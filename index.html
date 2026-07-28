@@ -1,785 +1,820 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>David Salgado — Investigación en Mercados Laborales</title>
-  <meta name="description" content="Consultor, investigador y conferencista especializado en mercados laborales, etnografía digital y futuro del trabajo en América Latina." />
-  <meta name="author" content="David Salgado" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --ink: #1a1a1a;
-      --paper: #fafaf8;
-      --accent: #c45f00;
-      --muted: #888;
-      --rule: #e0e0dc;
-      --dark-bg: #141412;
-      --dark-text: #f0ede8;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>David Salgado — Investigación en Mercados Laborales</title>
+<meta name="description" content="Consultor, investigador y conferencista especializado en mercados laborales, etnografía digital y futuro del trabajo en América Latina."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--p:#6D28D9;--pm:#7C3AED;--plt:#EDE9FE;--pbg:#F5F3FF;--o:#C45F00;--ink:#18181B;--soft:#52525B;--rule:#E4E4E7;--paper:#FAFAF8;--dk:#13111C;--dkt:#EDE9FE;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper);color:var(--ink);font-family:'Lato',sans-serif;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lineW{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:none;}
+.wrap{max-width:1040px;margin:0 auto;padding:0 1.5rem;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--o);display:block;}
+.sec-h2{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;color:var(--ink);line-height:1.1;}
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { background: var(--paper); color: var(--ink); font-family: 'Lato', sans-serif; }
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(250,250,248,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
+.nav-inner{max-width:1040px;margin:0 auto;padding:.85rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;white-space:nowrap;}
+.nav-links{display:flex;gap:1.4rem;list-style:none;}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--p);}
+.nav-cta{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--o);text-decoration:none;border-bottom:1px solid var(--o);padding-bottom:1px;white-space:nowrap;}
+@media(max-width:660px){.nav-links{display:none;}}
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes lineGrow {
-      from { transform: scaleX(0); }
-      to   { transform: scaleX(1); }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.in { opacity: 1; transform: none; }
+/* HERO */
+#inicio{padding:5rem 1.5rem 3.5rem;animation:fadeUp .9s ease both;}
+.hero-inner{max-width:1040px;margin:0 auto;}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,6.5vw,4.8rem);font-weight:900;line-height:1.03;letter-spacing:-.025em;color:var(--ink);margin-bottom:1.5rem;}
+.hero-h1 em{font-style:italic;color:var(--p);font-weight:400;}
+.hero-sub{font-size:1rem;color:var(--soft);line-height:1.8;max-width:540px;font-weight:300;margin-bottom:2.5rem;}
+.hero-btns{display:flex;gap:.8rem;flex-wrap:wrap;}
+.btn{display:inline-block;padding:.75rem 1.75rem;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s,border-color .2s;cursor:pointer;}
+.btn-dk{background:var(--ink);color:#fff;border:1px solid var(--ink);}
+.btn-dk:hover{background:var(--p);border-color:var(--p);}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+.btn-ghost:hover{background:var(--ink);color:#fff;}
+.hero-rule{max-width:1040px;margin:0 auto;padding:0 1.5rem;}
+.hero-line{height:2px;background:var(--p);transform-origin:left;animation:lineW .8s .4s ease both;}
+.hero-sub-label{font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;color:#bbb;margin-top:.4rem;}
 
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 200;
-      background: rgba(250,250,248,0.94);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--rule);
-      padding: 1rem 2rem;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem; font-weight: 700; color: var(--ink); text-decoration: none;
-    }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--accent); }
-    .nav-cta {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--accent); text-decoration: none;
-      border-bottom: 1px solid var(--accent); padding-bottom: 1px;
-    }
-    @media (max-width: 640px) { .nav-links { display: none; } }
+/* STATS */
+.stats-bar{background:var(--dk);padding:2.75rem 1.5rem;margin-top:3.5rem;}
+.stats-inner{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1.75rem;}
+.stat-n{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--pm);line-height:1;margin-bottom:.3rem;}
+.stat-l{font-size:.8rem;color:#888;font-weight:300;line-height:1.4;}
 
-    /* ── HERO ── */
-    #hero {
-      max-width: 960px; margin: 0 auto;
-      padding: 6rem 2rem 4rem;
-      animation: fadeUp 0.9s ease both;
-    }
-    .hero-eyebrow {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 1.5rem;
-    }
-    .hero-h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 7vw, 5rem);
-      font-weight: 900; line-height: 1.02;
-      letter-spacing: -0.025em; color: var(--ink);
-      margin-bottom: 1.75rem;
-    }
-    .hero-h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
-    .hero-sub {
-      font-size: 1.05rem; color: #555; line-height: 1.8;
-      max-width: 560px; font-weight: 300;
-      margin-bottom: 2.5rem;
-    }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn-primary {
-      padding: 0.85rem 2rem;
-      background: var(--ink); color: #fff;
-      font-family: 'DM Mono', monospace; font-size: 0.75rem;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; border: 1px solid var(--ink);
-      transition: background 0.2s, color 0.2s;
-    }
-    .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
-    .btn-ghost {
-      padding: 0.85rem 2rem;
-      background: transparent; color: var(--ink);
-      font-family: 'DM Mono', monospace; font-size: 0.75rem;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; border: 1px solid var(--ink);
-      transition: background 0.2s, color 0.2s;
-    }
-    .btn-ghost:hover { background: var(--ink); color: #fff; }
-    .hero-rule {
-      max-width: 960px; margin: 0 auto; padding: 0 2rem;
-    }
-    .hero-rule-line {
-      height: 2px; background: var(--ink);
-      transform-origin: left; animation: lineGrow 0.8s 0.4s ease both;
-    }
-    .hero-rule-label {
-      font-family: 'DM Mono', monospace; font-size: 0.68rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-top: 0.5rem;
-    }
+/* ── PAGE SYSTEM ── */
+.page{display:none;}
+.page.active{display:block;}
 
-    /* ── STATS STRIP ── */
-    .stats {
-      background: var(--dark-bg); color: var(--dark-text);
-      padding: 3rem 2rem; margin-top: 4rem;
-    }
-    .stats-inner {
-      max-width: 960px; margin: 0 auto;
-      display: flex; gap: 3rem; flex-wrap: wrap; justify-content: space-between;
-    }
-    .stat-item { flex: 1 1 150px; }
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.8rem; font-weight: 900;
-      color: var(--accent); line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-    .stat-label {
-      font-family: 'Lato', sans-serif; font-size: 0.85rem;
-      color: #888; font-weight: 300; line-height: 1.4;
-    }
+/* ── SERVICIOS ── */
+#page-servicios{background:var(--paper);}
+.svc-hero{padding:4rem 1.5rem 2rem;}
+.svc-hero .eyebrow{margin-bottom:.75rem;}
+.svc-hero-sub{font-size:.95rem;color:var(--soft);line-height:1.75;max-width:560px;font-weight:300;margin-top:.6rem;}
 
-    /* ── SERVICES ── */
-    #servicios { max-width: 960px; margin: 0 auto; padding: 5rem 2rem; }
-    .section-label {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 2.5rem;
-    }
-    .service-item { border-top: 1px solid var(--rule); }
-    .service-item:last-child { border-bottom: 1px solid var(--rule); }
-    .service-header {
-      display: flex; align-items: flex-start; gap: 2rem;
-      padding: 2rem 0; cursor: pointer; user-select: none;
-    }
-    .service-num {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      color: var(--muted); letter-spacing: 0.08em;
-      padding-top: 0.3rem; flex-shrink: 0; min-width: 1.8rem;
-    }
-    .service-info { flex: 1; }
-    .service-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.1rem, 2.5vw, 1.55rem);
-      font-weight: 700; color: var(--ink);
-      margin-bottom: 0.45rem; line-height: 1.2;
-    }
-    .service-tagline {
-      font-size: 0.93rem; color: #666; line-height: 1.6;
-    }
-    .service-toggle {
-      font-family: 'DM Mono', monospace;
-      font-size: 1.4rem; color: var(--accent);
-      flex-shrink: 0; transition: transform 0.3s ease;
-      line-height: 1;
-    }
-    .service-toggle.open { transform: rotate(45deg); }
-    .service-body {
-      display: none; padding: 0 0 2rem 3.5rem;
-    }
-    .service-body.open { display: block; animation: fadeUp 0.3s ease; }
-    .deliver-label {
-      font-family: 'DM Mono', monospace; font-size: 0.68rem;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.75rem;
-    }
-    .deliver-list { list-style: none; margin-bottom: 1.5rem; }
-    .deliver-list li {
-      font-size: 0.92rem; color: #444; line-height: 1.65;
-      padding: 0.35rem 0 0.35rem 1.1rem; position: relative;
-      border-bottom: 1px solid #f0f0ec;
-    }
-    .deliver-list li::before {
-      content: '●'; position: absolute; left: 0;
-      color: var(--accent); font-size: 0.45rem; top: 0.65rem;
-    }
-    .catalog-list { list-style: none; counter-reset: cat; }
-    .catalog-list li {
-      counter-increment: cat;
-      font-size: 0.88rem; color: #555; line-height: 1.6;
-      padding: 0.3rem 0 0.3rem 1.8rem; position: relative;
-    }
-    .catalog-list li::before {
-      content: counter(cat, decimal-leading-zero);
-      position: absolute; left: 0;
-      font-family: 'DM Mono', monospace; font-size: 0.68rem;
-      color: #ccc; top: 0.45rem;
-    }
-    .service-cta {
-      display: inline-block; margin-top: 1.5rem;
-      padding: 0.65rem 1.6rem;
-      background: var(--ink); color: #fff;
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      text-decoration: none; transition: background 0.2s;
-    }
-    .service-cta:hover { background: var(--accent); }
+/* 4 service accordion */
+.svc-list{padding:0 1.5rem 3rem;}
+.service-item{border-top:1px solid var(--rule);max-width:1040px;margin:0 auto;}
+.service-item:last-of-type{border-bottom:1px solid var(--rule);}
+.service-header{display:flex;align-items:flex-start;gap:1.5rem;padding:1.6rem 0;cursor:pointer;user-select:none;}
+.svc-num{font-family:'DM Mono',monospace;font-size:.66rem;color:#bbb;letter-spacing:.06em;padding-top:.22rem;flex-shrink:0;min-width:1.5rem;}
+.svc-info{flex:1;}
+.svc-title{font-family:'Playfair Display',serif;font-size:clamp(.95rem,2.2vw,1.35rem);font-weight:700;color:var(--ink);margin-bottom:.3rem;line-height:1.2;}
+.svc-tag{font-size:.82rem;color:var(--soft);line-height:1.55;}
+.svc-tog{font-family:'DM Mono',monospace;font-size:1.35rem;color:var(--p);flex-shrink:0;transition:transform .3s;line-height:1;}
+.svc-tog.open{transform:rotate(45deg);}
+.svc-body{display:none;padding:0 0 1.6rem 3.1rem;}
+.svc-body.open{display:block;animation:fadeUp .28s ease;}
+.dlbl{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:#bbb;margin-bottom:.6rem;}
+.dlist{list-style:none;margin-bottom:1.2rem;}
+.dlist li{font-size:.88rem;color:#444;line-height:1.65;padding:.28rem 0 .28rem 1rem;position:relative;border-bottom:1px solid #f2f2f0;}
+.dlist li::before{content:'●';position:absolute;left:0;color:var(--p);font-size:.38rem;top:.6rem;}
+.clist{list-style:none;counter-reset:c;}
+.clist li{counter-increment:c;font-size:.85rem;color:#555;line-height:1.6;padding:.26rem 0 .26rem 1.65rem;position:relative;}
+.clist li::before{content:counter(c,decimal-leading-zero);position:absolute;left:0;font-family:'DM Mono',monospace;font-size:.64rem;color:#ccc;top:.38rem;}
+.svc-cta-link{display:inline-block;margin-top:1.1rem;padding:.55rem 1.3rem;background:var(--ink);color:#fff;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s;}
+.svc-cta-link:hover{background:var(--p);}
 
-    /* ── COTIZADOR ── */
-    #cotizador {
-      background: #f4f2ee;
-      padding: 5rem 2rem;
-    }
-    .cotizador-inner { max-width: 960px; margin: 0 auto; }
-    .cotizador-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
-      align-items: start;
-    }
-    @media (max-width: 700px) { .cotizador-grid { grid-template-columns: 1fr; } }
-    .cotizador-h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 900; line-height: 1.1;
-      color: var(--ink); margin-bottom: 1rem;
-    }
-    .cotizador-desc {
-      font-size: 0.93rem; color: #666; line-height: 1.75; font-weight: 300;
-      margin-bottom: 0.5rem;
-    }
-    .form-group { margin-bottom: 1.5rem; }
-    .form-label {
-      display: block; font-family: 'DM Mono', monospace;
-      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.5rem;
-    }
-    .form-select, .form-range {
-      width: 100%; font-family: 'Lato', sans-serif;
-      font-size: 0.9rem; color: var(--ink);
-    }
-    .form-select {
-      padding: 0.7rem 1rem; border: 1px solid #d8d5d0;
-      background: #fff; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 1rem center;
-      cursor: pointer;
-    }
-    .form-select:focus { outline: 2px solid var(--accent); }
-    .form-range { accent-color: var(--accent); margin-top: 0.4rem; cursor: pointer; }
-    .range-value {
-      font-family: 'DM Mono', monospace; font-size: 0.82rem;
-      color: var(--accent); margin-top: 0.3rem; display: block;
-    }
-    .checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; }
-    .checkbox-item {
-      display: flex; align-items: center; gap: 0.6rem;
-      font-size: 0.9rem; color: #555; cursor: pointer;
-    }
-    .checkbox-item input[type=checkbox] { accent-color: var(--accent); width: 14px; height: 14px; }
+/* TALLERES GRID */
+.talleres-section{background:var(--dk);padding:3.5rem 1.5rem;}
+.talleres-inner{max-width:1040px;margin:0 auto;}
+.talleres-headline{padding:0 0 2rem;}
+.talleres-headline h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:900;line-height:1.05;color:#fff;}
+.talleres-headline h2 span{color:var(--pm);}
+.talleres-headline p{font-size:.95rem;color:#aaa;line-height:1.7;max-width:520px;font-weight:300;margin-top:.75rem;}
+.talleres-headline .pills{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem;}
+.pill{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .75rem;border:1px solid #3d2b6b;color:#a78bfa;background:#1e1b2e;}
+.talleres-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.1rem;}
+.taller-card{background:#1a1728;border:1px solid #2d2541;padding:1.4rem;display:flex;flex-direction:column;gap:.65rem;transition:border-color .2s,transform .2s;}
+.taller-card:hover{border-color:var(--pm);transform:translateY(-2px);}
+.tc-top{display:flex;align-items:flex-start;gap:1rem;}
+.tc-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--pm);line-height:1;flex-shrink:0;}
+.tc-head{flex:1;}
+.tc-title{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:#fff;line-height:1.25;margin-bottom:.3rem;}
+.tc-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .55rem;border-radius:2px;}
+.badge-taller{background:#3B0764;color:#c4b5fd;}
+.badge-webinar{background:#1e3a5f;color:#93c5fd;}
+.badge-master{background:#1c3a1c;color:#86efac;}
+.tc-meta{display:flex;gap:1rem;flex-wrap:wrap;}
+.tc-meta-item{font-family:'DM Mono',monospace;font-size:.62rem;color:#888;display:flex;align-items:center;gap:.3rem;}
+.tc-meta-item svg{flex-shrink:0;}
+.tc-desc{font-size:.8rem;color:#aaa;line-height:1.6;}
+.tc-skill{font-size:.78rem;color:#888;line-height:1.55;}
+.tc-skill strong{color:#c4b5fd;font-weight:700;}
+.talleres-cta{text-align:center;margin-top:2rem;}
 
-    /* Result card */
-    .result-card {
-      background: var(--dark-bg); color: var(--dark-text);
-      padding: 2.5rem; position: relative; overflow: hidden;
-    }
-    .result-card::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 4px; height: 100%; background: var(--accent);
-    }
-    .result-title {
-      font-family: 'DM Mono', monospace; font-size: 0.68rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 0.5rem;
-    }
-    .result-service {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem; font-weight: 700;
-      color: var(--dark-text); margin-bottom: 1.5rem; line-height: 1.3;
-    }
-    .result-row {
-      display: flex; justify-content: space-between; align-items: baseline;
-      border-bottom: 1px solid #2a2a28; padding: 0.6rem 0;
-    }
-    .result-row-label { font-size: 0.85rem; color: #888; }
-    .result-row-val { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: #ccc; }
-    .result-total {
-      display: flex; justify-content: space-between; align-items: baseline;
-      padding-top: 1rem; margin-top: 0.5rem;
-    }
-    .result-total-label {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
-    }
-    .result-total-val {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem; font-weight: 900; color: var(--accent);
-    }
-    .result-disclaimer {
-      font-size: 0.75rem; color: #555; margin-top: 1rem; line-height: 1.5;
-    }
-    .result-cta {
-      display: block; margin-top: 1.5rem; padding: 0.85rem;
-      background: var(--accent); color: #fff; text-align: center;
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; transition: opacity 0.2s;
-    }
-    .result-cta:hover { opacity: 0.85; }
+/* ── PUBLICACIONES ── */
+#page-publicaciones{background:var(--paper);padding:4rem 1.5rem;}
+.pub-intro{max-width:1040px;margin:0 auto 2rem;}
+.pub-grid{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.5rem;}
+.pub-card{background:#fff;border:1px solid var(--rule);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s;}
+.pub-card:hover{box-shadow:0 8px 28px rgba(109,40,217,.12);transform:translateY(-3px);}
+.pub-cover{height:145px;display:flex;align-items:center;justify-content:center;padding:1.4rem;text-align:center;}
+.pc1{background:linear-gradient(135deg,#18181B 55%,#3B0764);}
+.pc2{background:linear-gradient(135deg,#3730A3,#6D28D9);}
+.pc3{background:linear-gradient(135deg,#7C2D12,#C45F00);}
+.pc4{background:linear-gradient(135deg,#1E3A5F,#4C1D95);}
+.pub-cover-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:900;color:#fff;line-height:1.2;text-transform:uppercase;}
+.pub-body{padding:1.2rem;flex:1;display:flex;flex-direction:column;gap:.4rem;}
+.pub-date{font-family:'DM Mono',monospace;font-size:.63rem;color:#bbb;}
+.pub-title{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:700;color:var(--ink);line-height:1.3;}
+.pub-desc{font-size:.8rem;color:#666;line-height:1.6;flex:1;}
+.pub-dl{display:inline-block;margin-top:.7rem;padding:.48rem 1rem;background:var(--p);color:#fff;font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s;align-self:flex-start;}
+.pub-dl:hover{background:var(--pm);}
+/* LinkedIn strip */
+.li-strip{background:var(--dk);padding:3rem 1.5rem;margin-top:0;}
+.li-inner{max-width:1040px;margin:0 auto;}
+.li-h2{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2.8vw,1.9rem);font-weight:700;color:var(--dkt);line-height:1.2;margin:.65rem 0;}
+.li-sub{font-size:.88rem;color:#888;font-weight:300;line-height:1.65;max-width:460px;margin-bottom:1.75rem;}
+.li-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;}
+.li-card{background:#1e1b2e;border:1px solid #2d2541;padding:1.2rem;display:flex;flex-direction:column;gap:.45rem;}
+.li-tag{font-family:'DM Mono',monospace;font-size:.61rem;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;}
+.li-text{font-size:.83rem;color:#ccc;line-height:1.62;flex:1;}
+.li-link{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--o);text-decoration:none;}
+.li-link:hover{color:#a78bfa;}
+.li-cta{margin-top:1.5rem;}
 
-    /* ── PROFILE ── */
-    #perfil {
-      background: var(--dark-bg); color: var(--dark-text);
-      padding: 5rem 2rem;
-    }
-    .perfil-inner {
-      max-width: 960px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
-    }
-    @media (max-width: 700px) { .perfil-inner { grid-template-columns: 1fr; gap: 3rem; } }
-    .perfil-h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-      font-weight: 700; line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-    .perfil-body {
-      font-size: 0.93rem; color: #aaa; line-height: 1.8; font-weight: 300;
-      margin-bottom: 1.5rem;
-    }
-    .pub-list { list-style: none; }
-    .pub-item {
-      padding: 0.75rem 0; border-bottom: 1px solid #2a2a28;
-      font-size: 0.88rem; color: #bbb; line-height: 1.5;
-    }
-    .pub-year {
-      font-family: 'DM Mono', monospace; font-size: 0.7rem;
-      color: var(--accent); margin-right: 0.5rem;
-    }
-    .spec-list { list-style: none; }
-    .spec-item {
-      padding: 0.6rem 0; border-bottom: 1px solid #2a2a28;
-      font-size: 0.88rem; color: #ccc;
-      display: flex; align-items: center; gap: 0.6rem;
-    }
-    .spec-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
-    .section-label-light {
-      font-family: 'DM Mono', monospace; font-size: 0.68rem;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 1.25rem; display: block;
-    }
+/* ── PORTAFOLIO + PERFIL ── */
+#page-portafolio{background:var(--paper);}
+.port-section{padding:4rem 1.5rem;}
+.port-intro{max-width:1040px;margin:0 auto 2rem;}
+.port-grid{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:1.4rem;}
+.port-card{background:#fff;border:1px solid var(--rule);padding:1.6rem;display:flex;flex-direction:column;gap:.7rem;transition:box-shadow .2s,transform .2s;}
+.port-card:hover{box-shadow:0 8px 28px rgba(109,40,217,.1);transform:translateY(-2px);}
+.port-type{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--p);}
+.port-year{font-family:'DM Mono',monospace;font-size:.63rem;color:#bbb;}
+.port-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);line-height:1.3;}
+.port-org{font-size:.8rem;color:var(--soft);font-weight:700;}
+.port-desc{font-size:.83rem;color:#555;line-height:1.62;flex:1;}
+.port-link{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--o);text-decoration:none;letter-spacing:.05em;border-bottom:1px solid var(--o);padding-bottom:1px;align-self:flex-start;transition:color .2s;}
+.port-link:hover{color:var(--p);border-color:var(--p);}
+/* Perfil dark */
+.perfil-section{background:var(--dk);padding:4rem 1.5rem;}
+.perfil-inner{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;}
+@media(max-width:700px){.perfil-inner{grid-template-columns:1fr;gap:2.5rem;}}
+.perf-h2{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2.8vw,1.9rem);font-weight:700;color:var(--dkt);line-height:1.2;margin-bottom:.8rem;}
+.perf-body{font-size:.88rem;color:#aaa;line-height:1.8;font-weight:300;margin-bottom:1.1rem;}
+.sec-lbl-lt{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.17em;text-transform:uppercase;color:var(--pm);margin-bottom:1rem;display:block;}
+.pub-item-d{padding:.6rem 0;border-bottom:1px solid #2a2541;font-size:.84rem;color:#bbb;line-height:1.5;}
+.pub-y{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--pm);margin-right:.4rem;}
+.spec-item{padding:.52rem 0;border-bottom:1px solid #2a2541;font-size:.84rem;color:#ccc;display:flex;align-items:center;gap:.5rem;}
+.spec-dot{width:5px;height:5px;background:var(--pm);border-radius:50%;flex-shrink:0;}
 
-    /* ── CONTACT ── */
-    #contacto { padding: 6rem 2rem; text-align: center; }
-    .contact-inner { max-width: 600px; margin: 0 auto; }
-    .contact-h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 900; line-height: 1.05;
-      color: var(--ink); margin-bottom: 1rem;
-    }
-    .contact-h2 em { color: var(--accent); font-style: italic; }
-    .contact-sub {
-      font-size: 1rem; color: #666; line-height: 1.7;
-      font-weight: 300; margin-bottom: 2.5rem;
-    }
-    .contact-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
-    .contact-meta {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      color: #bbb; letter-spacing: 0.08em;
-    }
-    .social-links {
-      display: flex; gap: 1.5rem; justify-content: center;
-      margin-top: 1.5rem; list-style: none;
-    }
-    .social-links a {
-      font-family: 'DM Mono', monospace; font-size: 0.72rem;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none;
-      border-bottom: 1px solid transparent;
-      padding-bottom: 1px; transition: color 0.2s, border-color 0.2s;
-    }
-    .social-links a:hover { color: var(--accent); border-color: var(--accent); }
+/* ── CONTACTO + COTIZADOR ── */
+#page-contacto{background:var(--paper);}
+.contacto-hero{padding:4rem 1.5rem 2.5rem;text-align:center;}
+.con-h2{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:900;color:var(--ink);line-height:1.07;margin-bottom:.8rem;}
+.con-h2 em{color:var(--p);font-style:italic;}
+.con-sub{font-size:.95rem;color:var(--soft);line-height:1.7;font-weight:300;margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto;}
+.con-actions{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;}
+.con-meta{font-family:'DM Mono',monospace;font-size:.68rem;color:#bbb;letter-spacing:.06em;}
+.social-links{display:flex;gap:1.2rem;justify-content:center;margin-top:1.1rem;list-style:none;flex-wrap:wrap;}
+.social-links a{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px;transition:color .2s,border-color .2s;}
+.social-links a:hover{color:var(--p);border-color:var(--p);}
+/* Cotizador */
+.cotizador-section{background:var(--pbg);padding:3.5rem 1.5rem;}
+.cot-inner{max-width:1040px;margin:0 auto;}
+.cot-head{margin-bottom:2rem;}
+.cot-head .eyebrow{margin-bottom:.5rem;}
+.cot-head h2{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:900;color:var(--ink);}
+.cot-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+@media(max-width:680px){.cot-grid{grid-template-columns:1fr;}}
+.form-g{margin-bottom:1.35rem;}
+.form-lbl{display:block;font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:.42rem;}
+.form-sel{width:100%;padding:.62rem .88rem;border:1px solid #d4d4d8;background:#fff;font-family:'Lato',sans-serif;font-size:.86rem;color:var(--ink);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .88rem center;cursor:pointer;}
+.form-sel:focus{outline:2px solid var(--p);}
+.form-range{width:100%;accent-color:var(--p);cursor:pointer;margin-top:.32rem;}
+.range-val{font-family:'DM Mono',monospace;font-size:.78rem;color:var(--p);margin-top:.22rem;display:inline-block;}
+.check-group{display:flex;flex-direction:column;gap:.42rem;}
+.check-item{display:flex;align-items:center;gap:.52rem;font-size:.86rem;color:#555;cursor:pointer;}
+.check-item input{accent-color:var(--p);width:14px;height:14px;}
+.result-card{background:var(--dk);padding:2.1rem;position:relative;overflow:hidden;}
+.result-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--p);}
+.res-lbl{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;color:#555;margin-bottom:.35rem;}
+.res-svc{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--dkt);margin-bottom:1.1rem;line-height:1.3;}
+.res-row{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #2a2541;padding:.5rem 0;}
+.res-row-lbl{font-size:.8rem;color:#666;}
+.res-row-val{font-family:'DM Mono',monospace;font-size:.8rem;color:#ccc;}
+.res-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:.85rem;margin-top:.35rem;}
+.res-total-lbl{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:#555;}
+.res-total-val{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:900;color:var(--pm);}
+.res-disc{font-size:.7rem;color:#555;margin-top:.85rem;line-height:1.5;}
+.res-cta{display:block;margin-top:1.1rem;padding:.75rem;background:var(--p);color:#fff;text-align:center;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:opacity .2s;}
+.res-cta:hover{opacity:.85;}
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--ink); color: #555;
-      padding: 1.5rem 2rem; text-align: center;
-      font-family: 'DM Mono', monospace; font-size: 0.68rem;
-      letter-spacing: 0.08em;
-    }
-  </style>
+footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.07em;}
+
+@media(max-width:480px){
+  .hero-h1{font-size:2.2rem;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  .pub-grid,.port-grid,.talleres-grid{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#hero">David Salgado</a>
-  <ul class="nav-links">
-    <li><a href="#servicios">Servicios</a></li>
-    <li><a href="#cotizador">Cotizador</a></li>
-    <li><a href="#perfil">Perfil</a></li>
-  </ul>
-  <a class="nav-cta" href="#contacto">Contactar</a>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" onclick="showPage('inicio');return false;">David Salgado</a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('inicio');return false;" id="nav-inicio">Inicio</a></li>
+      <li><a href="#" onclick="showPage('servicios');return false;" id="nav-servicios">Servicios</a></li>
+      <li><a href="#" onclick="showPage('publicaciones');return false;" id="nav-publicaciones">Publicaciones</a></li>
+      <li><a href="#" onclick="showPage('portafolio');return false;" id="nav-portafolio">Portafolio</a></li>
+      <li><a href="#" onclick="showPage('contacto');return false;" id="nav-contacto">Contacto</a></li>
+    </ul>
+    <a class="nav-cta" href="#" onclick="showPage('contacto');return false;">Contactar</a>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section id="hero">
-  <p class="hero-eyebrow">Investigador · Consultor · Conferencista</p>
-  <h1 class="hero-h1">
-    Investigación en<br>
-    mercados laborales<br>
-    y <em>futuro del trabajo.</em>
-  </h1>
-  <p class="hero-sub">
-    Acompaño a instituciones, empresas y comunidades a interpretar los cambios 
-    del trabajo desde una perspectiva etnográfica y cultural. Especializado en 
-    la intersección entre educación, inteligencia artificial y empleo en América Latina.
-  </p>
-  <div class="hero-actions">
-    <a class="btn-primary" href="#servicios">Ver servicios</a>
-    <a class="btn-ghost" href="#cotizador">Cotizar proyecto</a>
+<!-- ══ PÁGINA: INICIO ══ -->
+<div id="page-inicio" class="page active">
+  <section id="inicio">
+    <div class="hero-inner">
+      <span class="eyebrow" style="margin-bottom:1.2rem;">Investigador · Consultor · Conferencista</span>
+      <h1 class="hero-h1">Investigación en<br>mercados laborales<br>y <em>futuro del trabajo.</em></h1>
+      <p class="hero-sub">Acompaño a instituciones, empresas y comunidades a interpretar los cambios del trabajo desde una perspectiva etnográfica y cultural. Especializado en la intersección entre educación, inteligencia artificial y empleo en América Latina.</p>
+      <div class="hero-btns">
+        <a class="btn btn-dk" href="#" onclick="showPage('servicios');return false;">Ver servicios</a>
+        <a class="btn btn-ghost" href="#" onclick="showPage('contacto');return false;">Cotizar proyecto</a>
+      </div>
+    </div>
+  </section>
+  <div class="hero-rule">
+    <div class="hero-line"></div>
+    <p class="hero-sub-label">Servicios, portafolio y publicaciones — selecciona en el menú</p>
   </div>
-</section>
-<div class="hero-rule">
-  <div class="hero-rule-line"></div>
-  <p class="hero-rule-label">Servicios — Selecciona para ver entregables</p>
+
+  <div class="stats-bar reveal">
+    <div class="stats-inner">
+      <div><div class="stat-n">3+</div><div class="stat-l">Publicaciones académicas en mercados laborales</div></div>
+      <div><div class="stat-n">9</div><div class="stat-l">Talleres y masterclasses disponibles</div></div>
+      <div><div class="stat-n">10+</div><div class="stat-l">Años de investigación aplicada en América Latina</div></div>
+      <div><div class="stat-n">60K+</div><div class="stat-l">Registros en base de datos de empleabilidad</div></div>
+    </div>
+  </div>
+
+  <!-- mini previews -->
+  <div style="padding:3.5rem 1.5rem;">
+    <div class="wrap">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;">
+        <div class="reveal" style="background:#fff;border:1px solid var(--rule);padding:1.5rem;cursor:pointer;" onclick="showPage('servicios')">
+          <span class="eyebrow" style="margin-bottom:.6rem;">01</span>
+          <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;line-height:1.2;">Servicios y talleres</p>
+          <p style="font-size:.82rem;color:var(--soft);line-height:1.6;">Consultoría, análisis etnográfico, capacitación y conferencias.</p>
+        </div>
+        <div class="reveal" style="background:#fff;border:1px solid var(--rule);padding:1.5rem;cursor:pointer;" onclick="showPage('publicaciones')">
+          <span class="eyebrow" style="margin-bottom:.6rem;">02</span>
+          <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;line-height:1.2;">Publicaciones</p>
+          <p style="font-size:.82rem;color:var(--soft);line-height:1.6;">Minilibros mensuales sobre trabajo, empleabilidad y vida laboral.</p>
+        </div>
+        <div class="reveal" style="background:#fff;border:1px solid var(--rule);padding:1.5rem;cursor:pointer;" onclick="showPage('portafolio')">
+          <span class="eyebrow" style="margin-bottom:.6rem;">03</span>
+          <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.4rem;line-height:1.2;">Portafolio y perfil</p>
+          <p style="font-size:.82rem;color:var(--soft);line-height:1.6;">Investigaciones, ponencias, consultorías y especialidades.</p>
+        </div>
+        <div class="reveal" style="background:var(--p);border:1px solid var(--p);padding:1.5rem;cursor:pointer;" onclick="showPage('contacto')">
+          <span style="font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:#c4b5fd;margin-bottom:.6rem;display:block;">04</span>
+          <p style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:.4rem;line-height:1.2;">Contacto y cotizador</p>
+          <p style="font-size:.82rem;color:#c4b5fd;line-height:1.6;">Solicita una propuesta o cotiza tu proyecto en minutos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- STATS -->
-<div class="stats reveal">
-  <div class="stats-inner">
-    <div class="stat-item">
-      <div class="stat-num">3+</div>
-      <div class="stat-label">Publicaciones académicas en mercados laborales</div>
+<!-- ══ PÁGINA: SERVICIOS ══ -->
+<div id="page-servicios" class="page">
+  <div class="svc-hero wrap">
+    <span class="eyebrow reveal">01 — Servicios</span>
+    <h2 class="sec-h2 reveal" style="margin-top:.5rem;">Consultoría, investigación<br>y formación especializada</h2>
+    <p class="svc-hero-sub reveal">Cuatro líneas de servicio orientadas a organizaciones, instituciones educativas y comunidades que buscan comprender y transformar el mundo del trabajo.</p>
+  </div>
+
+  <div class="svc-list">
+    <div class="service-item reveal">
+      <div class="service-header" onclick="toggleSvc(this)">
+        <span class="svc-num">01</span>
+        <div class="svc-info"><h3 class="svc-title">Consultoría en Investigación Social Aplicada</h3><p class="svc-tag">Proyectos de investigación sobre mercados laborales, empleo y transformaciones sociales.</p></div>
+        <span class="svc-tog">+</span>
+      </div>
+      <div class="svc-body">
+        <p class="dlbl">Entregables</p>
+        <ul class="dlist">
+          <li>Propuesta metodológica completa: problema, objetivos, justificación, enfoque y cronograma</li>
+          <li>Instrumentos de levantamiento: guías de entrevista, cuestionarios, protocolos de observación</li>
+          <li>Informe preliminar: sistematización, patrones emergentes, problemáticas clave</li>
+          <li>Informe final + presentación ejecutiva (10–15 diapositivas) con recomendaciones estratégicas</li>
+        </ul>
+        <a class="svc-cta-link" href="mailto:d.salgado.lpz@gmail.com?subject=Consultoría en Investigación Social">Contratar servicio</a>
+      </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">4</div>
-      <div class="stat-label">Líneas de servicio especializadas</div>
+    <div class="service-item reveal">
+      <div class="service-header" onclick="toggleSvc(this)">
+        <span class="svc-num">02</span>
+        <div class="svc-info"><h3 class="svc-title">Análisis Etnográfico y Digital</h3><p class="svc-tag">Metodologías cualitativas y narrativas para comprender cómo las personas viven y transforman el trabajo.</p></div>
+        <span class="svc-tog">+</span>
+      </div>
+      <div class="svc-body">
+        <p class="dlbl">Entregables</p>
+        <ul class="dlist">
+          <li>Plan de investigación: categorías de análisis, variables digitales, fuentes de observación</li>
+          <li>Diario de campo / bitácora digital con registro continuo de narrativas y patrones</li>
+          <li>Informe de hallazgos: mapas de tendencias, análisis cultural y digital, casos ilustrativos</li>
+          <li>Informe final + recomendaciones estratégicas para políticas, programas o proyectos</li>
+        </ul>
+        <a class="svc-cta-link" href="mailto:d.salgado.lpz@gmail.com?subject=Análisis Etnográfico y Digital">Contratar servicio</a>
+      </div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">10+</div>
-      <div class="stat-label">Años de investigación aplicada en América Latina</div>
+    <div class="service-item reveal">
+      <div class="service-header" onclick="toggleSvc(this)">
+        <span class="svc-num">03</span>
+        <div class="svc-info"><h3 class="svc-title">Talleres y Capacitación</h3><p class="svc-tag">Formación en inteligencia artificial, empleo, práctica educativa y nuevas dinámicas sociales.</p></div>
+        <span class="svc-tog">+</span>
+      </div>
+      <div class="svc-body">
+        <p class="dlbl">Entregables</p>
+        <ul class="dlist">
+          <li>Diseño instruccional: objetivos, estructura de módulos, syllabus</li>
+          <li>Materiales didácticos: presentaciones, guías, lecturas complementarias</li>
+          <li>Ejecución del taller (hasta 30 horas, sesiones semanales o intensivas)</li>
+          <li>Evaluación y reporte de impacto: rúbricas y encuestas de satisfacción</li>
+        </ul>
+        <a class="svc-cta-link" href="#" onclick="showPage('contacto');return false;">Ver catálogo completo de talleres ↓</a>
+      </div>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-header" onclick="toggleSvc(this)">
+        <span class="svc-num">04</span>
+        <div class="svc-info"><h3 class="svc-title">Conferencias sobre el Futuro del Trabajo</h3><p class="svc-tag">Charlas sobre el impacto de la IA, la virtualidad y los cambios laborales en América Latina.</p></div>
+        <span class="svc-tog">+</span>
+      </div>
+      <div class="svc-body">
+        <p class="dlbl">Entregables</p>
+        <ul class="dlist">
+          <li>Guion de conferencia: estructura narrativa, temas clave, casos ilustrativos</li>
+          <li>Presentación visual: keynote con gráficos, estadísticas y tendencias</li>
+          <li>Ejecución de la conferencia (60–90 minutos)</li>
+          <li>Material complementario para asistentes: lecturas, bibliografía y síntesis en PDF</li>
+        </ul>
+        <p class="dlbl" style="margin-top:1rem;">Conferencias disponibles</p>
+        <ol class="clist">
+          <li>El futuro del trabajo: profesiones que desaparecerán y las que están naciendo</li>
+          <li>Educación 2050: ¿cómo formar a las próximas generaciones?</li>
+          <li>De la automatización a la creatividad: nuevas habilidades para sobrevivir a la IA</li>
+          <li>El fin del empleo tradicional: escenarios y oportunidades en la economía digital</li>
+          <li>Aprender a desaprender: la clave del éxito en el siglo XXI</li>
+        </ol>
+        <a class="svc-cta-link" href="mailto:d.salgado.lpz@gmail.com?subject=Conferencia">Contratar conferencia</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATÁLOGO 9 TALLERES -->
+  <div class="talleres-section">
+    <div class="talleres-inner">
+      <div class="talleres-headline reveal">
+        <span class="eyebrow" style="color:#a78bfa;margin-bottom:.7rem;">Catálogo de formación</span>
+        <h2>Aprende.<br><span>Transforma.</span><br>Impacta.</h2>
+        <p>Formación práctica para educadores, líderes y agentes de cambio social.</p>
+        <div class="pills">
+          <span class="pill">Enfoque social</span>
+          <span class="pill">Aprendizaje práctico</span>
+          <span class="pill">Impacto real</span>
+        </div>
+      </div>
+      <div class="talleres-grid">
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">01</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Hablar para influir: comunicación efectiva en la vida profesional</h3>
+              <span class="tc-badge badge-taller">Taller</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>6 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Virtual / Presencial</span>
+          </div>
+          <p class="tc-desc">Dinámicas y ejercicios para transformar la manera de comunicarse en entornos laborales y sociales.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> reconocer estilos de comunicación, aplicar escucha activa, generar confianza al expresarte y mejorar la negociación con colegas y equipos.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">02</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Estrategia Digital con Propósito: visibilidad para tu proyecto social o educativo</h3>
+              <span class="tc-badge badge-webinar">Webinar</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>1.5 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Online</span>
+          </div>
+          <p class="tc-desc">Claves prácticas para usar redes sociales, métricas y herramientas digitales en beneficio de proyectos sociales.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> manejar plataformas de analítica (Looker Studio, Meta Business Suite), diseñar narrativas digitales y medir el impacto de publicaciones.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">03</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Liderazgo Colaborativo 360°: del trabajo en equipo a la innovación</h3>
+              <span class="tc-badge badge-taller">Taller</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>8 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Presencial</span>
+          </div>
+          <p class="tc-desc">Experiencia inmersiva para fortalecer el liderazgo desde la cooperación, la innovación y la inteligencia emocional.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> identificar tu estilo de liderazgo, potenciar equipos de alto desempeño y aplicar técnicas colaborativas para resolver problemas reales.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">04</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Historia viva: enseñar con enfoque social y crítico</h3>
+              <span class="tc-badge badge-master">Masterclass</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>2 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Online</span>
+          </div>
+          <p class="tc-desc">Mirada alternativa a la historia antigua y medieval para docentes que buscan conectar con adolescentes.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> desarrollar estrategias didácticas para enseñar historia con enfoque social, crítico y atractivo, usando ejemplos cercanos a la realidad de los jóvenes.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">05</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Diseño Ágil de Proyectos Educativos y Sociales</h3>
+              <span class="tc-badge badge-taller">Taller</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>10 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Presencial / Virtual</span>
+          </div>
+          <p class="tc-desc">Metodología práctica para planear, gestionar y evaluar proyectos de manera clara y medible.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> formular objetivos claros, usar indicadores de impacto, aplicar metodologías ágiles (Kanban, Scrum) y comunicar resultados a financiadores.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">06</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Productividad Inteligente: plataformas que transforman tu forma de trabajar</h3>
+              <span class="tc-badge badge-webinar">Webinar</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>1.5 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Online</span>
+          </div>
+          <p class="tc-desc">Revisión práctica de herramientas digitales para optimizar tiempo, organización y colaboración.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> usar Notion, Trello, Asana, Slack y Google Workspace para planificar proyectos, delegar tareas y aumentar la productividad personal y de equipos.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">07</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Tendencias del empleo: claves para adaptarte al mercado laboral del futuro</h3>
+              <span class="tc-badge badge-master">Masterclass</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>2 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Online</span>
+          </div>
+          <p class="tc-desc">Reflexión guiada sobre los cambios actuales y futuros en los mercados de trabajo.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> conocer las habilidades más demandadas, adaptarte a la automatización y la IA, construir un perfil atractivo en LinkedIn y mejorar tu empleabilidad.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">08</span>
+            <div class="tc-head">
+              <h3 class="tc-title">Comunicación Digital Docente: enseñar en la era híbrida</h3>
+              <span class="tc-badge badge-taller">Taller</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>6 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Mixta</span>
+          </div>
+          <p class="tc-desc">Estrategias para que docentes integren herramientas digitales de manera efectiva en su enseñanza.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> crear contenidos visuales y narrativos, usar plataformas interactivas (Kahoot, Mentimeter, Canva) y generar un ambiente participativo en clases virtuales y presenciales.</p>
+        </div>
+
+        <div class="taller-card reveal">
+          <div class="tc-top">
+            <span class="tc-num">09</span>
+            <div class="tc-head">
+              <h3 class="tc-title">IA para educadores: del miedo a la oportunidad</h3>
+              <span class="tc-badge badge-master">Masterclass</span>
+            </div>
+          </div>
+          <div class="tc-meta">
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>2 horas</span>
+            <span class="tc-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Online</span>
+          </div>
+          <p class="tc-desc">Sesión práctica para explorar cómo la inteligencia artificial puede apoyar la enseñanza.</p>
+          <p class="tc-skill"><strong>Aprenderás:</strong> usar aplicaciones de IA (ChatGPT, Perplexity, Gamma) para preparar clases, diseñar evaluaciones automáticas, generar materiales creativos y ahorrar tiempo docente.</p>
+        </div>
+
+      </div>
+      <div class="talleres-cta reveal">
+        <a class="btn btn-dk" style="background:var(--p);border-color:var(--p);" href="mailto:d.salgado.lpz@gmail.com?subject=Solicitud de taller">Solicitar un taller</a>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- SERVICES -->
-<section id="servicios">
-  <p class="section-label reveal">01 — Servicios</p>
-
-  <!-- S1 -->
-  <div class="service-item reveal">
-    <div class="service-header" onclick="toggleService(this)">
-      <span class="service-num">01</span>
-      <div class="service-info">
-        <h3 class="service-title">Consultoría en Investigación Social Aplicada</h3>
-        <p class="service-tagline">Proyectos de investigación sobre mercados laborales, empleo y transformaciones sociales.</p>
-      </div>
-      <span class="service-toggle">+</span>
+<!-- ══ PÁGINA: PUBLICACIONES ══ -->
+<div id="page-publicaciones" class="page">
+  <div id="publicaciones" style="padding:4rem 1.5rem;">
+    <div class="pub-intro reveal">
+      <span class="eyebrow" style="margin-bottom:.6rem;">02 — Publicaciones</span>
+      <h2 class="sec-h2" style="margin-top:.4rem;">Minilibros y ensayos</h2>
+      <p style="font-size:.9rem;color:var(--soft);line-height:1.7;max-width:520px;font-weight:300;margin-top:.65rem;">Serie de reflexiones sobre trabajo, empleabilidad y vida laboral. Un nuevo minilibro cada mes. Descarga gratuita.</p>
     </div>
-    <div class="service-body">
-      <p class="deliver-label">Entregables</p>
-      <ul class="deliver-list">
-        <li>Propuesta metodológica completa: problema, objetivos, justificación, enfoque y cronograma</li>
-        <li>Instrumentos de levantamiento: guías de entrevista, cuestionarios, protocolos de observación</li>
-        <li>Informe preliminar: sistematización, patrones emergentes, problemáticas clave</li>
-        <li>Informe final + presentación ejecutiva (10–15 diapositivas) con recomendaciones estratégicas</li>
-      </ul>
-      <a class="service-cta" href="mailto:d.salgado.lpz@gmail.com?subject=Consultoría en Investigación Social">Contratar servicio</a>
-    </div>
-  </div>
-
-  <!-- S2 -->
-  <div class="service-item reveal">
-    <div class="service-header" onclick="toggleService(this)">
-      <span class="service-num">02</span>
-      <div class="service-info">
-        <h3 class="service-title">Análisis Etnográfico y Digital</h3>
-        <p class="service-tagline">Metodologías cualitativas y narrativas para comprender cómo las personas viven y transforman el trabajo.</p>
-      </div>
-      <span class="service-toggle">+</span>
-    </div>
-    <div class="service-body">
-      <p class="deliver-label">Entregables</p>
-      <ul class="deliver-list">
-        <li>Plan de investigación: categorías de análisis, variables digitales, fuentes de observación</li>
-        <li>Diario de campo / bitácora digital con registro continuo de narrativas y patrones</li>
-        <li>Informe de hallazgos: mapas de tendencias, análisis cultural y digital, casos ilustrativos</li>
-        <li>Informe final + recomendaciones estratégicas para políticas, programas o proyectos</li>
-      </ul>
-      <a class="service-cta" href="mailto:d.salgado.lpz@gmail.com?subject=Análisis Etnográfico y Digital">Contratar servicio</a>
-    </div>
-  </div>
-
-  <!-- S3 -->
-  <div class="service-item reveal">
-    <div class="service-header" onclick="toggleService(this)">
-      <span class="service-num">03</span>
-      <div class="service-info">
-        <h3 class="service-title">Talleres y Capacitación</h3>
-        <p class="service-tagline">Formación en inteligencia artificial, empleo, práctica educativa y nuevas dinámicas sociales.</p>
-      </div>
-      <span class="service-toggle">+</span>
-    </div>
-    <div class="service-body">
-      <p class="deliver-label">Entregables</p>
-      <ul class="deliver-list">
-        <li>Diseño instruccional: objetivos, estructura de módulos, syllabus</li>
-        <li>Materiales didácticos: presentaciones, guías, lecturas complementarias</li>
-        <li>Ejecución del taller (hasta 30 horas, sesiones semanales o intensivas)</li>
-        <li>Evaluación y reporte de impacto: rúbricas y encuestas de satisfacción</li>
-      </ul>
-      <p class="deliver-label" style="margin-top:1.25rem;">Temas disponibles</p>
-      <ol class="catalog-list">
-        <li>Empleabilidad 360°: herramientas para navegar el mercado laboral actual</li>
-        <li>Del CV al impacto: cómo contar tu historia profesional con estrategia</li>
-        <li>Metodología SMART: del objetivo al resultado medible</li>
-        <li>Teoría de Cambio y Marco Lógico: diseñando proyectos con impacto social</li>
-        <li>Tendencias del trabajo en América Latina: habilidades para el futuro inmediato</li>
-      </ol>
-      <a class="service-cta" href="mailto:d.salgado.lpz@gmail.com?subject=Taller y Capacitación">Contratar servicio</a>
-    </div>
-  </div>
-
-  <!-- S4 -->
-  <div class="service-item reveal">
-    <div class="service-header" onclick="toggleService(this)">
-      <span class="service-num">04</span>
-      <div class="service-info">
-        <h3 class="service-title">Conferencias sobre el Futuro del Trabajo</h3>
-        <p class="service-tagline">Charlas sobre el impacto de la IA, la virtualidad y los cambios laborales en América Latina.</p>
-      </div>
-      <span class="service-toggle">+</span>
-    </div>
-    <div class="service-body">
-      <p class="deliver-label">Entregables</p>
-      <ul class="deliver-list">
-        <li>Guion de conferencia: estructura narrativa, temas clave, casos ilustrativos</li>
-        <li>Presentación visual: keynote con gráficos, estadísticas y tendencias</li>
-        <li>Ejecución de la conferencia (60–90 minutos)</li>
-        <li>Material complementario para asistentes: lecturas, bibliografía y síntesis en PDF</li>
-      </ul>
-      <p class="deliver-label" style="margin-top:1.25rem;">Conferencias disponibles</p>
-      <ol class="catalog-list">
-        <li>El futuro del trabajo: profesiones que desaparecerán y las que están naciendo</li>
-        <li>Educación 2050: ¿cómo formar a las próximas generaciones?</li>
-        <li>De la automatización a la creatividad: nuevas habilidades para sobrevivir a la IA</li>
-        <li>El fin del empleo tradicional: escenarios y oportunidades en la economía digital</li>
-        <li>Aprender a desaprender: la clave del éxito en el siglo XXI</li>
-      </ol>
-      <a class="service-cta" href="mailto:d.salgado.lpz@gmail.com?subject=Conferencia">Contratar servicio</a>
-    </div>
-  </div>
-</section>
-
-<!-- COTIZADOR -->
-<section id="cotizador">
-  <div class="cotizador-inner reveal">
-    <p class="section-label">02 — Cotizador estimado</p>
-    <div class="cotizador-grid">
-      <!-- Form -->
-      <div>
-        <h2 class="cotizador-h2">¿Cuánto<br>cuesta tu<br>proyecto?</h2>
-        <p class="cotizador-desc">Configura los parámetros de tu proyecto y obtén una estimación orientativa. Sin compromiso.</p>
-        <p class="cotizador-desc" style="font-size:0.8rem;color:#aaa;margin-bottom:1.5rem;">Los precios están en USD y son referenciales. El costo final se define en propuesta formal.</p>
-
-        <div class="form-group">
-          <label class="form-label" for="sel-servicio">Tipo de servicio</label>
-          <select class="form-select" id="sel-servicio" onchange="calcular()">
-            <option value="investigacion">Consultoría en Investigación Social</option>
-            <option value="etnografia">Análisis Etnográfico y Digital</option>
-            <option value="taller">Taller o Capacitación</option>
-            <option value="conferencia">Conferencia</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="sel-alcance">Alcance del proyecto</label>
-          <select class="form-select" id="sel-alcance" onchange="calcular()">
-            <option value="basico">Básico — exploración inicial</option>
-            <option value="estandar" selected>Estándar — proyecto completo</option>
-            <option value="avanzado">Avanzado — con presentación ejecutiva y seguimiento</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Duración estimada (semanas): <span class="range-value" id="dur-val">4</span></label>
-          <input class="form-range" type="range" id="sel-duracion" min="1" max="16" value="4" oninput="document.getElementById('dur-val').textContent=this.value; calcular()">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Adicionales</label>
-          <div class="checkbox-group">
-            <label class="checkbox-item">
-              <input type="checkbox" id="add-virtual" onchange="calcular()">
-              Sesiones virtuales en tiempo real incluidas
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" id="add-informe" onchange="calcular()">
-              Informe ejecutivo para stakeholders (PDF)
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" id="add-seguimiento" onchange="calcular()">
-              Seguimiento post-entrega (30 días)
-            </label>
-          </div>
+    <div class="pub-grid">
+      <div class="pub-card reveal">
+        <div class="pub-cover pc1"><span class="pub-cover-title">Vida Laboral<br>Antes y Después<br>de la Jornada</span></div>
+        <div class="pub-body">
+          <span class="pub-date">Febrero 2025</span>
+          <h3 class="pub-title">Vida Laboral Antes y Después de la Jornada</h3>
+          <p class="pub-desc">El trabajo no termina al cerrar la computadora. Reflexión desde la Antropología del Trabajo sobre la desconexión imposible y cómo el empleo moldea nuestra vida cotidiana.</p>
+          <a class="pub-dl" href="01_Febrero_Vida_laboral.pdf" download>Descargar PDF</a>
         </div>
       </div>
-
-      <!-- Result -->
-      <div>
-        <div class="result-card">
-          <p class="result-title">Estimación orientativa</p>
-          <p class="result-service" id="res-servicio">Consultoría en Investigación Social — Estándar</p>
-
-          <div class="result-row">
-            <span class="result-row-label">Servicio base</span>
-            <span class="result-row-val" id="res-base">—</span>
-          </div>
-          <div class="result-row">
-            <span class="result-row-label">Ajuste por duración</span>
-            <span class="result-row-val" id="res-duracion">—</span>
-          </div>
-          <div class="result-row" id="row-adicionales" style="display:none;">
-            <span class="result-row-label">Adicionales</span>
-            <span class="result-row-val" id="res-adicionales">—</span>
-          </div>
-
-          <div class="result-total">
-            <span class="result-total-label">Inversión estimada</span>
-            <span class="result-total-val" id="res-total">$0 USD</span>
-          </div>
-
-          <p class="result-disclaimer">
-            Esta estimación es orientativa. El precio final depende del alcance específico, 
-            número de participantes, ubicación y condiciones del proyecto.
-          </p>
-          <a class="result-cta" id="res-cta" href="mailto:d.salgado.lpz@gmail.com?subject=Cotización de proyecto">
-            Solicitar propuesta formal →
-          </a>
+      <div class="pub-card reveal">
+        <div class="pub-cover pc2"><span class="pub-cover-title">Empleabilidad<br>¿Ilusión u<br>Oportunidad?</span></div>
+        <div class="pub-body">
+          <span class="pub-date">Agosto 2022</span>
+          <h3 class="pub-title">Perspectivas de Empleabilidad</h3>
+          <p class="pub-desc">La empleabilidad como fenómeno multifacético: dimensiones históricas, prácticas y culturales. ¿Oportunidad real o ilusión construida desde discursos dominantes?</p>
+          <a class="pub-dl" href="02_Perspectivas_de_Empleabilidad_.pdf" download>Descargar PDF</a>
+        </div>
+      </div>
+      <div class="pub-card reveal">
+        <div class="pub-cover pc3"><span class="pub-cover-title">Bienestar<br>Laboral:<br>Sujeciones o<br>Posibilidades</span></div>
+        <div class="pub-body">
+          <span class="pub-date">Serie en curso</span>
+          <h3 class="pub-title">Bienestar Laboral — Sujeciones o Posibilidades</h3>
+          <p class="pub-desc">¿La flexibilidad laboral es virtud o precarización encubierta? Análisis de las zonas grises donde el trabajo oscila entre sujeción y posibilidad.</p>
+          <a class="pub-dl" href="03_Bienestar_Laboral.pdf" download>Descargar PDF</a>
+        </div>
+      </div>
+      <div class="pub-card reveal">
+        <div class="pub-cover pc4"><span class="pub-cover-title">Violencia<br>Estructural<br>en el Trabajo</span></div>
+        <div class="pub-body">
+          <span class="pub-date">Serie en curso</span>
+          <h3 class="pub-title">Violencia Estructural en el Trabajo</h3>
+          <p class="pub-desc">Lo que no se nombra también existe. Estudio de las formas de violencia que pasan desapercibidas en las dinámicas laborales cotidianas.</p>
+          <a class="pub-dl" href="Violencia_estructural_.pdf" download>Descargar PDF</a>
         </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- PROFILE -->
-<section id="perfil">
-  <div class="perfil-inner">
-    <div class="reveal">
-      <span class="section-label-light">03 — Perfil</span>
-      <h2 class="perfil-h2">Antropólogo social aplicado al mundo del trabajo</h2>
-      <p class="perfil-body">
-        Egresado de la Escuela Nacional de Antropología e Historia (ENAH, México). 
-        Fundador de Sintropía Social, consultora de investigación social orientada a organizaciones 
-        civiles y empresas. Mi metodología integra la descripción densa geertziana con análisis 
-        cuantitativo aplicado, situando los hallazgos dentro de sistemas culturales más amplios.
-      </p>
-      <p class="deliver-label" style="margin-bottom:0.75rem;">Publicaciones</p>
-      <ul class="pub-list">
-        <li class="pub-item"><span class="pub-year">2024</span><em>Aprender educando</em> — Liderazgo educativo y práctica docente</li>
-        <li class="pub-item"><span class="pub-year">2023</span><em>Análisis Conecta Empleo</em> — Mercados laborales y empleabilidad</li>
-        <li class="pub-item"><span class="pub-year">2021</span><em>Juventud tecnológica</em> — Jóvenes, trabajo e identidad digital</li>
-      </ul>
-    </div>
-    <div class="reveal">
-      <span class="section-label-light">Áreas de especialidad</span>
-      <ul class="spec-list">
-        <li class="spec-item"><span class="spec-dot"></span>Mercados laborales en América Latina</li>
-        <li class="spec-item"><span class="spec-dot"></span>Etnografía digital y análisis cultural</li>
-        <li class="spec-item"><span class="spec-dot"></span>Inteligencia artificial y transformación del empleo</li>
-        <li class="spec-item"><span class="spec-dot"></span>Liderazgo educativo e intervención escolar</li>
-        <li class="spec-item"><span class="spec-dot"></span>Intervención comunitaria y organizacional</li>
-        <li class="spec-item"><span class="spec-dot"></span>Metodología cualitativa y mixta</li>
-        <li class="spec-item"><span class="spec-dot"></span>Diseño de talleres y formación corporativa</li>
-      </ul>
+  <!-- LinkedIn strip -->
+  <div class="li-strip">
+    <div class="li-inner reveal">
+      <span class="eyebrow" style="color:#a78bfa;margin-bottom:.5rem;">Contenido semanal</span>
+      <h2 class="li-h2">Reflexiones en LinkedIn</h2>
+      <p class="li-sub">Cada semana publico análisis, tendencias y reflexiones sobre trabajo, educación e inteligencia artificial en América Latina.</p>
+      <div class="li-cards">
+        <div class="li-card">
+          <span class="li-tag">Vida laboral</span>
+          <p class="li-text">El trabajo no es solo lo que haces en 8 horas. Es lo que piensas al despertar, lo que sientes al salir, lo que cargas al llegar a casa. La frontera entre tiempo laboral y tiempo personal es más frágil de lo que creemos...</p>
+          <a class="li-link" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Leer en LinkedIn →</a>
+        </div>
+        <div class="li-card">
+          <span class="li-tag">Empleabilidad</span>
+          <p class="li-text">¿La empleabilidad es una oportunidad o una ilusión? Cuando la miramos solo desde el esfuerzo individual, dejamos fuera el contexto y las estructuras que determinan el acceso real al trabajo...</p>
+          <a class="li-link" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Leer en LinkedIn →</a>
+        </div>
+        <div class="li-card">
+          <span class="li-tag">Mercados laborales</span>
+          <p class="li-text">60 mil registros después, la pregunta sigue siendo la misma: ¿cómo se traduce toda esa información en comprensión real del mercado laboral? Los datos hacen el camino, las interpretaciones alumbran el rumbo...</p>
+          <a class="li-link" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Leer en LinkedIn →</a>
+        </div>
+      </div>
+      <div class="li-cta">
+        <a class="btn btn-dk" style="background:var(--p);border-color:var(--p);" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Ver todas las publicaciones →</a>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- CONTACT -->
-<section id="contacto">
-  <div class="contact-inner reveal">
-    <p class="section-label" style="justify-content:center;display:block;text-align:center;">04 — Contacto</p>
-    <h2 class="contact-h2">¿Tienes un<br>proyecto<br><em>en mente?</em></h2>
-    <p class="contact-sub">Escríbeme para explorar cómo podemos trabajar juntos. Respondo en menos de 48 horas.</p>
-    <div class="contact-actions">
-      <a class="btn-primary" href="mailto:d.salgado.lpz@gmail.com">Enviar correo</a>
-      <a class="btn-ghost" href="#cotizador">Cotizar proyecto</a>
+<!-- ══ PÁGINA: PORTAFOLIO + PERFIL ══ -->
+<div id="page-portafolio" class="page">
+  <div class="port-section">
+    <div class="port-intro reveal">
+      <span class="eyebrow" style="margin-bottom:.6rem;">03 — Portafolio y perfil</span>
+      <h2 class="sec-h2" style="margin-top:.4rem;">Proyectos e investigaciones</h2>
     </div>
-    <p class="contact-meta">d.salgado.lpz@gmail.com</p>
+    <div class="port-grid">
+      <div class="port-card reveal">
+        <div style="display:flex;justify-content:space-between;"><span class="port-type">Investigación</span><span class="port-year">2024</span></div>
+        <h3 class="port-title">Perfiles tecnológicos: trabajo, educación y capacitación</h3>
+        <p class="port-org">Red de Investigadores Latinoamericanos — REDILAT</p>
+        <p class="port-desc">Análisis de casi diez mil respuestas de usuarias/os de Conecta Empleo. Identifica perfiles, motivaciones y dinámicas de empleabilidad en México.</p>
+        <a class="port-link" href="https://revistalatam.redilat.org/index.php/lt/article/view/libro-resumenes-congreso-cientifico-redilat/4271" target="_blank">Ver publicación →</a>
+      </div>
+      <div class="port-card reveal">
+        <div style="display:flex;justify-content:space-between;"><span class="port-type">Investigación</span><span class="port-year">2023</span></div>
+        <h3 class="port-title">Capacitación para el Empleo: de lo presencial a lo online</h3>
+        <p class="port-org">UAM — Revista Reencuentro</p>
+        <p class="port-desc">Analiza cómo la pandemia aceleró la transformación educativa y laboral, evidenciando la necesidad de competencias híbridas en México.</p>
+        <a class="port-link" href="https://reencuentro.xoc.uam.mx/index.php/reencuentro/article/view/1179/1106" target="_blank">Ver publicación →</a>
+      </div>
+      <div class="port-card reveal">
+        <div style="display:flex;justify-content:space-between;"><span class="port-type">Investigación</span><span class="port-year">2024</span></div>
+        <h3 class="port-title">Aprender educando en tiempos prefabricados</h3>
+        <p class="port-org">Religación Press</p>
+        <p class="port-desc">Reflexión sobre la influencia de los modelos de producción capitalista en la cultura del trabajo y las prácticas educativas contemporáneas.</p>
+        <a class="port-link" href="https://press.religacion.com/index.php/press/catalog/view/190/605/805" target="_blank">Ver publicación →</a>
+      </div>
+      <div class="port-card reveal">
+        <div style="display:flex;justify-content:space-between;"><span class="port-type">Investigación</span><span class="port-year">2019</span></div>
+        <h3 class="port-title">Educación de calle, juventudes y espacio público</h3>
+        <p class="port-org">Universidad de Colima</p>
+        <p class="port-desc">Metodología de trabajo de calle y práctica social en la colonia Pensil. Intervención comunitaria con enfoque en orientación vocacional y empleabilidad.</p>
+        <a class="port-link" href="https://ww.ucol.mx/content/publicacionesenlinea/adjuntos/Educacion-y-jovenes_512.pdf" target="_blank">Ver publicación →</a>
+      </div>
+      <div class="port-card reveal">
+        <div style="display:flex;justify-content:space-between;"><span class="port-type">Consultoría</span><span class="port-year">2022</span></div>
+        <h3 class="port-title">Evaluación de Impacto y Teoría de Cambio</h3>
+        <p class="port-org">Monstritos AC</p>
+        <p class="port-desc">Diseño y evaluación de teoría de cambio y marco lógico. Proceso de recaudación de fondos con análisis de impacto social para bienestar socioemocional infantil.</p>
+        <a class="port-link" href="mailto:d.salgado.lpz@gmail.com?subject=Solicito información portafolio">Solicitar información →</a>
+      </div>
+      <div class="port-card reveal">
+        <div style="display:flex;justify-content:space-between;"><span class="port-type">Ponencias</span><span class="port-year">2019–2024</span></div>
+        <h3 class="port-title">Conferencias y ponencias académicas</h3>
+        <p class="port-org">IPN · UAM · UPY · Servicio Nacional de Empleo</p>
+        <p class="port-desc">Habilidades para el Empleo (IPN) · Empleabilidad 4.0 (UPY) · VI Seminario Internacional de Juventudes en América Latina · Metodologías Ágiles (2022).</p>
+        <a class="port-link" href="mailto:d.salgado.lpz@gmail.com?subject=Invitación a conferencia">Invitar a conferencia →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Perfil dark -->
+  <div class="perfil-section">
+    <div class="perfil-inner">
+      <div class="reveal">
+        <span class="sec-lbl-lt">Perfil</span>
+        <h2 class="perf-h2">Antropólogo social aplicado al mundo del trabajo</h2>
+        <p class="perf-body">Egresado de la Escuela Nacional de Antropología e Historia (ENAH, México). Fundador de Sintropía Social, consultora de investigación social orientada a organizaciones civiles y empresas. Mi metodología integra la descripción densa geertziana con análisis cuantitativo aplicado.</p>
+        <span class="sec-lbl-lt">Publicaciones académicas</span>
+        <ul style="list-style:none;">
+          <li class="pub-item-d"><span class="pub-y">2024</span><em>Aprender educando</em> — Liderazgo educativo y práctica docente</li>
+          <li class="pub-item-d"><span class="pub-y">2023</span><em>Análisis Conecta Empleo</em> — Mercados laborales y empleabilidad</li>
+          <li class="pub-item-d"><span class="pub-y">2021</span><em>Juventud tecnológica</em> — Jóvenes, trabajo e identidad digital</li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <span class="sec-lbl-lt">Áreas de especialidad</span>
+        <ul style="list-style:none;">
+          <li class="spec-item"><span class="spec-dot"></span>Mercados laborales en América Latina</li>
+          <li class="spec-item"><span class="spec-dot"></span>Etnografía digital y análisis cultural</li>
+          <li class="spec-item"><span class="spec-dot"></span>Inteligencia artificial y transformación del empleo</li>
+          <li class="spec-item"><span class="spec-dot"></span>Liderazgo educativo e intervención escolar</li>
+          <li class="spec-item"><span class="spec-dot"></span>Intervención comunitaria y organizacional</li>
+          <li class="spec-item"><span class="spec-dot"></span>Metodología cualitativa y mixta</li>
+          <li class="spec-item"><span class="spec-dot"></span>Diseño de talleres y formación corporativa</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PÁGINA: CONTACTO + COTIZADOR ══ -->
+<div id="page-contacto" class="page">
+  <div class="contacto-hero reveal">
+    <span class="eyebrow" style="display:block;text-align:center;margin-bottom:.8rem;">04 — Contacto</span>
+    <h2 class="con-h2">¿Tienes un<br>proyecto<br><em>en mente?</em></h2>
+    <p class="con-sub">Escríbeme para explorar cómo podemos trabajar juntos. Respondo en menos de 48 horas.</p>
+    <div class="con-actions">
+      <a class="btn btn-dk" href="mailto:d.salgado.lpz@gmail.com">Enviar correo</a>
+      <a class="btn btn-ghost" href="#cotizador-anchor">Cotizar proyecto</a>
+    </div>
+    <p class="con-meta">d.salgado.lpz@gmail.com</p>
     <ul class="social-links">
       <li><a href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">LinkedIn</a></li>
       <li><a href="https://www.instagram.com/davidsalgado_lpz/" target="_blank">Instagram</a></li>
-      <li><a href="https://www.tiktok.com/@davidsalgado76?_t=ZS-8yjkuoQCRVa&amp;_r=1" target="_blank">TikTok</a></li>
+      <li><a href="https://www.tiktok.com/@davidsalgado76?_t=ZS-8yjkuoQCRVa&_r=1" target="_blank">TikTok</a></li>
     </ul>
   </div>
-</section>
 
-<footer>
-  © 2025 David Salgado — Investigación en mercados laborales y futuro del trabajo
-</footer>
+  <div class="cotizador-section" id="cotizador-anchor">
+    <div class="cot-inner">
+      <div class="cot-head reveal">
+        <span class="eyebrow" style="margin-bottom:.4rem;">Cotizador estimado</span>
+        <h2>¿Cuánto cuesta tu proyecto?</h2>
+        <p style="font-size:.85rem;color:var(--soft);margin-top:.5rem;font-weight:300;">Configura los parámetros y obtén una estimación orientativa. Sin compromiso. Precios en USD, referenciales.</p>
+      </div>
+      <div class="cot-grid">
+        <div>
+          <div class="form-g">
+            <label class="form-lbl" for="sel-s">Tipo de servicio</label>
+            <select class="form-sel" id="sel-s" onchange="calc()">
+              <option value="investigacion">Consultoría en Investigación Social</option>
+              <option value="etnografia">Análisis Etnográfico y Digital</option>
+              <option value="taller">Taller o Capacitación</option>
+              <option value="conferencia">Conferencia</option>
+            </select>
+          </div>
+          <div class="form-g">
+            <label class="form-lbl" for="sel-a">Alcance</label>
+            <select class="form-sel" id="sel-a" onchange="calc()">
+              <option value="basico">Básico — exploración inicial</option>
+              <option value="estandar" selected>Estándar — proyecto completo</option>
+              <option value="avanzado">Avanzado — con seguimiento ejecutivo</option>
+            </select>
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">Duración: <span id="dur-v" class="range-val">4 semanas</span></label>
+            <input class="form-range" type="range" id="sel-d" min="1" max="16" value="4" oninput="document.getElementById('dur-v').textContent=this.value+' semanas';calc()">
+          </div>
+          <div class="form-g">
+            <label class="form-lbl">Adicionales</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" id="add-v" onchange="calc()"> Sesiones virtuales en tiempo real</label>
+              <label class="check-item"><input type="checkbox" id="add-i" onchange="calc()"> Informe ejecutivo para stakeholders</label>
+              <label class="check-item"><input type="checkbox" id="add-s" onchange="calc()"> Seguimiento post-entrega (30 días)</label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="result-card">
+            <p class="res-lbl">Estimación orientativa</p>
+            <p class="res-svc" id="r-svc">Consultoría en Investigación Social — Estándar</p>
+            <div class="res-row"><span class="res-row-lbl">Servicio base</span><span class="res-row-val" id="r-base">—</span></div>
+            <div class="res-row"><span class="res-row-lbl">Ajuste por duración</span><span class="res-row-val" id="r-dur">—</span></div>
+            <div class="res-row" id="r-add-row" style="display:none;"><span class="res-row-lbl">Adicionales</span><span class="res-row-val" id="r-add">—</span></div>
+            <div class="res-total">
+              <span class="res-total-lbl">Inversión estimada</span>
+              <span class="res-total-val" id="r-total">$0 USD</span>
+            </div>
+            <p class="res-disc">Estimación orientativa. El precio final depende del alcance, participantes, ubicación y condiciones del proyecto.</p>
+            <a class="res-cta" id="r-cta" href="mailto:d.salgado.lpz@gmail.com">Solicitar propuesta formal →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2025 David Salgado — Investigación en mercados laborales y futuro del trabajo</footer>
 
 <script>
-  // ── SCROLL REVEAL ──
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-  // ── SERVICE ACCORDION ──
-  function toggleService(header) {
-    const body   = header.nextElementSibling;
-    const toggle = header.querySelector('.service-toggle');
-    const isOpen = body.classList.contains('open');
-    document.querySelectorAll('.service-body').forEach(b => b.classList.remove('open'));
-    document.querySelectorAll('.service-toggle').forEach(t => t.classList.remove('open'));
-    if (!isOpen) { body.classList.add('open'); toggle.classList.add('open'); }
-  }
-
-  // ── COTIZADOR ──
-  const BASE = {
-    investigacion: { basico: 800,  estandar: 1800, avanzado: 3200 },
-    etnografia:    { basico: 700,  estandar: 1600, avanzado: 2800 },
-    taller:        { basico: 400,  estandar: 900,  avanzado: 1600 },
-    conferencia:   { basico: 300,  estandar: 600,  avanzado: 1000 },
-  };
-  const NAMES = {
-    investigacion: 'Consultoría en Investigación Social',
-    etnografia:    'Análisis Etnográfico y Digital',
-    taller:        'Taller o Capacitación',
-    conferencia:   'Conferencia',
-  };
-  const ALCANCE_NAMES = { basico: 'Básico', estandar: 'Estándar', avanzado: 'Avanzado' };
-
-  function calcular() {
-    const servicio  = document.getElementById('sel-servicio').value;
-    const alcance   = document.getElementById('sel-alcance').value;
-    const semanas   = parseInt(document.getElementById('sel-duracion').value);
-    const addVirt   = document.getElementById('add-virtual').checked;
-    const addInf    = document.getElementById('add-informe').checked;
-    const addSeg    = document.getElementById('add-seguimiento').checked;
-
-    const base      = BASE[servicio][alcance];
-    const durMult   = 1 + (semanas - 4) * 0.04;
-    const durAdj    = Math.round(base * (durMult - 1));
-    let   adicional = 0;
-    if (addVirt) adicional += 200;
-    if (addInf)  adicional += 150;
-    if (addSeg)  adicional += 300;
-    const total = base + durAdj + adicional;
-
-    document.getElementById('res-servicio').textContent  = `${NAMES[servicio]} — ${ALCANCE_NAMES[alcance]}`;
-    document.getElementById('res-base').textContent      = `$${base.toLocaleString()} USD`;
-    document.getElementById('res-duracion').textContent  = durAdj >= 0 ? `+$${durAdj.toLocaleString()} USD` : `-$${Math.abs(durAdj).toLocaleString()} USD`;
-    const rowAd = document.getElementById('row-adicionales');
-    if (adicional > 0) {
-      rowAd.style.display = 'flex';
-      document.getElementById('res-adicionales').textContent = `+$${adicional.toLocaleString()} USD`;
-    } else { rowAd.style.display = 'none'; }
-    document.getElementById('res-total').textContent = `$${total.toLocaleString()} USD`;
-
-    const subject = encodeURIComponent(`Cotización: ${NAMES[servicio]} — ${ALCANCE_NAMES[alcance]}`);
-    const body_   = encodeURIComponent(`Hola David,\n\nMe interesa cotizar el servicio de ${NAMES[servicio]} (alcance ${ALCANCE_NAMES[alcance]}, ~${semanas} semanas).\n\nEstimación generada: $${total.toLocaleString()} USD.\n\nQuedo en espera de tu propuesta formal.`);
-    document.getElementById('res-cta').href = `mailto:d.salgado.lpz@gmail.com?subject=${subject}&body=${body_}`;
-  }
-
-  calcular();
+// PAGE SYSTEM
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const page=document.getElementById('page-'+id);
+  if(page){page.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+  const navLink=document.getElementById('nav-'+id);
+  if(navLink)navLink.classList.add('active');
+  // trigger reveals
+  setTimeout(()=>{
+    page.querySelectorAll('.reveal').forEach(el=>{
+      if(!el.classList.contains('in'))obs.observe(el);
+    });
+  },100);
+}
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:.07});
+document.querySelectorAll('#page-inicio .reveal').forEach(el=>obs.observe(el));
+// SERVICE ACCORDION
+function toggleSvc(h){const body=h.nextElementSibling,tog=h.querySelector('.svc-tog'),open=body.classList.contains('open');document.querySelectorAll('.svc-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.svc-tog').forEach(t=>t.classList.remove('open'));if(!open){body.classList.add('open');tog.classList.add('open');}}
+// COTIZADOR
+const BASE={investigacion:{basico:800,estandar:1800,avanzado:3200},etnografia:{basico:700,estandar:1600,avanzado:2800},taller:{basico:400,estandar:900,avanzado:1600},conferencia:{basico:300,estandar:600,avanzado:1000}};
+const NAMES={investigacion:'Consultoría en Investigación Social',etnografia:'Análisis Etnográfico y Digital',taller:'Taller o Capacitación',conferencia:'Conferencia'};
+const AN={basico:'Básico',estandar:'Estándar',avanzado:'Avanzado'};
+function calc(){const s=document.getElementById('sel-s').value,a=document.getElementById('sel-a').value,d=parseInt(document.getElementById('sel-d').value),av=document.getElementById('add-v').checked,ai=document.getElementById('add-i').checked,as_=document.getElementById('add-s').checked,base=BASE[s][a],dur=Math.round(base*(1+(d-4)*0.04)-base);let add=0;if(av)add+=200;if(ai)add+=150;if(as_)add+=300;const total=base+dur+add;document.getElementById('r-svc').textContent=NAMES[s]+' — '+AN[a];document.getElementById('r-base').textContent='$'+base.toLocaleString()+' USD';document.getElementById('r-dur').textContent=(dur>=0?'+':'')+' $'+Math.abs(dur).toLocaleString()+' USD';const ra=document.getElementById('r-add-row');if(add>0){ra.style.display='flex';document.getElementById('r-add').textContent='+$'+add.toLocaleString()+' USD';}else ra.style.display='none';document.getElementById('r-total').textContent='$'+total.toLocaleString()+' USD';const sub=encodeURIComponent('Cotización: '+NAMES[s]+' — '+AN[a]),bod=encodeURIComponent('Hola David,\n\nMe interesa cotizar '+NAMES[s]+' ('+AN[a]+', ~'+d+' semanas).\n\nEstimación: $'+total.toLocaleString()+' USD.');document.getElementById('r-cta').href='mailto:d.salgado.lpz@gmail.com?subject='+sub+'&body='+bod;}
+calc();
 </script>
 </body>
 </html>
