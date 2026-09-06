@@ -37,7 +37,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .sstat-l{font-size:.65rem;color:rgba(237,233,254,.4);margin-top:.15rem;}
 .sb-nav{padding:1rem 0;flex:1;}
 .nav-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(237,233,254,.3);padding:.5rem 1.5rem .4rem;}
-.nav-item{display:block;padding:.6rem 1.5rem;font-size:.82rem;color:rgba(237,233,254,.65);cursor:pointer;border:none;background:none;text-align:left;width:100%;transition:all .15s;font-family:'Lato',sans-serif;}
+.nav-item{display:block;padding:.6rem 1.5rem;font-size:.82rem;color:rgba(237,233,254,.65);cursor:pointer;border:none;background:none;text-align:left;width:100%;transition:all .15s;font-family:'Lato',sans-serif;text-decoration:none;}
 .nav-item:hover{color:#fff;background:rgba(255,255,255,.05);}
 .nav-item.on{color:#fff;background:rgba(255,255,255,.09);border-left:2px solid var(--pm);}
 .ni{display:inline-block;width:18px;margin-right:.5rem;opacity:.6;font-size:.8rem;}
@@ -166,7 +166,13 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
     <div class="sstat"><div class="sstat-n" id="stF">0</div><div class="sstat-l">Fuentes</div></div>
   </div>
   <nav class="sb-nav">
-    <div class="nav-label">Explorar</div>
+    <div class="nav-label">Sitio principal</div>
+    <a class="nav-item" href="index.html#inicio">Inicio</a>
+    <a class="nav-item" href="index.html#servicios">Servicios</a>
+    <a class="nav-item" href="index.html#publicaciones">Publicaciones</a>
+    <a class="nav-item" href="index.html#portafolio">Portafolio</a>
+    <a class="nav-item" href="index.html#contacto">Contacto</a>
+    <div class="nav-label" style="margin-top:1rem;">Explorar</div>
     <button class="nav-item on" onclick="goTab('historial',this)"><span class="ni">▤</span>Historial</button>
     <button class="nav-item" onclick="goTab('semanal',this)"><span class="ni">◷</span>Resumen semanal</button>
     <button class="nav-item" onclick="goTab('buscar',this)"><span class="ni">⌕</span>Buscar con IA</button>
