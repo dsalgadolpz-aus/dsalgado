@@ -14,6 +14,6 @@ description: La publicación reflexiona sobre cómo la flexibilidad laboral, la
   herramienta, sino un espacio donde se construyen nuevas prácticas sociales,
   mientras que la seguridad social debería convertirse en una condición común
   del trabajo y no en un privilegio
-pdf: /pdfs/01_flexibilidad-y-rigidez-intervenciones-sociales.pdf
-cover: /covers/captura-de-pantalla-2026-09-06-a-la-s-10.12.55 a.m..png
+pdf: pdfs/01_flexibilidad-y-rigidez-intervenciones-sociales.pdf
+cover: covers/flexibilidad-y-rigidez.png
 ---
