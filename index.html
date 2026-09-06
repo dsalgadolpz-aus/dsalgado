@@ -939,7 +939,7 @@ async function loadMinilibros() {
     if (!res.ok) return; // fallback to static cards already in HTML
     const files = await res.json();
     const mdFiles = files.filter(f => f.name.endsWith('.md'));
-    if (!mdFiles.length) return;
+    if (!mdFiles.length) { console.log('No dynamic minilibros found, keeping static cards.'); return; }
 
     // Fetch each markdown file
     const minilibros = [];
@@ -957,6 +957,7 @@ async function loadMinilibros() {
     // Inject into pub-grid
     const grid = document.querySelector('#publicaciones .pub-grid');
     if (!grid) return;
+    if (!minilibros.length) { console.log('Parsed 0 minilibros, keeping static.'); return; }
     grid.innerHTML = '';
 
     const covers = ['pc1','pc2','pc3','pc4'];
