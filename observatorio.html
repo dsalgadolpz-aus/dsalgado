@@ -572,46 +572,55 @@ function goTab(t,el) {
 document.getElementById('nFe').value = new Date().toISOString().split('T')[0];
 
 // ── SEED DATA from Google Sheet (last 5 entries) ──
-const SEED_NOTAS = [{"id": "seed_1", "titulo": "Pattaya, la 'ciudad del pecado' de Tailandia en la que desembarcaron 5.000 marines de EE.UU. tras pasar más de ocho meses en alta mar", "fecha": "2026-09-05", "fuente": "BBC Mundo", "ref": "https://www.bbc.com/mundo/articles/c4gre5kmgg4o", "resumen": "Tras 250 días en alta mar, el USS Abraham Lincoln atracó cerca de Pattaya, una ciudad conocida por una animada vida nocturna y el turismo sexual.", "analisis": "La llegada del USS Abraham Lincoln a Pattaya reactiva una relación histórica entre el ejército estadounidense y Tailandia que se remonta a la Guerra de Vietnam. El impacto económico es inmediato y masivo, pero también revela las contradicciones del turismo sexual y la economía informal que rodea las bases militares. ¿Quién se beneficia realmente de estos 5,000 marineros con dinero en el bolsillo? La ciudad intenta reinventarse como destino familiar, pero la historia pesa: fueron los soldados quienes la construyeron tal como es.", "pais": "Internacional", "indicador": "Trabajo digno", "auto": false, "fechaR": "2026-09-05T00:00:00.000Z"}, {"id": "seed_2", "titulo": "Quién es Alejandro Betancourt, el polémico 'bolichico' multimillonario detrás del acuerdo petrolero entre EE.UU. y Venezuela", "fecha": "2026-09-05", "fuente": "BBC Mundo", "ref": "https://www.bbc.com/mundo/articles/c8jd037kg19o", "resumen": "Pese a las dudas sobre el origen de su fortuna y sus vínculos con el chavismo, Washington eligió a este empresario para explotar los 17 yacimientos petrolíferos incluidos en el pacto con el gobierno interino de Delcy Rodríguez.", "analisis": "La figura de Betancourt condensa un patrón histórico en América Latina: el capitalismo de compadres que transforma el Estado en botín. Los 'bolichicos' no son una anomalía venezolana — son el síntoma de sistemas políticos donde la renta extractiva se distribuye entre lealtades, no entre capacidades. La pregunta que queda sin respuesta es quién no aparece en este acuerdo: los trabajadores petroleros venezolanos, los que perdieron empleos, los que viven en las comunidades donde están los yacimientos.", "pais": "América Latina", "indicador": "Trabajo digno", "auto": false, "fechaR": "2026-09-05T00:00:00.000Z"}, {"id": "seed_3", "titulo": "'Un asesinato literario': cómo 'Life of M' desató un escándalo en Hollywood que involucra a Natalie Portman", "fecha": "2026-09-05", "fuente": "BBC Mundo", "ref": "https://www.bbc.com/mundo/articles/cvgye5g46ylo", "resumen": "La nueva novela de Rachel Cusk narra la historia de una actriz de ficción llamada M, cuyos detalles biográficos guardan un parecido sorprendente con los de la estrella de cine Natalie Portman.", "analisis": "Más allá del escándalo, este caso interroga los límites del trabajo creativo y la propiedad de la experiencia vivida. ¿A quién pertenece la historia de una mujer pública? Cusk usa la vida de Portman como materia prima — un acto que en el mundo laboral llamaríamos apropiación sin reconocimiento. La frialdad clínica con que retrata a 'M' reproduce, paradójicamente, lo mismo que critica: vaciar a una mujer de su agencia para convertirla en objeto de análisis.", "pais": "Internacional", "indicador": "Precarización", "auto": false, "fechaR": "2026-09-05T00:00:00.000Z"}, {"id": "seed_4", "titulo": "Por qué han disminuido tan drásticamente las muertes por sobredosis de fentanilo en EE.UU.", "fecha": "2026-09-05", "fuente": "BBC Mundo", "ref": "https://www.bbc.com/mundo/articles/cgjqv1p9n8lo", "resumen": "Las cifras de muertes por fentanilo han caído en picado, pero las razones detrás de este fenómeno no están claras.", "analisis": "La crisis del fentanilo es también una crisis laboral. Afecta desproporcionadamente a trabajadores de sectores precarizados — construcción, manufactura, servicios — donde el dolor físico crónico y la falta de atención médica abren la puerta a los opioides. La reducción de muertes es una buena noticia, pero la pregunta incómoda es cuántas de esas personas siguen trabajando en condiciones que generan el dolor que los llevó ahí.", "pais": "Internacional", "indicador": "Trabajo digno", "auto": false, "fechaR": "2026-09-05T00:00:00.000Z"}, {"id": "seed_5", "titulo": "'Cambiará el mundo': la revolución de las máquinas que se gesta en China y va mucho más allá de los robots humanoides", "fecha": "2026-09-05", "fuente": "BBC Mundo", "ref": "https://www.bbc.com/mundo/articles/c4g7enmvjrdo", "resumen": "La implementación de los robots en muchos aspectos industriales en China está transformando la producción a una escala sin precedentes.", "analisis": "China automatiza para compensar una crisis demográfica y el aumento de salarios — es decir, automatiza precisamente porque los trabajadores lograron cierto poder. El debate global sobre automatización suele centrarse en qué empleos desaparecen, pero raramente pregunta qué empleos se crean, en qué condiciones y para quién. En América Latina, donde la manufactura de bajo costo ha sido refugio del empleo informal, esta revolución china llegará como onda expansiva antes de que tengamos respuestas.", "pais": "Internacional", "indicador": "Automatización", "auto": false, "fechaR": "2026-09-05T00:00:00.000Z"}];
+const SEED_NOTAS = []; // sin datos de ejemplo — solo se usa si el Sheet no responde
 
 
 // ── GOOGLE SHEET LOADER ──
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSjJPkWPUC_prGPdM_6tHCXVWMiwvdtroOF3J_1KruWNn0nNOZ9Q1PNVGNDlaJclyMaqjnji8GU2zn6/pub?gid=0&single=true&output=csv';
 
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  // Parse header
-  const headers = parseCSVLine(lines[0]);
-  const results = [];
-  for (let i = 1; i < lines.length; i++) {
-    if (!lines[i].trim()) continue;
-    const vals = parseCSVLine(lines[i]);
-    const row = {};
-    headers.forEach((h, idx) => { row[h.trim()] = (vals[idx] || '').trim(); });
-    results.push(row);
-  }
-  return results;
-}
-
-function parseCSVLine(line) {
-  const result = [];
-  let current = '';
+  // Full RFC4180-style parser: handles quoted fields that contain
+  // embedded commas AND newlines (common when a Sheet cell has a
+  // multi-line "Resumen" or "Análisis Social"). Parsing line-by-line
+  // first (the old approach) breaks as soon as a quoted field spans
+  // more than one line, which shifts every column after it.
+  const t = text.replace(/\r\n/g, '\n');
+  const rows = [];
+  let row = [];
+  let field = '';
   let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i];
-    if (ch === '"') {
-      if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
-      else { inQuotes = !inQuotes; }
-    } else if (ch === ',' && !inQuotes) {
-      result.push(current);
-      current = '';
+  for (let i = 0; i < t.length; i++) {
+    const ch = t[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (t[i + 1] === '"') { field += '"'; i++; }
+        else { inQuotes = false; }
+      } else {
+        field += ch;
+      }
+    } else if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ',') {
+      row.push(field); field = '';
+    } else if (ch === '\n') {
+      row.push(field); rows.push(row); row = []; field = '';
     } else {
-      current += ch;
+      field += ch;
     }
   }
-  result.push(current);
-  return result;
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  if (rows.length < 2) return [];
+
+  const headers = rows[0].map(h => h.trim());
+  const results = [];
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (r.length === 1 && r[0].trim() === '') continue; // skip blank lines
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); });
+    results.push(obj);
+  }
+  return results;
 }
 
 function sheetRowToNota(row, idx) {
@@ -663,15 +672,16 @@ async function loadFromSheet() {
 
 async function loadWithSeed() {
   await load();
-  // If no notes exist yet, inject seed data as fallback
-  if (notas.length === 0) {
+  apF();
+  // Always sync from Sheet first
+  await loadFromSheet();
+  // Only fall back to seed data if the Sheet truly never returned anything
+  if (notas.length === 0 && SEED_NOTAS.length) {
     notas = SEED_NOTAS;
     await save();
     upS();
     apF();
   }
-  // Always sync from Sheet
-  await loadFromSheet();
 }
 
 loadWithSeed();
