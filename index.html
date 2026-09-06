@@ -248,7 +248,6 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
 .pdf-no-support p{font-size:.9rem;color:#aaa;line-height:1.6;max-width:360px;}
 
 </style>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
@@ -913,18 +912,6 @@ function closeViewer(){
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeViewer(); });
 </script>
 
-
-<script>
-if (window.netlifyIdentity) {
-  window.netlifyIdentity.on("init", user => {
-    if (!user) {
-      window.netlifyIdentity.on("login", () => {
-        document.location.href = "/admin/";
-      });
-    }
-  });
-}
-</script>
 
 <script>
 // ── DYNAMIC MINILIBROS from GitHub ──
