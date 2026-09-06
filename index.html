@@ -262,6 +262,7 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
       <li><a href="#" onclick="showPage('publicaciones');return false;" id="nav-publicaciones">Publicaciones</a></li>
       <li><a href="#" onclick="showPage('portafolio');return false;" id="nav-portafolio">Portafolio</a></li>
       <li><a href="#" onclick="showPage('contacto');return false;" id="nav-contacto">Contacto</a></li>
+      <li><a href="/observatorio" id="nav-observatorio" style="color:var(--pm);font-weight:700;">Observatorio ↗</a></li>
     </ul>
     <a class="nav-cta" href="#" onclick="showPage('contacto');return false;">Contactar</a>
   </div>
@@ -924,5 +925,97 @@ if (window.netlifyIdentity) {
   });
 }
 </script>
+
+<script>
+// ── DYNAMIC MINILIBROS from GitHub ──
+const REPO_OWNER = 'dsalgadolpz-aus';
+const REPO_NAME  = 'dsalgado';
+const BRANCH     = 'main';
+
+async function loadMinilibros() {
+  try {
+    const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/_minilibros?ref=${BRANCH}`;
+    const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+    if (!res.ok) return; // fallback to static cards already in HTML
+    const files = await res.json();
+    const mdFiles = files.filter(f => f.name.endsWith('.md'));
+    if (!mdFiles.length) return;
+
+    // Fetch each markdown file
+    const minilibros = [];
+    for (const file of mdFiles) {
+      const r = await fetch(file.download_url);
+      const text = await r.text();
+      const parsed = parseFrontmatter(text);
+      if (parsed) minilibros.push(parsed);
+    }
+    if (!minilibros.length) return;
+
+    // Sort by date descending
+    minilibros.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+    // Inject into pub-grid
+    const grid = document.querySelector('#publicaciones .pub-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const covers = ['pc1','pc2','pc3','pc4'];
+    minilibros.forEach((m, i) => {
+      const coverClass = covers[i % covers.length];
+      const pdfHref = m.pdf || '';
+      const coverImg = m.cover || '';
+      const card = document.createElement('div');
+      card.className = 'pub-card reveal';
+      if (pdfHref) card.onclick = () => openViewer(pdfHref, m.title || 'Minilibro');
+      card.innerHTML = `
+        <div class="pub-cover-img">
+          ${coverImg
+            ? `<img src="${coverImg}" alt="Portada ${m.title}" loading="lazy"/>`
+            : `<div class="pub-cover ${coverClass}" style="height:145px;display:flex;align-items:center;justify-content:center;padding:1.4rem;text-align:center;"><span class="pub-cover-title">${(m.title||'').toUpperCase()}</span></div>`
+          }
+          <div class="pub-cover-overlay"><span>Ver minilibro</span></div>
+        </div>
+        <div class="pub-body">
+          <span class="pub-date">${m.date || ''}</span>
+          <h3 class="pub-title">${m.title || ''}</h3>
+          <p class="pub-desc">${m.description || ''}</p>
+          <div class="pub-actions">
+            ${pdfHref ? `<button class="pub-view" onclick="event.stopPropagation();openViewer('${pdfHref}','${(m.title||'').replace(/'/g,"\'")}')">Leer</button>` : ''}
+            ${pdfHref ? `<a class="pub-dl" href="${pdfHref}" download onclick="event.stopPropagation()">Descargar PDF</a>` : ''}
+          </div>
+        </div>`;
+      grid.appendChild(card);
+      // Trigger reveal observer
+      setTimeout(() => { if (!card.classList.contains('in')) card.classList.add('in'); }, 100 * i);
+    });
+  } catch(err) {
+    console.warn('Minilibros dinámicos no disponibles, usando estáticos.', err);
+  }
+}
+
+function parseFrontmatter(text) {
+  const match = text.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return null;
+  const fm = {};
+  match[1].split('\n').forEach(line => {
+    const [key, ...vals] = line.split(':');
+    if (key && vals.length) fm[key.trim()] = vals.join(':').trim().replace(/^["']|["']$/g,'');
+  });
+  return fm;
+}
+
+// Load on publications page shown
+const _origShowPage = showPage;
+window.showPage = function(id) {
+  _origShowPage(id);
+  if (id === 'publicaciones') loadMinilibros();
+};
+
+// Also load if starting on publications
+if (document.getElementById('page-publicaciones')?.classList.contains('active')) {
+  loadMinilibros();
+}
+</script>
+
 </body>
 </html>

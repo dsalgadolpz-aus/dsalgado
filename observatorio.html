@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Observatorio del Trabajo — David Salgado</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --p:#6D28D9;--pm:#7C3AED;--pbg:#F5F3FF;--plt:#EDE9FE;
+  --o:#C45F00;--ink:#18181B;--soft:#52525B;--rule:#E4E4E7;
+  --paper:#FAFAF8;--dk:#13111C;--dkt:#EDE9FE;
+  --amber:#B8860B;--amber-bg:#FDF6E3;--amber-border:#D4A017;
+  --red:#8B2020;--green:#1A5C2A;--green-bg:#EAF2EC;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+@media(max-width:768px){.layout{grid-template-columns:1fr;}}
+
+/* SIDEBAR */
+.sidebar{background:var(--dk);color:var(--dkt);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;}
+@media(max-width:768px){.sidebar{position:static;height:auto;}}
+.sb-back{padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-back a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;text-decoration:none;transition:color .2s;}
+.sb-back a:hover{color:#fff;}
+.sb-brand{padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;line-height:1.25;}
+.sb-sub{font-size:.68rem;color:rgba(237,233,254,.4);margin-top:.3rem;letter-spacing:.06em;text-transform:uppercase;}
+.sb-stats{padding:1.1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.sstat-n{font-size:1.5rem;font-weight:700;color:var(--pm);line-height:1;}
+.sstat-l{font-size:.65rem;color:rgba(237,233,254,.4);margin-top:.15rem;}
+.sb-nav{padding:1rem 0;flex:1;}
+.nav-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(237,233,254,.3);padding:.5rem 1.5rem .4rem;}
+.nav-item{display:block;padding:.6rem 1.5rem;font-size:.82rem;color:rgba(237,233,254,.65);cursor:pointer;border:none;background:none;text-align:left;width:100%;transition:all .15s;font-family:'Lato',sans-serif;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.05);}
+.nav-item.on{color:#fff;background:rgba(255,255,255,.09);border-left:2px solid var(--pm);}
+.ni{display:inline-block;width:18px;margin-right:.5rem;opacity:.6;font-size:.8rem;}
+.sb-footer{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.07);}
+.sync-info{font-size:.68rem;color:rgba(237,233,254,.35);line-height:1.5;}
+.sync-btn{width:100%;margin-top:.6rem;padding:.55rem;background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:#a78bfa;border-radius:3px;font-size:.72rem;cursor:pointer;font-family:'Lato',sans-serif;transition:all .15s;}
+.sync-btn:hover{background:rgba(124,58,237,.35);}
+
+/* MAIN */
+.main{padding:0;overflow-x:hidden;}
+.panel{display:none;}
+.panel.on{display:block;}
+
+/* PAGE HEADER */
+.page-hdr{padding:2rem 2.5rem 1.5rem;border-bottom:1px solid var(--rule);}
+.page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--ink);}
+.page-sub{font-size:.85rem;color:var(--soft);margin-top:.3rem;}
+
+/* FILTROS */
+.filtros{padding:1.1rem 2.5rem;background:#f4f2ee;border-bottom:1px solid var(--rule);}
+.fg{display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end;}
+.fg-item label{font-size:.63rem;color:#aaa;display:block;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.06em;}
+.fg-item input,.fg-item select{height:32px;padding:0 .6rem;border:1px solid var(--rule);border-radius:3px;background:#fff;color:var(--ink);font-size:.82rem;font-family:'Lato',sans-serif;min-width:120px;}
+.fg-item input:focus,.fg-item select:focus{outline:2px solid var(--p);}
+.fg-item input{min-width:160px;}
+.btn{height:32px;padding:0 .9rem;border-radius:3px;border:1px solid var(--rule);background:#fff;color:var(--ink);font-size:.8rem;font-family:'Lato',sans-serif;cursor:pointer;transition:all .15s;}
+.btn:hover{background:#f0eef8;}
+.btn-ink{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.btn-ink:hover{background:var(--p);border-color:var(--p);}
+.btn-purple{background:var(--p);color:#fff;border-color:var(--p);}
+.btn-purple:hover{background:var(--pm);}
+.btn-amber{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border);}
+.btn-amber:hover{background:#F9EDBB;}
+.btn-sm{height:26px;padding:0 .7rem;font-size:.72rem;}
+.btn-danger{color:var(--red);border-color:rgba(139,32,32,.3);}
+.btn-danger:hover{background:#FEF0F0;}
+
+/* NOTAS */
+.lista-wrap{padding:1.5rem 2.5rem;}
+.semana-hdr{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;padding:.75rem 0 .4rem;border-bottom:1px solid var(--rule);margin-bottom:.75rem;margin-top:1.5rem;}
+.semana-hdr:first-child{margin-top:0;}
+.nota{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:.75rem;transition:border-color .15s;}
+.nota:hover{border-color:var(--pm);}
+.nota-meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.65rem;}
+.badge{font-size:.65rem;padding:.18rem .5rem;border-radius:2px;font-weight:400;}
+.badge-fecha{background:#f4f2ee;color:#888;}
+.badge-pais{background:#E8F0FE;color:#1A4CAA;}
+.badge-fuente{background:var(--green-bg);color:var(--green);}
+.badge-indicador{background:var(--plt);color:var(--p);}
+.badge-auto{background:var(--amber-bg);color:var(--amber);font-size:.6rem;}
+.nota-titulo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.35rem;line-height:1.35;}
+.nota-ref{font-size:.72rem;color:#aaa;margin-bottom:.5rem;}
+.nota-ref a{color:var(--o);}
+.nota-resumen{font-size:.85rem;color:var(--soft);line-height:1.7;margin-bottom:.75rem;}
+.analisis{background:var(--pbg);border-left:3px solid var(--p);padding:1rem 1.25rem;margin-top:.5rem;border-radius:0 3px 3px 0;}
+.analisis-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.6rem;}
+.analisis-texto{font-family:'Playfair Display',serif;font-size:.85rem;color:#3B2A6E;line-height:1.85;font-style:italic;}
+.analisis-texto p{margin-bottom:.65rem;}
+.analisis-texto p:last-child{margin-bottom:0;}
+.nota-acciones{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap;}
+.empty{text-align:center;padding:3.5rem 1.5rem;color:#bbb;}
+.empty-icon{font-size:2rem;margin-bottom:.75rem;}
+.empty-text{font-size:.85rem;}
+
+/* FORM */
+.form-wrap{padding:1.5rem 2.5rem;max-width:780px;}
+.form-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.75rem 2rem;}
+.form-section{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;margin-bottom:1rem;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.85rem;margin-bottom:.85rem;}
+.form-group label{font-size:.65rem;color:#aaa;display:block;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.5rem .65rem;border:1px solid var(--rule);border-radius:3px;font-size:.85rem;font-family:'Lato',sans-serif;color:var(--ink);background:#fff;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:2px solid var(--p);}
+.form-group textarea{resize:vertical;line-height:1.6;}
+.form-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;}
+.form-msg{font-size:.82rem;margin-top:.75rem;}
+
+/* IA PANEL */
+.ia-wrap{padding:1.5rem 2.5rem;}
+.ia-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;}
+.ia-desc{font-size:.85rem;color:var(--soft);line-height:1.7;margin-bottom:1rem;}
+.ia-input-row{display:flex;gap:.6rem;}
+.ia-input-row input{flex:1;padding:.55rem .75rem;border:1px solid var(--rule);border-radius:3px;font-size:.85rem;font-family:'Lato',sans-serif;color:var(--ink);}
+.ia-input-row input:focus{outline:2px solid var(--p);}
+.ia-status{font-size:.75rem;color:#aaa;margin-top:.5rem;font-style:italic;min-height:16px;}
+
+/* SEMANAL */
+.semanal-wrap{padding:1.5rem 2.5rem;}
+.semanal-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;}
+.semanal-titulo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:.3rem;}
+.semanal-fecha{font-size:.72rem;color:#bbb;margin-bottom:1rem;}
+.semanal-analisis{font-family:'Playfair Display',serif;font-size:.88rem;color:var(--ink);line-height:1.85;font-style:italic;}
+.semanal-analisis p{margin-bottom:.85rem;}
+.semana-empty{text-align:center;padding:2.5rem;color:#bbb;font-size:.85rem;}
+
+/* PÚBLICO toggle */
+.pub-banner{background:var(--pbg);border-bottom:2px solid var(--p);padding:.6rem 2.5rem;display:flex;align-items:center;gap:.75rem;font-size:.78rem;color:var(--p);}
+.pub-badge{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;background:var(--p);color:#fff;border-radius:2px;}
+
+/* LOADING */
+.loading{display:inline-block;width:11px;height:11px;border:1.5px solid var(--rule);border-top-color:var(--p);border-radius:50%;animation:spin .6s linear infinite;margin-right:.4rem;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:768px){
+  .page-hdr,.filtros,.lista-wrap,.form-wrap,.ia-wrap,.semanal-wrap{padding-left:1rem;padding-right:1rem;}
+  .pub-banner{padding-left:1rem;padding-right:1rem;}
+  .fg{flex-direction:column;}
+  .fg-item input,.fg-item select{width:100%;}
+  .ia-input-row{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-back"><a href="/">← Sitio principal</a></div>
+  <div class="sb-brand">
+    <div class="sb-title">Observatorio<br>del Trabajo</div>
+    <div class="sb-sub">México · América Latina</div>
+  </div>
+  <div class="sb-stats">
+    <div class="sstat"><div class="sstat-n" id="stT">0</div><div class="sstat-l">Notas</div></div>
+    <div class="sstat"><div class="sstat-n" id="stS">0</div><div class="sstat-l">Esta semana</div></div>
+    <div class="sstat"><div class="sstat-n" id="stA">0</div><div class="sstat-l">Analizadas</div></div>
+    <div class="sstat"><div class="sstat-n" id="stF">0</div><div class="sstat-l">Fuentes</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nav-label">Explorar</div>
+    <button class="nav-item on" onclick="goTab('historial',this)"><span class="ni">▤</span>Historial</button>
+    <button class="nav-item" onclick="goTab('semanal',this)"><span class="ni">◷</span>Resumen semanal</button>
+    <button class="nav-item" onclick="goTab('buscar',this)"><span class="ni">⌕</span>Buscar con IA</button>
+    <div class="nav-label" style="margin-top:1rem;">Gestionar</div>
+    <button class="nav-item" onclick="goTab('agregar',this)"><span class="ni">+</span>Nueva nota</button>
+    <button class="nav-item" onclick="goTab('ia',this)"><span class="ni">⟳</span>Búsqueda automática</button>
+  </nav>
+  <div class="sb-footer">
+    <div class="sync-info" id="syncInfo">Actualización automática cada lunes.</div>
+    <button class="sync-btn" onclick="runAutoSearch()">⟳ Buscar notas ahora</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HISTORIAL -->
+  <div id="tab-historial" class="panel on">
+    <div class="pub-banner"><span class="pub-badge">Público</span> Este historial es visible para todos los visitantes de tu sitio.</div>
+    <div class="page-hdr">
+      <div class="page-title">Historial de notas</div>
+      <div class="page-sub">Registros revisados y analizados sobre estudios del trabajo en México y América Latina</div>
+    </div>
+    <div class="filtros">
+      <div class="fg">
+        <div class="fg-item"><label>Desde</label><input type="date" id="fD"></div>
+        <div class="fg-item"><label>Hasta</label><input type="date" id="fH"></div>
+        <div class="fg-item"><label>País</label>
+          <select id="fP"><option value="">Todos</option><option>México</option><option>Argentina</option><option>Brasil</option><option>Colombia</option><option>Chile</option><option>Perú</option><option>América Latina</option><option>Internacional</option></select>
+        </div>
+        <div class="fg-item"><label>Indicador</label>
+          <select id="fI"><option value="">Todos</option><option>Empleo formal</option><option>Desempleo</option><option>Salario mínimo</option><option>Informalidad</option><option>Trabajo digno</option><option>Brecha salarial</option><option>Trabajo infantil</option><option>Sindicatos</option><option>Precarización</option><option>Productividad</option><option>Automatización</option><option>Migración laboral</option></select>
+        </div>
+        <div class="fg-item"><label>Fuente</label>
+          <select id="fF"><option value="">Todas</option><option>OIT</option><option>CEPAL</option><option>BID</option><option>Banco Mundial</option><option>INEGI</option><option>OCDE</option><option>FMI</option><option>STPS</option><option>IMSS</option><option>Otra</option></select>
+        </div>
+        <div class="fg-item"><label>Buscar</label><input type="text" id="fT" placeholder="Título o resumen..."></div>
+        <div class="fg-item" style="padding-top:1.1rem;display:flex;gap:.5rem;">
+          <button class="btn btn-ink" onclick="apF()">Filtrar</button>
+          <button class="btn" onclick="clF()">Limpiar</button>
+        </div>
+      </div>
+    </div>
+    <div class="lista-wrap" id="lista"></div>
+  </div>
+
+  <!-- RESUMEN SEMANAL -->
+  <div id="tab-semanal" class="panel">
+    <div class="pub-banner"><span class="pub-badge">Público</span> Los resúmenes semanales son visibles para todos.</div>
+    <div class="page-hdr">
+      <div class="page-title">Resumen semanal</div>
+      <div class="page-sub">Síntesis crítica generada cada lunes con las notas de la semana</div>
+    </div>
+    <div class="semanal-wrap" id="semanalWrap"></div>
+  </div>
+
+  <!-- BUSCAR PÚBLICO -->
+  <div id="tab-buscar" class="panel">
+    <div class="pub-banner"><span class="pub-badge">Público</span> Cualquier visitante puede explorar el observatorio.</div>
+    <div class="page-hdr">
+      <div class="page-title">Explorar el observatorio</div>
+      <div class="page-sub">Busca notas, análisis y reflexiones sobre trabajo en América Latina</div>
+    </div>
+    <div class="ia-wrap">
+      <div class="ia-card">
+        <p class="ia-desc">Escribe un tema o pregunta y encuentra notas relevantes del historial. Si no hay resultados locales, la IA generará análisis nuevos.</p>
+        <div class="ia-input-row">
+          <input type="text" id="pubQ" placeholder="Ej: informalidad en México, brecha salarial, trabajo juvenil...">
+          <button class="btn btn-purple" onclick="buscarPublico()">Explorar ↗</button>
+        </div>
+        <div class="ia-status" id="pubS"></div>
+      </div>
+      <div id="pubR"></div>
+    </div>
+  </div>
+
+  <!-- AGREGAR -->
+  <div id="tab-agregar" class="panel">
+    <div class="page-hdr">
+      <div class="page-title">Nueva nota</div>
+      <div class="page-sub">Registro manual de estudios, informes y artículos</div>
+    </div>
+    <div class="form-wrap">
+      <div class="form-card">
+        <div class="form-section">Datos de la nota</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Fecha *</label><input type="date" id="nFe"></div>
+          <div class="form-group"><label>País *</label>
+            <select id="nPa"><option value="">Seleccionar...</option><option>México</option><option>Argentina</option><option>Brasil</option><option>Colombia</option><option>Chile</option><option>Perú</option><option>América Latina</option><option>Internacional</option></select>
+          </div>
+          <div class="form-group"><label>Fuente *</label>
+            <select id="nFu"><option value="">Seleccionar...</option><option>OIT</option><option>CEPAL</option><option>BID</option><option>Banco Mundial</option><option>INEGI</option><option>OCDE</option><option>FMI</option><option>STPS</option><option>IMSS</option><option>Otra</option></select>
+          </div>
+          <div class="form-group"><label>Indicador *</label>
+            <select id="nIn"><option value="">Seleccionar...</option><option>Empleo formal</option><option>Desempleo</option><option>Salario mínimo</option><option>Informalidad</option><option>Trabajo digno</option><option>Brecha salarial</option><option>Trabajo infantil</option><option>Sindicatos</option><option>Precarización</option><option>Productividad</option><option>Automatización</option><option>Migración laboral</option></select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:.85rem;"><label>Título / Nota de referencia *</label><input type="text" id="nTi" placeholder="Ej: Informe empleo formal Q1 2025 — OIT"></div>
+        <div class="form-group" style="margin-bottom:.85rem;"><label>URL o referencia</label><input type="text" id="nRe" placeholder="https://..."></div>
+        <div class="form-group"><label>Resumen *</label><textarea id="nRs" rows="5" placeholder="Describe los hallazgos principales de la nota..."></textarea></div>
+        <div class="form-actions">
+          <button class="btn btn-ink" onclick="gN()">Guardar nota</button>
+          <button class="btn btn-amber" onclick="gNA()">Guardar + análisis social ↗</button>
+        </div>
+        <div class="form-msg" id="fMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IA AUTOMÁTICA -->
+  <div id="tab-ia" class="panel">
+    <div class="page-hdr">
+      <div class="page-title">Búsqueda automática con IA</div>
+      <div class="page-sub">Encuentra y registra notas automáticamente sobre trabajo en México y América Latina</div>
+    </div>
+    <div class="ia-wrap">
+      <div class="ia-card">
+        <div class="form-section">Búsqueda manual</div>
+        <p class="ia-desc">Describe el tema o pregunta y la IA buscará notas relevantes para agregar al historial con análisis social incluido.</p>
+        <div class="ia-input-row">
+          <input type="text" id="aiQ" placeholder="Ej: informalidad laboral en México 2025...">
+          <button class="btn btn-ink" onclick="busIA()">Buscar ↗</button>
+        </div>
+        <div class="ia-status" id="aiS"></div>
+      </div>
+      <div id="aiR"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+const MODEL = 'claude-sonnet-4-6';
+let notas = [];
+let nF = [];
+
+async function load() {
+  try { const r = await window.storage.get('obs_v3'); if (r && r.value) notas = JSON.parse(r.value); } catch(e) { notas = []; }
+  try { const last = await window.storage.get('obs_last_auto'); if (last && last.value) document.getElementById('syncInfo').textContent = 'Última búsqueda: ' + last.value; } catch(e) {}
+  checkAutoRun(); apF(); upS(); renderSemanal();
+}
+
+async function save() { try { await window.storage.set('obs_v3', JSON.stringify(notas)); } catch(e) {} }
+
+function upS() {
+  document.getElementById('stT').textContent = notas.length;
+  const hoy = new Date(); const lun = new Date(hoy); lun.setDate(hoy.getDate() - ((hoy.getDay()+6)%7)); lun.setHours(0,0,0,0);
+  document.getElementById('stS').textContent = notas.filter(n => new Date(n.fecha+'T12:00:00') >= lun).length;
+  document.getElementById('stA').textContent = notas.filter(n => n.analisis && n.analisis.length > 10).length;
+  document.getElementById('stF').textContent = new Set(notas.map(n => n.fuente)).size;
+}
+
+async function checkAutoRun() {
+  const hoy = new Date(); if (hoy.getDay() !== 1) return;
+  const fechaHoy = hoy.toISOString().split('T')[0];
+  try { const r = await window.storage.get('obs_auto_run_date'); if (r && r.value === fechaHoy) return; } catch(e) {}
+  await runAutoSearch();
+  try { await window.storage.set('obs_auto_run_date', fechaHoy); } catch(e) {}
+}
+
+async function runAutoSearch() {
+  const btn = document.querySelector('.sync-btn'); btn.disabled = true; btn.textContent = '⟳ Buscando...';
+  const queries = ['empleo formal México últimas semanas','informalidad laboral América Latina reciente','salario mínimo brecha salarial México','desempleo juvenil América Latina'];
+  let agregadas = 0;
+  for (const q of queries) {
+    try { const nuevas = await fetchNotasIA(q, true); for (const n of nuevas) { if (!notas.find(x => x.titulo.toLowerCase() === n.titulo.toLowerCase())) { notas.unshift(n); agregadas++; } } } catch(e) {}
+  }
+  if (agregadas > 0) { await save(); await generarResumenSemanal(); }
+  const ahora = new Date().toLocaleString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  try { await window.storage.set('obs_last_auto', ahora); } catch(e) {}
+  document.getElementById('syncInfo').textContent = 'Última búsqueda: '+ahora+' ('+agregadas+' nuevas)';
+  btn.disabled = false; btn.textContent = '⟳ Buscar notas ahora';
+  upS(); apF(); renderSemanal();
+}
+
+async function fetchNotasIA(query, conAnalisis) {
+  const p = `Eres un asistente especializado en estudios del trabajo en México y América Latina. Genera 2 notas relevantes y recientes sobre: "${query}"
+Responde SOLO con JSON válido, sin texto adicional, sin markdown:
+[{"titulo":"título","pais":"México","fuente":"OIT","indicador":"Empleo formal","fecha":"2025-04-01","ref":"https://ilo.org","resumen":"3-4 oraciones con hallazgos principales concretos"}]
+Opciones pais: México, Argentina, Brasil, Colombia, Chile, Perú, América Latina, Internacional
+Opciones fuente: OIT, CEPAL, BID, Banco Mundial, INEGI, OCDE, FMI, STPS, IMSS, Otra
+Opciones indicador: Empleo formal, Desempleo, Salario mínimo, Informalidad, Trabajo digno, Brecha salarial, Trabajo infantil, Sindicatos, Precarización, Productividad, Automatización, Migración laboral`;
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({model:MODEL, max_tokens:1200, messages:[{role:'user',content:p}]})
+  });
+  const data = await r.json();
+  const txt = data.content?.[0]?.text || '[]';
+  const arr = JSON.parse(txt.replace(/```json|```/g,'').trim());
+  const result = [];
+  for (const x of arr) {
+    const analisis = conAnalisis ? await llmAnalisis(x.titulo, x.resumen, x.indicador, x.pais, x.fuente) : '';
+    result.push({id: Date.now().toString()+Math.random().toString(36).slice(2), ...x, analisis, auto:true, fechaR: new Date().toISOString()});
+  }
+  return result;
+}
+
+async function llmAnalisis(titulo, resumen, indicador, pais, fuente) {
+  const p = `Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. Tu análisis tiene estas marcas:
+— Partes siempre desde los trabajadores, nunca desde los mercados
+— Usas la pregunta como motor argumentativo
+— Mezclas teoría densa (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano
+— Vas de lo estructural a lo íntimo (el cuerpo, el desgaste, la persona que se convierte en cifra)
+— Preguntas siempre quién queda fuera de la muestra
+— Sostienes contradicciones sin resolverlas
+— Cierras abriendo incógnitas, no dando recetas
+
+Analiza: Título: ${titulo} | País: ${pais} | Fuente: ${fuente} | Indicador: ${indicador} | Resumen: ${resumen}
+Escribe 4 párrafos con tu voz. Separa párrafos con salto de línea.`;
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:MODEL, max_tokens:1000, messages:[{role:'user',content:p}]})
+    });
+    const data = await r.json();
+    return data.content?.[0]?.text || 'No se pudo generar el análisis.';
+  } catch(e) { return 'Error al generar análisis.'; }
+}
+
+async function generarResumenSemanal() {
+  const hoy = new Date(); const lun = new Date(hoy); lun.setDate(hoy.getDate()-((hoy.getDay()+6)%7)); lun.setHours(0,0,0,0);
+  const notasSemana = notas.filter(n => new Date(n.fecha+'T12:00:00') >= lun);
+  if (!notasSemana.length) return;
+  const resumenNotas = notasSemana.map(n => `- ${n.titulo} (${n.pais}, ${n.fuente}): ${n.resumen}`).join('\n');
+  const p = `Eres David Salgado López, investigador de la ENAH. Con tu voz analítica característica, escribe una síntesis crítica de las siguientes notas sobre trabajo revisadas esta semana:\n${resumenNotas}\nEscribe 4-5 párrafos de síntesis integradora. No es un resumen descriptivo: es tu reflexión sobre qué dicen estas notas juntas, qué patrón emerge, qué queda sin decir.`;
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:MODEL, max_tokens:1200, messages:[{role:'user',content:p}]})
+    });
+    const data = await r.json();
+    const texto = data.content?.[0]?.text || '';
+    const semanaKey = lun.toISOString().split('T')[0];
+    await window.storage.set('obs_semanal_'+semanaKey, JSON.stringify({fecha:semanaKey, texto, notas:notasSemana.length}));
+    renderSemanal();
+  } catch(e) {}
+}
+
+async function renderSemanal() {
+  const wrap = document.getElementById('semanalWrap');
+  const hoy = new Date(); let html = '';
+  for (let i = 0; i < 8; i++) {
+    const lun = new Date(hoy); lun.setDate(hoy.getDate()-((hoy.getDay()+6)%7)-i*7); lun.setHours(0,0,0,0);
+    const key = lun.toISOString().split('T')[0];
+    try {
+      const r = await window.storage.get('obs_semanal_'+key);
+      if (r && r.value) {
+        const d = JSON.parse(r.value);
+        const dom = new Date(lun); dom.setDate(lun.getDate()+6);
+        const fmt = dt => dt.toLocaleDateString('es-MX',{day:'2-digit',month:'long'});
+        html += `<div class="semanal-card"><div class="semanal-titulo">Semana del ${fmt(lun)} al ${fmt(dom)}</div><div class="semanal-fecha">${d.notas} nota(s) revisada(s)</div><div class="semanal-analisis">${d.texto.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>`;
+      }
+    } catch(e) {}
+  }
+  wrap.innerHTML = html || '<div class="semana-empty">Aún no hay resúmenes semanales. Se generan automáticamente cada lunes o al usar "Buscar notas ahora".</div>';
+}
+
+function apF() {
+  const d=document.getElementById('fD').value, h=document.getElementById('fH').value,
+        p=document.getElementById('fP').value, i=document.getElementById('fI').value,
+        f=document.getElementById('fF').value, t=document.getElementById('fT').value.toLowerCase();
+  nF = notas.filter(n => {
+    if (d && n.fecha < d) return false; if (h && n.fecha > h) return false;
+    if (p && n.pais !== p) return false; if (i && n.indicador !== i) return false;
+    if (f && n.fuente !== f) return false;
+    if (t && !n.titulo.toLowerCase().includes(t) && !n.resumen.toLowerCase().includes(t)) return false;
+    return true;
+  });
+  renderL();
+}
+function clF() { ['fD','fH','fP','fI','fF','fT'].forEach(id=>{document.getElementById(id).value='';}); apF(); }
+
+function semL(fecha) {
+  const d=new Date(fecha+'T12:00:00'), l=new Date(d); l.setDate(d.getDate()-((d.getDay()+6)%7));
+  const s=new Date(l); s.setDate(l.getDate()+6);
+  const fmt = dt => dt.toLocaleDateString('es-MX',{day:'2-digit',month:'short'});
+  return 'Semana del '+fmt(l)+' al '+fmt(s);
+}
+function fmtF(f) { return new Date(f+'T12:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}); }
+
+function renderL() {
+  const c = document.getElementById('lista');
+  if (!nF.length) { c.innerHTML=`<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">${notas.length===0?'Aún no hay notas. Usa "Buscar notas ahora" para la primera búsqueda automática.':'Sin resultados para los filtros seleccionados.'}</div></div>`; return; }
+  const sorted = [...nF].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  let html=''; let lastSem='';
+  sorted.forEach(n => {
+    const sm=semL(n.fecha); if (sm!==lastSem) { html+=`<div class="semana-hdr">${sm}</div>`; lastSem=sm; }
+    const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+    html+=`<div class="nota" id="n-${n.id}">
+      <div class="nota-meta"><span class="badge badge-fecha">${fmtF(n.fecha)}</span><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span>${n.auto?'<span class="badge badge-auto">auto</span>':''}</div>
+      <div class="nota-titulo">${n.titulo}</div>
+      ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref.length>60?n.ref.slice(0,60)+'...':n.ref}</a></div>`:''}
+      <div class="nota-resumen">${n.resumen}</div>
+      ${analisisHTML}
+      <div class="nota-acciones">
+        ${!n.analisis?`<button class="btn btn-sm btn-amber" onclick="genA('${n.id}')">Generar análisis social ↗</button>`:`<button class="btn btn-sm" onclick="genA('${n.id}')">Regenerar análisis ↗</button>`}
+        <button class="btn btn-sm btn-danger" onclick="delN('${n.id}')">Eliminar</button>
+      </div>
+    </div>`;
+  });
+  c.innerHTML = html;
+}
+
+async function genA(id) {
+  const n=notas.find(x=>x.id===id); if (!n) return;
+  const card=document.getElementById('n-'+id);
+  card.querySelectorAll('.nota-acciones button').forEach(b=>{b.disabled=true;b.innerHTML='<span class="loading"></span>Generando...';});
+  n.analisis = await llmAnalisis(n.titulo, n.resumen, n.indicador, n.pais, n.fuente);
+  await save(); upS(); apF();
+}
+
+function delN(id) { if (!confirm('¿Eliminar esta nota?')) return; notas=notas.filter(n=>n.id!==id); save(); upS(); apF(); }
+
+function getForm() { return {titulo:document.getElementById('nTi').value.trim(),pais:document.getElementById('nPa').value,fuente:document.getElementById('nFu').value,indicador:document.getElementById('nIn').value,fecha:document.getElementById('nFe').value,ref:document.getElementById('nRe').value.trim(),resumen:document.getElementById('nRs').value.trim()}; }
+function valForm(d) { if (!d.titulo||!d.pais||!d.fuente||!d.indicador||!d.fecha||!d.resumen){document.getElementById('fMsg').innerHTML='<span style="color:var(--red)">Completa todos los campos obligatorios (*).</span>';return false;}return true; }
+function clrForm() { ['nTi','nRe','nRs'].forEach(id=>document.getElementById(id).value=''); ['nPa','nFu','nIn'].forEach(id=>document.getElementById(id).value=''); document.getElementById('nFe').value=new Date().toISOString().split('T')[0]; }
+
+function gN() {
+  const d=getForm(); if (!valForm(d)) return;
+  notas.unshift({id:Date.now().toString(),...d,analisis:'',auto:false,fechaR:new Date().toISOString()});
+  save(); upS(); apF();
+  document.getElementById('fMsg').innerHTML='<span style="color:var(--green)">Nota guardada correctamente.</span>';
+  setTimeout(()=>{document.getElementById('fMsg').innerHTML='';clrForm();},2000);
+}
+
+async function gNA() {
+  const d=getForm(); if (!valForm(d)) return;
+  document.getElementById('fMsg').innerHTML='<span class="loading"></span><span style="color:var(--amber)">Generando análisis social...</span>';
+  const analisis = await llmAnalisis(d.titulo,d.resumen,d.indicador,d.pais,d.fuente);
+  notas.unshift({id:Date.now().toString(),...d,analisis,auto:false,fechaR:new Date().toISOString()});
+  save(); upS(); apF();
+  document.getElementById('fMsg').innerHTML='<span style="color:var(--green)">Nota guardada con análisis.</span>';
+  setTimeout(()=>{document.getElementById('fMsg').innerHTML='';clrForm();},2500);
+}
+
+async function busIA() {
+  const q=document.getElementById('aiQ').value.trim(); if (!q) return;
+  document.getElementById('aiS').innerHTML='<span class="loading"></span>Buscando y analizando...';
+  document.getElementById('aiR').innerHTML='';
+  try {
+    const res = await fetchNotasIA(q, false);
+    document.getElementById('aiS').textContent=res.length+' nota(s) encontrada(s). Revísalas y agrégalas.';
+    let h='';
+    res.forEach(x => {
+      const js=JSON.stringify(JSON.stringify(x));
+      h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(x.fecha)}</span><span class="badge badge-pais">${x.pais}</span><span class="badge badge-fuente">${x.fuente}</span><span class="badge badge-indicador">${x.indicador}</span></div><div class="nota-titulo">${x.titulo}</div>${x.ref?`<div class="nota-ref">${x.ref}</div>`:''}<div class="nota-resumen">${x.resumen}</div><div class="nota-acciones"><button class="btn btn-sm btn-ink" onclick='addIA(${js})'>Agregar al historial</button><button class="btn btn-sm btn-amber" onclick='addIAan(${js})'>Agregar + análisis social ↗</button></div></div>`;
+    });
+    document.getElementById('aiR').innerHTML=h;
+  } catch(e) { document.getElementById('aiS').textContent='Error al procesar. Intenta de nuevo.'; }
+}
+
+async function buscarPublico() {
+  const q=document.getElementById('pubQ').value.trim(); if (!q) return;
+  document.getElementById('pubS').innerHTML='<span class="loading"></span>Buscando...';
+  document.getElementById('pubR').innerHTML='';
+  const local = notas.filter(n => n.titulo.toLowerCase().includes(q.toLowerCase()) || n.resumen.toLowerCase().includes(q.toLowerCase()) || n.indicador.toLowerCase().includes(q.toLowerCase()));
+  if (local.length) {
+    document.getElementById('pubS').textContent=local.length+' resultado(s) en el historial.';
+    let h='';
+    local.forEach(n => {
+      const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+      h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(n.fecha)}</span><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div><div class="nota-titulo">${n.titulo}</div>${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref}</a></div>`:''}<div class="nota-resumen">${n.resumen}</div>${analisisHTML}</div>`;
+    });
+    document.getElementById('pubR').innerHTML=h;
+  } else {
+    document.getElementById('pubS').innerHTML='<span class="loading"></span>Sin resultados locales. Generando con IA...';
+    try {
+      const res = await fetchNotasIA(q, true);
+      document.getElementById('pubS').textContent='Análisis generado sobre "'+q+'".';
+      let h='';
+      res.forEach(x => {
+        const analisisHTML = x.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${x.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+        h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(x.fecha)}</span><span class="badge badge-pais">${x.pais}</span><span class="badge badge-fuente">${x.fuente}</span><span class="badge badge-indicador">${x.indicador}</span></div><div class="nota-titulo">${x.titulo}</div><div class="nota-resumen">${x.resumen}</div>${analisisHTML}</div>`;
+      });
+      document.getElementById('pubR').innerHTML=h;
+    } catch(e) { document.getElementById('pubS').textContent='Error al generar. Intenta de nuevo.'; }
+  }
+}
+
+async function addIA(js) { const x=JSON.parse(js); notas.unshift(x); await save(); upS(); apF(); document.getElementById('aiS').textContent='Nota agregada al historial.'; }
+async function addIAan(js) {
+  const x=JSON.parse(js);
+  document.getElementById('aiS').innerHTML='<span class="loading"></span>Generando análisis social...';
+  x.analisis=await llmAnalisis(x.titulo,x.resumen,x.indicador,x.pais,x.fuente);
+  notas.unshift(x); await save(); upS(); apF();
+  document.getElementById('aiS').textContent='Nota con análisis agregada.';
+}
+
+function goTab(t,el) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('on'); el.classList.add('on');
+  if (t==='semanal') renderSemanal();
+}
+
+document.getElementById('nFe').value = new Date().toISOString().split('T')[0];
+load();
+</script>
+</body>
+</html>
