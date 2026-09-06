@@ -1,0 +1,76 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "pdfs"
+public_folder: "/pdfs"
+
+locale: 'es'
+
+collections:
+  - name: "minilibros"
+    label: "Minilibros"
+    label_singular: "Minilibro"
+    folder: "_minilibros"
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - label: "Título"
+        name: "title"
+        widget: "string"
+        hint: "Ej: Vida Laboral Antes y Después de la Jornada"
+      - label: "Fecha"
+        name: "date"
+        widget: "string"
+        hint: "Ej: Febrero 2025"
+      - label: "Descripción"
+        name: "description"
+        widget: "text"
+        hint: "Breve descripción del minilibro (2-3 líneas)"
+      - label: "Archivo PDF"
+        name: "pdf"
+        widget: "file"
+        media_folder: "/pdfs"
+        public_folder: "/pdfs"
+        media_library:
+          config:
+            multiple: false
+        hint: "Sube el PDF del minilibro"
+      - label: "Portada (imagen)"
+        name: "cover"
+        widget: "image"
+        media_folder: "/covers"
+        public_folder: "/covers"
+        hint: "Imagen de portada del minilibro (JPG o PNG)"
+        required: false
+
+  - name: "configuracion"
+    label: "Configuración del sitio"
+    files:
+      - label: "Información personal"
+        name: "info"
+        file: "_config/info.json"
+        fields:
+          - label: "Nombre"
+            name: "name"
+            widget: "string"
+          - label: "Subtítulo / tagline"
+            name: "tagline"
+            widget: "string"
+          - label: "Descripción"
+            name: "description"
+            widget: "text"
+          - label: "Email de contacto"
+            name: "email"
+            widget: "string"
+          - label: "LinkedIn URL"
+            name: "linkedin"
+            widget: "string"
+          - label: "Instagram URL"
+            name: "instagram"
+            widget: "string"
+          - label: "TikTok URL"
+            name: "tiktok"
+            widget: "string"
