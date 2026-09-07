@@ -19,8 +19,8 @@
 html{scroll-behavior:smooth;}
 body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;}
 
-/* TOP NAV — mismo look que el sitio principal, en secuencia arriba de todo */
-.topnav{background:rgba(250,250,248,.96);border-bottom:1px solid var(--rule);}
+/* TOP NAV — mismo look que el sitio principal, fijo arriba al hacer scroll */
+.topnav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
 .topnav-inner{max-width:1180px;margin:0 auto;padding:.85rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
 .topnav-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;white-space:nowrap;display:flex;align-items:center;}
 .topnav-logo img{height:38px;width:auto;display:block;}
@@ -34,7 +34,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 @media(max-width:768px){.layout{grid-template-columns:1fr;}}
 
 /* SIDEBAR */
-.sidebar{background:var(--dk);color:var(--dkt);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar{background:var(--dk);color:var(--dkt);position:sticky;top:70px;height:calc(100vh - 70px);overflow-y:auto;display:flex;flex-direction:column;}
 @media(max-width:768px){.sidebar{position:static;height:auto;}}
 .sb-back{padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);}
 .sb-back a{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;text-decoration:none;transition:color .2s;}
@@ -42,6 +42,9 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .sb-brand{padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.07);}
 .sb-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;line-height:1.25;}
 .sb-sub{font-size:.68rem;color:rgba(237,233,254,.4);margin-top:.3rem;letter-spacing:.06em;text-transform:uppercase;}
+.share-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem;}
+.share-btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.04em;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:transparent;color:rgba(237,233,254,.6);cursor:pointer;transition:all .15s;}
+.share-btn:hover{border-color:#a78bfa;color:#fff;background:rgba(124,58,237,.15);}
 .sb-stats{padding:1.1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
 .sstat-n{font-size:1.5rem;font-weight:700;color:var(--pm);line-height:1;}
 .sstat-l{font-size:.65rem;color:rgba(237,233,254,.4);margin-top:.15rem;}
@@ -88,10 +91,10 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .btn-danger:hover{background:#FEF0F0;}
 
 /* NOTAS */
-.lista-wrap{padding:1.5rem 2.5rem;}
-.semana-hdr{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;padding:.75rem 0 .4rem;border-bottom:1px solid var(--rule);margin-bottom:.75rem;margin-top:1.5rem;}
+.lista-wrap{padding:1.25rem 2rem;}
+.semana-hdr{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;padding:.5rem 0 .3rem;border-bottom:1px solid var(--rule);margin-bottom:.5rem;margin-top:1rem;}
 .semana-hdr:first-child{margin-top:0;}
-.nota{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:.75rem;transition:border-color .15s;}
+.nota{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1rem 1.25rem;margin-bottom:.6rem;transition:border-color .15s;}
 .nota:hover{border-color:var(--pm);}
 .nota-meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.65rem;}
 .badge{font-size:.65rem;padding:.18rem .5rem;border-radius:2px;font-weight:400;}
@@ -104,9 +107,9 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .nota-ref{font-size:.72rem;color:#aaa;margin-bottom:.5rem;}
 .nota-ref a{color:var(--o);}
 .nota-resumen{font-size:.85rem;color:var(--soft);line-height:1.7;margin-bottom:.75rem;}
-.analisis{background:var(--pbg);border-left:3px solid var(--p);padding:1rem 1.25rem;margin-top:.5rem;border-radius:0 3px 3px 0;}
+.analisis{background:var(--pbg);border-left:3px solid var(--p);padding:.85rem 1.1rem;margin-top:.4rem;border-radius:0 3px 3px 0;}
 .analisis-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.6rem;}
-.analisis-texto{font-family:'Times New Roman',Times,serif;font-size:.85rem;color:#3B2A6E;line-height:1.85;font-style:italic;}
+.analisis-texto{font-family:'Times New Roman',Times,serif;font-size:.9rem;color:#3B2A6E;line-height:1.75;}
 .analisis-texto p{margin-bottom:.65rem;}
 .analisis-texto p:last-child{margin-bottom:0;}
 .nota-acciones{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap;}
@@ -140,8 +143,11 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .semanal-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;}
 .semanal-titulo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:.3rem;}
 .semanal-fecha{font-size:.72rem;color:#bbb;margin-bottom:1rem;}
-.semanal-analisis{font-family:'Playfair Display',serif;font-size:.88rem;color:var(--ink);line-height:1.85;font-style:italic;}
-.semanal-analisis p{margin-bottom:.85rem;}
+.semanal-analisis{font-family:'Times New Roman',Times,serif;font-size:.9rem;color:#3B2A6E;line-height:1.75;}
+.semanal-analisis p{margin-bottom:.65rem;}
+.semanal-analisis p:last-child{margin-bottom:0;}
+.semanal-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin:.9rem 0 .5rem;}
+.semanal-label:first-of-type{margin-top:0;}
 .semana-empty{text-align:center;padding:2.5rem;color:#bbb;font-size:.85rem;}
 
 /* PÚBLICO toggle */
@@ -174,6 +180,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
       <li><a href="index.html#portafolio">Portafolio</a></li>
       <li><a href="index.html#contacto">Contacto</a></li>
       <li><a href="observatorio.html" class="here">Observatorio</a></li>
+      <li><a href="admin.html" style="opacity:.5;">Admin</a></li>
     </ul>
   </div>
 </nav>
@@ -185,6 +192,12 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
   <div class="sb-brand">
     <div class="sb-title">Observatorio<br>del Trabajo</div>
     <div class="sb-sub">México · América Latina</div>
+    <div class="share-row">
+      <button class="share-btn" onclick="shareObservatorio('facebook')" title="Compartir en Facebook">Facebook</button>
+      <button class="share-btn" onclick="shareObservatorio('linkedin')" title="Compartir en LinkedIn">LinkedIn</button>
+      <button class="share-btn" onclick="shareObservatorio('x')" title="Compartir en X">X</button>
+      <button class="share-btn" onclick="shareObservatorio('instagram')" title="Copiar enlace para Instagram">Instagram</button>
+    </div>
   </div>
   <div class="sb-stats">
     <div class="sstat"><div class="sstat-n" id="stT">0</div><div class="sstat-l">Notas</div></div>
@@ -194,17 +207,18 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
   </div>
   <nav class="sb-nav">
     <div class="nav-label">Explorar</div>
-    <button class="nav-item on" onclick="goTab('historial',this)"><span class="ni">▤</span>Historial</button>
+    <button class="nav-item on" onclick="goTab('historial',this)" id="navHistorial"><span class="ni">▤</span>Historial</button>
     <button class="nav-item" onclick="goTab('semanal',this)"><span class="ni">◷</span>Resumen semanal</button>
     <button class="nav-item" onclick="goTab('buscar',this)"><span class="ni">⌕</span>Buscar con IA</button>
-    <div class="nav-label" style="margin-top:1rem;">Gestionar</div>
-    <button class="nav-item" onclick="goTab('agregar',this)"><span class="ni">+</span>Nueva nota</button>
-    <button class="nav-item" onclick="goTab('ia',this)"><span class="ni">⟳</span>Búsqueda automática</button>
+    <div class="nav-label" id="navGestionarLabel" style="margin-top:1rem;">Gestionar</div>
+    <button class="nav-item" onclick="goTab('agregar',this)" id="navAgregar"><span class="ni">+</span>Nueva nota</button>
+    <button class="nav-item" onclick="goTab('ia',this)" id="navIA"><span class="ni">⟳</span>Búsqueda automática</button>
   </nav>
   <div class="sb-footer">
     <div class="sync-info" id="syncInfo">Sincroniza con Google Sheet automáticamente.</div>
     <button class="sync-btn" onclick="loadFromSheet()">⟳ Buscar notas ahora</button>
     <button class="cfg-btn" onclick="configurarGeminiKey()">⚙ Configurar IA (Gemini)</button>
+    <button class="cfg-btn" onclick="configurarAdmin()" id="adminCfgBtn">🔑 Acceso administrador</button>
   </div>
 </aside>
 
@@ -244,10 +258,27 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
   <!-- RESUMEN SEMANAL -->
   <div id="tab-semanal" class="panel">
     <div class="pub-banner"><span class="pub-badge">Público</span> Los resúmenes semanales son visibles para todos.</div>
-    <div class="page-hdr">
-      <div class="page-title">Resumen semanal</div>
-      <div class="page-sub">Síntesis crítica generada cada lunes con las notas de la semana</div>
+    <div class="page-hdr" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <div class="page-title">Resumen semanal</div>
+        <div class="page-sub">Síntesis crítica con las notas de esta semana, generada con IA</div>
+      </div>
+      <button class="btn btn-purple btn-sm" onclick="generarResumenManual()" id="btnResumenSemanal" hidden>Generar resumen de esta semana</button>
     </div>
+
+    <div class="semanal-wrap" style="padding-bottom:0;">
+      <div class="semanal-card" id="compartirCard">
+        <div class="semanal-titulo">Comparte una noticia</div>
+        <div class="semanal-fecha" style="margin-bottom:1rem;">Pega el link de una noticia de un blog o medio confiable sobre trabajo, empleo o mercado laboral. La IA la lee, la resume y genera una interpretación — y si quieres, queda registrada para que David la revise.</div>
+        <div class="ia-input-row">
+          <input type="text" id="compUrl" placeholder="https://...">
+          <button class="btn btn-purple" onclick="analizarNoticiaCompartida()">Analizar ↗</button>
+        </div>
+        <div class="ia-status" id="compStatus"></div>
+        <div id="compResultado"></div>
+      </div>
+    </div>
+
     <div class="semanal-wrap" id="semanalWrap"></div>
   </div>
 
@@ -327,6 +358,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 </main>
 </div>
 
+<script src="admin.js"></script>
 <script>
 // Ligero reemplazo de window.storage (API propia del entorno de Claude.ai,
 // no existe en un sitio publicado normal) respaldado en localStorage del
@@ -405,7 +437,7 @@ async function runAutoSearch() {
   for (const q of queries) {
     try { const nuevas = await fetchNotasIA(q, true); for (const n of nuevas) { if (!notas.find(x => x.titulo.toLowerCase() === n.titulo.toLowerCase())) { notas.unshift(n); agregadas++; } } } catch(e) {}
   }
-  if (agregadas > 0) { await save(); await generarResumenSemanal(); }
+  if (agregadas > 0) { await save(); try { await generarResumenSemanal(); } catch(e) {} }
   const ahora = new Date().toLocaleString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
   try { await window.storage.set('obs_last_auto', ahora); } catch(e) {}
   document.getElementById('syncInfo').textContent = 'Última búsqueda: '+ahora+' ('+agregadas+' nuevas)';
@@ -447,53 +479,195 @@ Escribe 4 párrafos con tu voz. Separa párrafos con salto de línea.`;
   } catch(e) { return e.message || 'Error al generar análisis.'; }
 }
 
+// Interpretación en el propio estilo de David — plantilla determinística
+// (sin IA), igual en espíritu a un "makeDiag()": siempre disponible, nunca
+// depende de que la IA responda, y da la primera lectura ordenada de las
+// últimas notas.
+function makeResumenObservatorio(top) {
+  const fuentes = [...new Set(top.map(n => n.fuente))];
+  const paises = [...new Set(top.map(n => n.pais))];
+  const indicadores = [...new Set(top.map(n => n.indicador))];
+  let t = '';
+  t += `Esta síntesis reúne las ${top.length} nota(s) más recientes registradas en el Observatorio del Trabajo, con información proveniente de ${fuentes.join(', ')}, sobre ${paises.join(', ')}. Los indicadores en juego son: ${indicadores.join(', ')}.\n\n`;
+  top.forEach((n, i) => {
+    t += `${i + 1}. ${fmtF(n.fecha)} — ${n.titulo} (${n.pais}, ${n.fuente}). ${n.resumen}\n\n`;
+  });
+  t += `Leídas en conjunto, estas notas trazan un mapa parcial —nunca completo— de cómo se está reconfigurando el trabajo en la región en este momento.`;
+  return t;
+}
+
 async function generarResumenSemanal() {
-  const hoy = new Date(); const lun = new Date(hoy); lun.setDate(hoy.getDate()-((hoy.getDay()+6)%7)); lun.setHours(0,0,0,0);
-  const notasSemana = notas.filter(n => new Date(n.fecha+'T12:00:00') >= lun);
-  if (!notasSemana.length) return;
-  const resumenNotas = notasSemana.map(n => `- ${n.titulo} (${n.pais}, ${n.fuente}): ${n.resumen}`).join('\n');
-  const p = `Eres David Salgado López, investigador de la ENAH. Con tu voz analítica característica, escribe una síntesis crítica de las siguientes notas sobre trabajo revisadas esta semana:\n${resumenNotas}\nEscribe 4-5 párrafos de síntesis integradora. No es un resumen descriptivo: es tu reflexión sobre qué dicen estas notas juntas, qué patrón emerge, qué queda sin decir.`;
-  try {
-    const texto = await callGemini(p, 1200) || '';
-    const semanaKey = lun.toISOString().split('T')[0];
-    await window.storage.set('obs_semanal_'+semanaKey, JSON.stringify({fecha:semanaKey, texto, notas:notasSemana.length}));
-    renderSemanal();
-  } catch(e) {}
+  const top5 = [...notas].sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 5);
+  if (!top5.length) throw new Error('Aún no hay notas registradas en el historial.');
+  const resumenTexto = makeResumenObservatorio(top5);
+  const notasTxt = top5.map(n => `- ${n.titulo} (${n.pais}, ${n.fuente}): ${n.resumen}`).join('\n');
+  const p = `Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. Tu análisis parte siempre desde los trabajadores (nunca desde los mercados), mezcla teoría densa (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano, sostiene contradicciones sin resolverlas y cierra abriendo preguntas, no dando recetas.\nCon esa voz, escribe una interpretación académica robusta de 1 a 2 párrafos sobre el patrón que emerge de estas notas recientes del observatorio:\n${notasTxt}\nNo describas cada nota por separado: interpreta qué dicen juntas.`;
+  const interpretacion = await callGemini(p, 700) || '';
+  const registro = { fecha: new Date().toISOString(), notas: top5.length, resumenTexto, interpretacion };
+  let historial = [];
+  try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
+  historial.unshift(registro);
+  historial = historial.slice(0, 12);
+  await window.storage.set('obs_resumenes', JSON.stringify(historial));
+  renderSemanal();
 }
 
 async function renderSemanal() {
   const wrap = document.getElementById('semanalWrap');
-  const hoy = new Date(); let html = '';
-  for (let i = 0; i < 8; i++) {
-    const lun = new Date(hoy); lun.setDate(hoy.getDate()-((hoy.getDay()+6)%7)-i*7); lun.setHours(0,0,0,0);
-    const key = lun.toISOString().split('T')[0];
-    try {
-      const r = await window.storage.get('obs_semanal_'+key);
-      if (r && r.value) {
-        const d = JSON.parse(r.value);
-        const dom = new Date(lun); dom.setDate(lun.getDate()+6);
-        const fmt = dt => dt.toLocaleDateString('es-MX',{day:'2-digit',month:'long'});
-        html += `<div class="semanal-card"><div class="semanal-titulo">Semana del ${fmt(lun)} al ${fmt(dom)}</div><div class="semanal-fecha">${d.notas} nota(s) revisada(s)</div><div class="semanal-analisis">${d.texto.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>`;
-      }
-    } catch(e) {}
-  }
-  wrap.innerHTML = html || '<div class="semana-empty">Aún no hay resúmenes semanales. Se generan automáticamente cada lunes o al usar "Buscar notas ahora".</div>';
+  let historial = [];
+  try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
+  if (!historial.length) { wrap.innerHTML = '<div class="semana-empty">Aún no hay resúmenes generados. Da clic en "Generar resumen de esta semana" (usa tu clave de Gemini).</div>'; return; }
+  let html = '';
+  historial.forEach((d, idx) => {
+    const fecha = new Date(d.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const resumenHTML = (d.resumenTexto || '').split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
+    const interpHTML = d.interpretacion ? d.interpretacion.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('') : '';
+    html += `<div class="semanal-card">
+      <div class="semanal-titulo">Resumen generado el ${fecha}</div>
+      <div class="semanal-fecha">${d.notas} nota(s) más recientes del historial</div>
+      <div class="semanal-label">Síntesis de lectura</div>
+      <div class="semanal-analisis">${resumenHTML}</div>
+      ${interpHTML ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${interpHTML}</div>` : ''}
+      <div class="nota-acciones" style="margin-top:1rem;"><button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
+    </div>`;
+  });
+  wrap.innerHTML = html;
 }
 
+// ── Backend ligero (Google Apps Script) para "Comparte una noticia" ──
+// Cualquier visitante puede pegar un link, sin necesitar su propia clave
+// de Gemini: el análisis lo hace este pequeño backend, que guarda tu
+// clave de Gemini de forma privada (nunca viaja a este archivo ni al
+// navegador de nadie) y además guarda la noticia en la pestaña
+// "Notas_Comunidad" de tu Google Sheet para que la revises.
+//
+// PENDIENTE DE CONFIGURAR: despliega el Apps Script (ver instrucciones
+// aparte) y pega aquí la URL que te da, terminada en "/exec".
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8sG2DiEuReO24Gr7rxemi834G6Jy4bNv4C0B3_oP7i3JCof6MeO7wn02gDM64duLh/exec';
+
+async function llamarBackend(accion, datos) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PEGA_AQUI') === 0) {
+    throw new Error('Esta herramienta todavía no está conectada (falta configurar el backend en observatorio.html).');
+  }
+  // Importante: se envía SIN header Content-Type para que el navegador use
+  // 'text/plain' por defecto — así se evita el preflight CORS que Apps
+  // Script no puede responder. El servidor igual recibe y parsea el JSON.
+  const r = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(Object.assign({ accion: accion }, datos)) });
+  const data = await r.json();
+  if (!data.ok) throw new Error(data.error || 'Error del backend.');
+  return data;
+}
+
+function makeResumenNotaIndividual(n) {
+  let t = `Nota compartida por un visitante del Observatorio, sobre ${n.pais} (fuente: ${n.fuente}).\n\n`;
+  t += `${n.titulo}. ${n.resumenFactual}\n\n`;
+  t += `Se registra bajo el indicador "${n.indicador}".`;
+  return t;
+}
+
+let notaCompartidaActual = null;
+
+async function analizarNoticiaCompartida() {
+  const url = document.getElementById('compUrl').value.trim();
+  const status = document.getElementById('compStatus');
+  const resultado = document.getElementById('compResultado');
+  resultado.innerHTML = ''; notaCompartidaActual = null;
+  if (!url) { status.textContent = 'Pega un link primero.'; return; }
+  status.innerHTML = '<span class="loading"></span>Leyendo y analizando la noticia...';
+  try {
+    const data = await llamarBackend('analizarUrl', { url: url });
+    const n = data.nota; n.fecha = new Date().toISOString().split('T')[0];
+    notaCompartidaActual = n;
+    status.textContent = 'Análisis listo.';
+    const resumenTexto = makeResumenNotaIndividual(n);
+    resultado.innerHTML = `
+      <div class="semanal-label">Síntesis de lectura</div>
+      <div class="semanal-analisis">${resumenTexto.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>
+      ${n.interpretacion ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${n.interpretacion.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>` : ''}
+      <div class="nota-acciones" style="margin-top:1rem;">
+        <button class="btn btn-sm btn-purple" onclick="guardarNoticiaCompartida()">Guardar en el Observatorio</button>
+        <button class="btn btn-sm" onclick="descargarNoticiaCompartida()">⬇ Descargar esta noticia</button>
+      </div>`;
+  } catch (e) {
+    status.textContent = 'No se pudo analizar: ' + e.message;
+  }
+}
+
+async function guardarNoticiaCompartida() {
+  if (!notaCompartidaActual) return;
+  const status = document.getElementById('compStatus');
+  status.innerHTML = '<span class="loading"></span>Guardando...';
+  try {
+    await llamarBackend('guardarNota', { nota: notaCompartidaActual });
+    status.textContent = '¡Gracias! Tu noticia quedó registrada para que David la revise.';
+  } catch (e) {
+    status.textContent = 'No se pudo guardar: ' + e.message;
+  }
+}
+
+function descargarNoticiaCompartida() {
+  if (!notaCompartidaActual) return;
+  const n = notaCompartidaActual;
+  const txt = `NOTICIA ANALIZADA — OBSERVATORIO DEL TRABAJO\n${'─'.repeat(50)}\n\n${n.titulo}\nFuente: ${n.fuente} · País: ${n.pais}\nLink: ${n.url}\n\nSÍNTESIS DE LECTURA\n\n${makeResumenNotaIndividual(n)}\n\nINTERPRETACIÓN ACADÉMICA\n\n${n.interpretacion || ''}\n`;
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'noticia-observatorio-' + Date.now() + '.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function descargarResumen(idx) {
+  let historial = [];
+  try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
+  const d = historial[idx]; if (!d) return;
+  let txt = `RESUMEN DEL OBSERVATORIO DEL TRABAJO\nDavid Salgado López — Sintropía Social\nGenerado: ${new Date(d.fecha).toLocaleString('es-MX')}\n${'─'.repeat(50)}\n\nSÍNTESIS DE LECTURA\n\n${d.resumenTexto}\n`;
+  if (d.interpretacion) txt += `\nINTERPRETACIÓN ACADÉMICA\n\n${d.interpretacion}\n`;
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'resumen-observatorio-' + d.fecha.slice(0, 10) + '.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function generarResumenManual() {
+  if (!getGeminiKey()) { alert('Primero configura tu API key de Gemini (⚙ Configurar IA, abajo en la barra lateral).'); return; }
+  const btn = document.getElementById('btnResumenSemanal');
+  btn.disabled = true; btn.textContent = 'Generando...';
+  try {
+    await generarResumenSemanal();
+  } catch(e) {
+    alert('No se pudo generar el resumen: ' + (e.message || 'intenta de nuevo.'));
+  }
+  btn.disabled = false; btn.textContent = 'Generar resumen de esta semana';
+}
+
+let verTodoHistorial = false;
 function apF() {
   const d=document.getElementById('fD').value, h=document.getElementById('fH').value,
         p=document.getElementById('fP').value, i=document.getElementById('fI').value,
         f=document.getElementById('fF').value, t=document.getElementById('fT').value.toLowerCase();
-  nF = notas.filter(n => {
+  const sinFiltros = !d && !h && !p && !i && !f && !t;
+  const filtradas = notas.filter(n => {
     if (d && n.fecha < d) return false; if (h && n.fecha > h) return false;
     if (p && n.pais !== p) return false; if (i && n.indicador !== i) return false;
     if (f && n.fuente !== f) return false;
     if (t && !n.titulo.toLowerCase().includes(t) && !n.resumen.toLowerCase().includes(t)) return false;
     return true;
-  });
+  }).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  if (sinFiltros && !verTodoHistorial) {
+    nF = filtradas.slice(0, 5);
+    nF._total = filtradas.length;
+    nF._truncado = filtradas.length > 5;
+  } else {
+    nF = filtradas;
+    nF._truncado = false;
+  }
   renderL();
 }
-function clF() { ['fD','fH','fP','fI','fF','fT'].forEach(id=>{document.getElementById(id).value='';}); apF(); }
+function clF() { ['fD','fH','fP','fI','fF','fT'].forEach(id=>{document.getElementById(id).value='';}); verTodoHistorial=false; apF(); }
+function toggleVerTodo() { verTodoHistorial = !verTodoHistorial; apF(); }
 
 function semL(fecha) {
   const d=new Date(fecha+'T12:00:00'), l=new Date(d); l.setDate(d.getDate()-((d.getDay()+6)%7));
@@ -506,27 +680,40 @@ function fmtF(f) { return new Date(f+'T12:00:00').toLocaleDateString('es-MX',{da
 function renderL() {
   const c = document.getElementById('lista');
   if (!nF.length) { c.innerHTML=`<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">${notas.length===0?'Aún no hay notas. Usa "Buscar notas ahora" para la primera búsqueda automática.':'Sin resultados para los filtros seleccionados.'}</div></div>`; return; }
-  const sorted = [...nF].sort((a,b)=>b.fecha.localeCompare(a.fecha));
-  let html=''; let lastSem='';
-  sorted.forEach(n => {
+  let html='';
+  if (nF._truncado) {
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;font-size:.78rem;color:var(--soft);">
+      <span>Mostrando las 5 notas más recientes de ${nF._total}.</span>
+      <button class="btn btn-sm" onclick="toggleVerTodo()">Ver historial completo</button>
+    </div>`;
+  } else if (verTodoHistorial) {
+    html += `<div style="display:flex;justify-content:flex-end;margin-bottom:.85rem;">
+      <button class="btn btn-sm" onclick="toggleVerTodo()">Ver solo las 5 más recientes</button>
+    </div>`;
+  }
+  let lastSem='';
+  const admin = isAdmin();
+  nF.forEach(n => {
     const sm=semL(n.fecha); if (sm!==lastSem) { html+=`<div class="semana-hdr">${sm}</div>`; lastSem=sm; }
     const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+    const accionesHTML = admin ? `<div class="nota-acciones">
+        ${!n.analisis?`<button class="btn btn-sm btn-amber" onclick="genA('${n.id}')">Generar análisis social ↗</button>`:`<button class="btn btn-sm" onclick="genA('${n.id}')">Regenerar análisis ↗</button>`}
+        <button class="btn btn-sm btn-danger" onclick="delN('${n.id}')">Eliminar</button>
+      </div>` : '';
     html+=`<div class="nota" id="n-${n.id}">
       <div class="nota-meta"><span class="badge badge-fecha">${fmtF(n.fecha)}</span><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span>${n.auto?'<span class="badge badge-auto">auto</span>':''}</div>
       <div class="nota-titulo">${n.titulo}</div>
       ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref.length>60?n.ref.slice(0,60)+'...':n.ref}</a></div>`:''}
       <div class="nota-resumen">${n.resumen}</div>
       ${analisisHTML}
-      <div class="nota-acciones">
-        ${!n.analisis?`<button class="btn btn-sm btn-amber" onclick="genA('${n.id}')">Generar análisis social ↗</button>`:`<button class="btn btn-sm" onclick="genA('${n.id}')">Regenerar análisis ↗</button>`}
-        <button class="btn btn-sm btn-danger" onclick="delN('${n.id}')">Eliminar</button>
-      </div>
+      ${accionesHTML}
     </div>`;
   });
   c.innerHTML = html;
 }
 
 async function genA(id) {
+  if (!isAdmin()) return;
   const n=notas.find(x=>x.id===id); if (!n) return;
   const card=document.getElementById('n-'+id);
   card.querySelectorAll('.nota-acciones button').forEach(b=>{b.disabled=true;b.innerHTML='<span class="loading"></span>Generando...';});
@@ -534,7 +721,7 @@ async function genA(id) {
   await save(); upS(); apF();
 }
 
-function delN(id) { if (!confirm('¿Eliminar esta nota?')) return; notas=notas.filter(n=>n.id!==id); save(); upS(); apF(); }
+function delN(id) { if (!isAdmin()) return; if (!confirm('¿Eliminar esta nota?')) return; notas=notas.filter(n=>n.id!==id); save(); upS(); apF(); }
 
 function getForm() { return {titulo:document.getElementById('nTi').value.trim(),pais:document.getElementById('nPa').value,fuente:document.getElementById('nFu').value,indicador:document.getElementById('nIn').value,fecha:document.getElementById('nFe').value,ref:document.getElementById('nRe').value.trim(),resumen:document.getElementById('nRs').value.trim()}; }
 function valForm(d) { if (!d.titulo||!d.pais||!d.fuente||!d.indicador||!d.fecha||!d.resumen){document.getElementById('fMsg').innerHTML='<span style="color:var(--red)">Completa todos los campos obligatorios (*).</span>';return false;}return true; }
@@ -611,12 +798,61 @@ async function addIAan(js) {
   document.getElementById('aiS').textContent='Nota con análisis agregada.';
 }
 
+function shareObservatorio(red) {
+  const url = location.origin + location.pathname;
+  const texto = 'Observatorio del Trabajo — David Salgado: seguimiento de estudios sobre mercados laborales en México y América Latina.';
+  if (red === 'instagram') {
+    const hacerCopia = () => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(
+          () => alert('Enlace copiado. Instagram no permite compartir enlaces directamente desde la web — pégalo en tu bio o en una historia.'),
+          () => prompt('Copia este enlace para compartir en Instagram:', url)
+        );
+      } else {
+        prompt('Copia este enlace para compartir en Instagram:', url);
+      }
+    };
+    hacerCopia();
+    return;
+  }
+  const links = {
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+    x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(texto)}&url=${encodeURIComponent(url)}`
+  };
+  window.open(links[red], '_blank', 'noopener,noreferrer,width=600,height=520');
+}
+
 function goTab(t,el) {
+  if ((t === 'agregar' || t === 'ia') && !isAdmin()) { configurarAdmin(); return; }
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
   document.getElementById('tab-'+t).classList.add('on'); el.classList.add('on');
   if (t==='semanal') renderSemanal();
 }
+
+// ── Visibilidad de herramientas de edición/publicación: solo para quien
+// tenga configurado su token de administrador en este navegador (ver admin.js).
+// Un visitante normal solo puede leer el historial, el resumen semanal y
+// explorar — nunca crear, editar ni eliminar notas. ──
+function refrescarUIAdmin() {
+  const admin = isAdmin();
+  ['navAgregar','navIA','navGestionarLabel'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = !admin; });
+  const btnResumen = document.getElementById('btnResumenSemanal'); if (btnResumen) btnResumen.hidden = !admin;
+  const cfgBtn = document.getElementById('adminCfgBtn'); if (cfgBtn) cfgBtn.textContent = admin ? '🔑 Administrador activo' : '🔑 Acceso administrador';
+  if (!admin) {
+    const agregarOn = document.getElementById('tab-agregar').classList.contains('on');
+    const iaOn = document.getElementById('tab-ia').classList.contains('on');
+    if (agregarOn || iaOn) goTabForce('historial', document.getElementById('navHistorial'));
+  }
+  apF();
+}
+function goTabForce(t, el) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('on'); el.classList.add('on');
+}
+onAdminChange(refrescarUIAdmin);
 
 document.getElementById('nFe').value = new Date().toISOString().split('T')[0];
 
@@ -733,6 +969,7 @@ async function loadWithSeed() {
   }
 }
 
+refrescarUIAdmin();
 loadWithSeed();
 </script>
 </body>
