@@ -64,7 +64,9 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 /* MAIN */
 .main{padding:0;overflow-x:hidden;}
 .panel{display:none;}
-.panel.on{display:block;}
+.panel.on{display:block;animation:fadeInUp .32s ease both;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
 /* PAGE HEADER */
 .page-hdr{padding:2rem 2.5rem 1.5rem;border-bottom:1px solid var(--rule);}
@@ -94,7 +96,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .lista-wrap{padding:1.25rem 2rem;}
 .semana-hdr{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#bbb;padding:.5rem 0 .3rem;border-bottom:1px solid var(--rule);margin-bottom:.5rem;margin-top:1rem;}
 .semana-hdr:first-child{margin-top:0;}
-.nota{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1rem 1.25rem;margin-bottom:.6rem;transition:border-color .15s;}
+.nota{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1rem 1.25rem;margin-bottom:.6rem;transition:border-color .15s;animation:fadeInUp .3s ease both;}
 .nota:hover{border-color:var(--pm);}
 .nota-meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.65rem;}
 .badge{font-size:.65rem;padding:.18rem .5rem;border-radius:2px;font-weight:400;}
@@ -107,7 +109,9 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .nota-ref{font-size:.72rem;color:#aaa;margin-bottom:.5rem;}
 .nota-ref a{color:var(--o);}
 .nota-resumen{font-size:.85rem;color:var(--soft);line-height:1.7;margin-bottom:.75rem;}
-.analisis{background:var(--pbg);border-left:3px solid var(--p);padding:.85rem 1.1rem;margin-top:.4rem;border-radius:0 3px 3px 0;}
+.analisis{background:var(--pbg);border-left:3px solid var(--p);padding:.85rem 1.1rem;margin-top:.4rem;border-radius:0 3px 3px 0;animation:fadeIn .4s ease both;}
+.fade-block{animation:fadeInUp .35s ease both;}
+.ia-status,.form-msg{transition:opacity .15s;}
 .analisis-label{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.6rem;}
 .analisis-texto{font-family:'Times New Roman',Times,serif;font-size:.9rem;color:#3B2A6E;line-height:1.75;}
 .analisis-texto p{margin-bottom:.65rem;}
@@ -140,7 +144,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 
 /* SEMANAL */
 .semanal-wrap{padding:1.5rem 2.5rem;}
-.semanal-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;}
+.semanal-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;animation:fadeInUp .3s ease both;}
 .semanal-titulo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:.3rem;}
 .semanal-fecha{font-size:.72rem;color:#bbb;margin-bottom:1rem;}
 .semanal-analisis{font-family:'Times New Roman',Times,serif;font-size:.9rem;color:#3B2A6E;line-height:1.75;}
@@ -212,7 +216,6 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
     <button class="nav-item" onclick="goTab('buscar',this)"><span class="ni">⌕</span>Buscar con IA</button>
     <div class="nav-label" id="navGestionarLabel" style="margin-top:1rem;">Gestionar</div>
     <button class="nav-item" onclick="goTab('agregar',this)" id="navAgregar"><span class="ni">+</span>Nueva nota</button>
-    <button class="nav-item" onclick="goTab('ia',this)" id="navIA"><span class="ni">⟳</span>Búsqueda automática</button>
   </nav>
   <div class="sb-footer">
     <div class="sync-info" id="syncInfo">Sincroniza con Google Sheet automáticamente.</div>
@@ -335,25 +338,6 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
     </div>
   </div>
 
-  <!-- IA AUTOMÁTICA -->
-  <div id="tab-ia" class="panel">
-    <div class="page-hdr">
-      <div class="page-title">Búsqueda automática con IA</div>
-      <div class="page-sub">Encuentra y registra notas automáticamente sobre trabajo en México y América Latina</div>
-    </div>
-    <div class="ia-wrap">
-      <div class="ia-card">
-        <div class="form-section">Búsqueda manual</div>
-        <p class="ia-desc">Describe el tema o pregunta y la IA buscará notas relevantes para agregar al historial con análisis social incluido.</p>
-        <div class="ia-input-row">
-          <input type="text" id="aiQ" placeholder="Ej: informalidad laboral en México 2025...">
-          <button class="btn btn-ink" onclick="busIA()">Buscar ↗</button>
-        </div>
-        <div class="ia-status" id="aiS"></div>
-      </div>
-      <div id="aiR"></div>
-    </div>
-  </div>
 
 </main>
 </div>
@@ -419,7 +403,7 @@ let nF = [];
 async function load() {
   try { const r = await window.storage.get('obs_v3'); if (r && r.value) notas = JSON.parse(r.value); } catch(e) { notas = []; }
   try { const last = await window.storage.get('obs_last_auto'); if (last && last.value) document.getElementById('syncInfo').textContent = 'Última búsqueda: ' + last.value; } catch(e) {}
-  checkAutoRun(); apF(); upS(); renderSemanal();
+  apF(); upS(); renderSemanal();
 }
 
 async function save() { try { await window.storage.set('obs_v3', JSON.stringify(notas)); } catch(e) {} }
@@ -430,30 +414,6 @@ function upS() {
   document.getElementById('stS').textContent = notas.filter(n => new Date(n.fecha+'T12:00:00') >= lun).length;
   document.getElementById('stA').textContent = notas.filter(n => n.analisis && n.analisis.length > 10).length;
   document.getElementById('stF').textContent = new Set(notas.map(n => n.fuente)).size;
-}
-
-async function checkAutoRun() {
-  const hoy = new Date(); if (hoy.getDay() !== 1) return;
-  const fechaHoy = hoy.toISOString().split('T')[0];
-  try { const r = await window.storage.get('obs_auto_run_date'); if (r && r.value === fechaHoy) return; } catch(e) {}
-  await runAutoSearch();
-  try { await window.storage.set('obs_auto_run_date', fechaHoy); } catch(e) {}
-}
-
-async function runAutoSearch() {
-  if (!getGeminiKey()) { alert('Primero configura tu API key de Gemini (⚙ Configurar IA, abajo en la barra lateral).'); return; }
-  const btn = document.querySelector('.sync-btn'); btn.disabled = true; btn.textContent = '⟳ Buscando...';
-  const queries = ['empleo formal México últimas semanas','informalidad laboral América Latina reciente','salario mínimo brecha salarial México','desempleo juvenil América Latina'];
-  let agregadas = 0;
-  for (const q of queries) {
-    try { const nuevas = await fetchNotasIA(q, true); for (const n of nuevas) { if (!notas.find(x => x.titulo.toLowerCase() === n.titulo.toLowerCase())) { notas.unshift(n); agregadas++; } } } catch(e) {}
-  }
-  if (agregadas > 0) { await save(); try { await generarResumenSemanal(); } catch(e) {} }
-  const ahora = new Date().toLocaleString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-  try { await window.storage.set('obs_last_auto', ahora); } catch(e) {}
-  document.getElementById('syncInfo').textContent = 'Última búsqueda: '+ahora+' ('+agregadas+' nuevas)';
-  btn.disabled = false; btn.textContent = '⟳ Buscar notas ahora';
-  upS(); apF(); renderSemanal();
 }
 
 async function fetchNotasIA(query, conAnalisis) {
@@ -507,14 +467,15 @@ function makeResumenObservatorio(top) {
   return t;
 }
 
+// Paso 1: resumen + interpretación en el estilo de David (determinístico,
+// sin IA — igual que "Comparte una noticia" en su primer paso). Nunca
+// requiere clave de Gemini, así que nunca puede "no aparecer nada".
 async function generarResumenSemanal() {
   const top5 = [...notas].sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 5);
   if (!top5.length) throw new Error('Aún no hay notas registradas en el historial.');
   const resumenTexto = makeResumenObservatorio(top5);
-  const notasTxt = top5.map(n => `- ${n.titulo} (${n.pais}, ${n.fuente}): ${n.resumen}`).join('\n');
-  const p = `Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. Tu análisis parte siempre desde los trabajadores (nunca desde los mercados), mezcla teoría densa (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano, sostiene contradicciones sin resolverlas y cierra abriendo preguntas, no dando recetas.\nCon esa voz, escribe una interpretación académica robusta de 1 a 2 párrafos sobre el patrón que emerge de estas notas recientes del observatorio:\n${notasTxt}\nNo describas cada nota por separado: interpreta qué dicen juntas.`;
-  const interpretacion = await callGemini(p, 700) || '';
-  const registro = { fecha: new Date().toISOString(), notas: top5.length, resumenTexto, interpretacion };
+  const notasUsadas = top5.map(n => ({ titulo: n.titulo, pais: n.pais, fuente: n.fuente, resumen: n.resumen }));
+  const registro = { fecha: new Date().toISOString(), notas: top5.length, resumenTexto, interpretacion: '', notasUsadas };
   let historial = [];
   try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
   historial.unshift(registro);
@@ -523,23 +484,45 @@ async function generarResumenSemanal() {
   renderSemanal();
 }
 
+// Paso 2 (bajo un botón aparte, opcional): interpretación académica con
+// IA sobre ese mismo resumen — solo se llama a Gemini si el admin lo pide.
+async function generarInterpretacionResumen(idx) {
+  if (!getGeminiKey()) { alert('Primero configura tu API key de Gemini (⚙ Configurar IA, abajo en la barra lateral).'); return; }
+  let historial = [];
+  try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
+  const registro = historial[idx]; if (!registro) return;
+  const notasTxt = (registro.notasUsadas || []).map(n => `- ${n.titulo} (${n.pais}, ${n.fuente}): ${n.resumen}`).join('\n');
+  const p = `Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. Tu análisis parte siempre desde los trabajadores (nunca desde los mercados), mezcla teoría densa (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano, sostiene contradicciones sin resolverlas y cierra abriendo preguntas, no dando recetas.\nCon esa voz, escribe una interpretación académica robusta de 1 a 2 párrafos sobre el patrón que emerge de estas notas recientes del observatorio:\n${notasTxt}\nNo describas cada nota por separado: interpreta qué dicen juntas.`;
+  try {
+    registro.interpretacion = await callGemini(p, 700) || '';
+    await window.storage.set('obs_resumenes', JSON.stringify(historial));
+    renderSemanal();
+  } catch (e) {
+    alert('No se pudo generar la interpretación: ' + e.message);
+  }
+}
+
 async function renderSemanal() {
   const wrap = document.getElementById('semanalWrap');
   let historial = [];
   try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
-  if (!historial.length) { wrap.innerHTML = '<div class="semana-empty">Aún no hay resúmenes generados. Da clic en "Generar resumen de esta semana" (usa tu clave de Gemini).</div>'; return; }
+  if (!historial.length) { wrap.innerHTML = '<div class="semana-empty">Aún no hay resúmenes generados. Da clic en "Generar resumen de esta semana".</div>'; return; }
+  const admin = isAdmin();
   let html = '';
   historial.forEach((d, idx) => {
     const fecha = new Date(d.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     const resumenHTML = (d.resumenTexto || '').split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
     const interpHTML = d.interpretacion ? d.interpretacion.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('') : '';
+    const botonIA = admin ? (d.interpretacion
+      ? `<button class="btn btn-sm" onclick="generarInterpretacionResumen(${idx})">Regenerar interpretación IA</button>`
+      : `<button class="btn btn-sm btn-amber" onclick="generarInterpretacionResumen(${idx})">Generar interpretación IA ↗</button>`) : '';
     html += `<div class="semanal-card">
       <div class="semanal-titulo">Resumen generado el ${fecha}</div>
       <div class="semanal-fecha">${d.notas} nota(s) más recientes del historial</div>
       <div class="semanal-label">Síntesis de lectura</div>
       <div class="semanal-analisis">${resumenHTML}</div>
       ${interpHTML ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${interpHTML}</div>` : ''}
-      <div class="nota-acciones" style="margin-top:1rem;"><button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
+      <div class="nota-acciones" style="margin-top:1rem;">${botonIA}<button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
     </div>`;
   });
   wrap.innerHTML = html;
@@ -584,14 +567,16 @@ async function analizarNoticiaCompartida() {
     notaCompartidaActual = n;
     status.textContent = 'Análisis listo.';
     resultado.innerHTML = `
-      <div class="nota-meta" style="margin-top:1rem;"><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div>
-      <div class="nota-titulo" style="margin-top:.5rem;">${n.titulo}</div>
-      <div class="semanal-label">Resumen</div>
-      <div class="nota-resumen">${n.resumenFactual || 'No se pudo generar un resumen de esta página.'}</div>
-      ${n.interpretacion ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${n.interpretacion.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>` : ''}
-      <div class="nota-acciones" style="margin-top:1rem;">
-        <button class="btn btn-sm btn-purple" onclick="guardarNoticiaCompartida()">Guardar en el Observatorio</button>
-        <button class="btn btn-sm" onclick="descargarNoticiaCompartida()">⬇ Descargar esta noticia</button>
+      <div class="fade-block">
+        <div class="nota-meta" style="margin-top:1rem;"><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div>
+        <div class="nota-titulo" style="margin-top:.5rem;">${n.titulo}</div>
+        <div class="semanal-label">Resumen</div>
+        <div class="nota-resumen">${n.resumenFactual || 'No se pudo generar un resumen de esta página.'}</div>
+        ${n.interpretacion ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${n.interpretacion.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>` : ''}
+        <div class="nota-acciones" style="margin-top:1rem;">
+          <button class="btn btn-sm btn-purple" onclick="guardarNoticiaCompartida()">Guardar en el Observatorio</button>
+          <button class="btn btn-sm" onclick="descargarNoticiaCompartida()">⬇ Descargar esta noticia</button>
+        </div>
       </div>`;
   } catch (e) {
     status.textContent = 'No se pudo analizar: ' + e.message;
@@ -637,7 +622,6 @@ async function descargarResumen(idx) {
 }
 
 async function generarResumenManual() {
-  if (!getGeminiKey()) { alert('Primero configura tu API key de Gemini (⚙ Configurar IA, abajo en la barra lateral).'); return; }
   const btn = document.getElementById('btnResumenSemanal');
   btn.disabled = true; btn.textContent = 'Generando...';
   try {
@@ -750,22 +734,6 @@ async function gNA() {
   setTimeout(()=>{document.getElementById('fMsg').innerHTML='';clrForm();},2500);
 }
 
-async function busIA() {
-  const q=document.getElementById('aiQ').value.trim(); if (!q) return;
-  document.getElementById('aiS').innerHTML='<span class="loading"></span>Buscando y analizando...';
-  document.getElementById('aiR').innerHTML='';
-  try {
-    const res = await fetchNotasIA(q, false);
-    document.getElementById('aiS').textContent=res.length+' nota(s) encontrada(s). Revísalas y agrégalas.';
-    let h='';
-    res.forEach(x => {
-      const js=JSON.stringify(JSON.stringify(x));
-      h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(x.fecha)}</span><span class="badge badge-pais">${x.pais}</span><span class="badge badge-fuente">${x.fuente}</span><span class="badge badge-indicador">${x.indicador}</span></div><div class="nota-titulo">${x.titulo}</div>${x.ref?`<div class="nota-ref">${x.ref}</div>`:''}<div class="nota-resumen">${x.resumen}</div><div class="nota-acciones"><button class="btn btn-sm btn-ink" onclick='addIA(${js})'>Agregar al historial</button><button class="btn btn-sm btn-amber" onclick='addIAan(${js})'>Agregar + análisis social ↗</button></div></div>`;
-    });
-    document.getElementById('aiR').innerHTML=h;
-  } catch(e) { document.getElementById('aiS').textContent='Error al procesar. Intenta de nuevo.'; }
-}
-
 async function buscarPublico() {
   const q=document.getElementById('pubQ').value.trim(); if (!q) return;
   document.getElementById('pubS').innerHTML='<span class="loading"></span>Buscando...';
@@ -794,15 +762,6 @@ async function buscarPublico() {
   }
 }
 
-async function addIA(js) { const x=JSON.parse(js); notas.unshift(x); await save(); upS(); apF(); document.getElementById('aiS').textContent='Nota agregada al historial.'; }
-async function addIAan(js) {
-  const x=JSON.parse(js);
-  document.getElementById('aiS').innerHTML='<span class="loading"></span>Generando análisis social...';
-  x.analisis=await llmAnalisis(x.titulo,x.resumen,x.indicador,x.pais,x.fuente);
-  notas.unshift(x); await save(); upS(); apF();
-  document.getElementById('aiS').textContent='Nota con análisis agregada.';
-}
-
 function shareObservatorio(red) {
   const url = location.origin + location.pathname;
   const texto = 'Observatorio del Trabajo — David Salgado: seguimiento de estudios sobre mercados laborales en México y América Latina.';
@@ -829,7 +788,7 @@ function shareObservatorio(red) {
 }
 
 function goTab(t,el) {
-  if ((t === 'agregar' || t === 'ia') && !isAdmin()) { configurarAdmin(); return; }
+  if (t === 'agregar' && !isAdmin()) { configurarAdmin(); return; }
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
   document.getElementById('tab-'+t).classList.add('on'); el.classList.add('on');
@@ -842,14 +801,13 @@ function goTab(t,el) {
 // explorar — nunca crear, editar ni eliminar notas. ──
 function refrescarUIAdmin() {
   const admin = isAdmin();
-  ['navAgregar','navIA','navGestionarLabel','btnGeminiCfg'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = !admin; });
+  ['navAgregar','navGestionarLabel','btnGeminiCfg'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = !admin; });
   const btnResumen = document.getElementById('btnResumenSemanal'); if (btnResumen) btnResumen.hidden = !admin;
   const cfgBtn = document.getElementById('adminCfgBtn');
   if (cfgBtn) { cfgBtn.hidden = !admin; cfgBtn.textContent = admin ? 'Administrador activo — cambiar' : 'Acceso administrador'; }
   if (!admin) {
-    const agregarOn = document.getElementById('tab-agregar').classList.contains('on');
-    const iaOn = document.getElementById('tab-ia').classList.contains('on');
-    if (agregarOn || iaOn) goTabForce('historial', document.getElementById('navHistorial'));
+    const agregarPanel = document.getElementById('tab-agregar');
+    if (agregarPanel && agregarPanel.classList.contains('on')) goTabForce('historial', document.getElementById('navHistorial'));
   }
   apF();
 }
