@@ -394,12 +394,25 @@ async function callGemini(promptText, maxTokens) {
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({
       contents: [{ parts: [{ text: promptText }] }],
-      generationConfig: { maxOutputTokens: maxTokens || 1200 }
+      generationConfig: {
+        maxOutputTokens: maxTokens || 1200,
+        // Los modelos "flash" recientes razonan internamente antes de
+        // responder, y ese razonamiento consume el mismo presupuesto de
+        // tokens de salida — sin este límite, a veces se gasta todo el
+        // presupuesto pensando y no queda nada para la respuesta final.
+        thinkingConfig: { thinkingBudget: 0 }
+      }
     })
   });
   const data = await r.json();
   if (data.error) throw new Error(data.error.message || 'Error de Gemini');
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  const candidato = data.candidates?.[0];
+  const partes = candidato?.content?.parts || [];
+  const texto = partes.map(p => p.text || '').join('\n').trim();
+  if (!texto && candidato?.finishReason && candidato.finishReason !== 'STOP') {
+    throw new Error('Gemini no completó la respuesta (motivo: ' + candidato.finishReason + '). Intenta de nuevo.');
+  }
+  return texto;
 }
 
 let notas = [];

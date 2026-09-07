@@ -124,16 +124,33 @@ function analizarUrl(url) {
       muteHttpExceptions: true,
       payload: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 1200, responseMimeType: 'application/json' }
+        generationConfig: {
+          maxOutputTokens: 3000,
+          responseMimeType: 'application/json',
+          // Los modelos "flash" recientes razonan internamente antes de
+          // responder, y ese razonamiento consume el mismo presupuesto de
+          // tokens de salida — si no se limita, a veces se gasta todo el
+          // presupuesto pensando y no queda nada para el JSON final.
+          thinkingConfig: { thinkingBudget: 0 }
+        }
       })
     }
   );
   var data = JSON.parse(respuestaIA.getContentText());
   if (data.error) throw new Error(data.error.message || 'Error de Gemini.');
-  var textoIA = (data.candidates && data.candidates[0] && data.candidates[0].content.parts[0].text) || '{}';
-  var analisis;
-  try { analisis = JSON.parse(textoIA.replace(/```json|```/g, '').trim()); }
-  catch (e) { throw new Error('La IA no devolvió un formato válido, intenta de nuevo.'); }
+  var candidato = data.candidates && data.candidates[0];
+  if (!candidato) throw new Error('Gemini no devolvió resultados.' + (data.promptFeedback ? ' (' + JSON.stringify(data.promptFeedback) + ')' : ''));
+  var partes = (candidato.content && candidato.content.parts) || [];
+  var textoIA = partes.map(function (p) { return p.text || ''; }).join('\n').trim();
+  if (!textoIA) throw new Error('Gemini devolvió una respuesta vacía (motivo: ' + (candidato.finishReason || 'desconocido') + ').');
+  var limpio = textoIA.replace(/```json|```/g, '').trim();
+  var analisis = null;
+  try { analisis = JSON.parse(limpio); }
+  catch (e1) {
+    var m = limpio.match(/\{[\s\S]*\}/);
+    if (m) { try { analisis = JSON.parse(m[0]); } catch (e2) {} }
+  }
+  if (!analisis) throw new Error('La IA no devolvió un formato válido. Respuesta recibida: ' + limpio.slice(0, 300));
 
   return {
     ok: true,
