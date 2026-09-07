@@ -16,6 +16,7 @@
   --red:#8B2020;--green:#1A5C2A;--green-bg:#EAF2EC;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+[hidden]{display:none!important;}
 html{scroll-behavior:smooth;}
 body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;}
 
@@ -370,9 +371,11 @@ function configurarGeminiKey() {
     alert(nueva.trim() ? 'Clave guardada en este navegador.' : 'Clave eliminada.');
   }
 }
-async function callGemini(promptText, maxTokens) {
-  const key = getGeminiKey();
-  if (!key) throw new Error('Configura tu API key de Gemini primero (⚙ Configurar IA, abajo en la barra lateral).');
+function _esErrorTemporalGemini(msg) {
+  return /overloaded|high demand|unavailable|503|try again/i.test(msg || '');
+}
+
+async function _llamarGeminiUnaVez(promptText, maxTokens, key) {
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(key)}`, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
@@ -395,6 +398,23 @@ async function callGemini(promptText, maxTokens) {
     throw new Error('Gemini no completó la respuesta (motivo: ' + candidato.finishReason + '). Intenta de nuevo.');
   }
   return texto;
+}
+
+async function callGemini(promptText, maxTokens) {
+  const key = getGeminiKey();
+  if (!key) throw new Error('Configura tu API key de Gemini primero (⚙ Configurar IA, abajo en la barra lateral).');
+  try {
+    return await _llamarGeminiUnaVez(promptText, maxTokens, key);
+  } catch (e) {
+    // El modelo a veces está saturado por demanda alta — se reintenta
+    // automáticamente una vez, con una breve pausa, antes de rendirse.
+    if (_esErrorTemporalGemini(e.message)) {
+      await new Promise(res => setTimeout(res, 2000));
+      try { return await _llamarGeminiUnaVez(promptText, maxTokens, key); }
+      catch (e2) { throw new Error('Gemini está saturado por demanda alta en este momento. Intenta de nuevo en unos segundos.'); }
+    }
+    throw e;
+  }
 }
 
 let notas = [];

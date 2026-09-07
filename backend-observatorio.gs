@@ -101,21 +101,7 @@ function extraerTextoLegible_(html) {
   return { titulo: titulo, texto: texto.slice(0, 8000) };
 }
 
-function analizarUrl(url) {
-  if (!url || !/^https?:\/\//i.test(url)) throw new Error('Pega un link válido (debe empezar con http:// o https://).');
-  var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
-  if (resp.getResponseCode() >= 400) throw new Error('No se pudo abrir ese link (código ' + resp.getResponseCode() + ').');
-  var extraido = extraerTextoLegible_(resp.getContentText());
-  var titulo = extraido.titulo, texto = extraido.texto;
-  if (!texto || texto.length < 200) throw new Error('No se pudo leer contenido suficiente en esa página. Prueba con otro link.');
-
-  var dominio = url.replace(/^https?:\/\//i, '').split('/')[0];
-  var prompt = 'Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. ' +
-    'Analiza el siguiente artículo (dominio: ' + dominio + ', título aproximado: "' + titulo + '") sobre temas de trabajo, empleo o mercado laboral:\n\n' +
-    texto.slice(0, 6000) + '\n\n' +
-    'Responde SOLO con un objeto JSON válido, sin markdown, con esta forma exacta:\n' +
-    '{"titulo":"título breve y claro de la noticia","pais":"país principal del que habla (o \\"Internacional\\")","fuente":"nombre de la fuente/medio","indicador":"uno de: Empleo formal, Desempleo, Salario mínimo, Informalidad, Trabajo digno, Brecha salarial, Trabajo infantil, Sindicatos, Precarización, Productividad, Automatización, Migración laboral","resumenFactual":"3 a 4 oraciones resumiendo los hallazgos concretos del artículo, en tono neutral","interpretacion":"1 a 2 párrafos con tu voz analítica característica — partes desde los trabajadores nunca desde los mercados, mezclas teoría (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano, sostienes contradicciones sin resolverlas, cierras abriendo preguntas"}';
-
+function llamarGeminiUnaVez_(prompt) {
   var respuestaIA = UrlFetchApp.fetch(
     'https://generativelanguage.googleapis.com/v1beta/models/' + MODELO_GEMINI + ':generateContent?key=' + encodeURIComponent(getGeminiKey_()),
     {
@@ -136,6 +122,40 @@ function analizarUrl(url) {
   );
   var data = JSON.parse(respuestaIA.getContentText());
   if (data.error) throw new Error(data.error.message || 'Error de Gemini.');
+  return data;
+}
+
+function llamarGeminiConReintento_(prompt) {
+  try {
+    return llamarGeminiUnaVez_(prompt);
+  } catch (e) {
+    // El modelo a veces está saturado por demanda alta — se reintenta
+    // automáticamente una vez, con una breve pausa, antes de rendirse.
+    if (/overloaded|high demand|unavailable|503|try again/i.test(e.message || '')) {
+      Utilities.sleep(2000);
+      try { return llamarGeminiUnaVez_(prompt); }
+      catch (e2) { throw new Error('Gemini está saturado por demanda alta en este momento. Intenta de nuevo en unos segundos.'); }
+    }
+    throw e;
+  }
+}
+
+function analizarUrl(url) {
+  if (!url || !/^https?:\/\//i.test(url)) throw new Error('Pega un link válido (debe empezar con http:// o https://).');
+  var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
+  if (resp.getResponseCode() >= 400) throw new Error('No se pudo abrir ese link (código ' + resp.getResponseCode() + ').');
+  var extraido = extraerTextoLegible_(resp.getContentText());
+  var titulo = extraido.titulo, texto = extraido.texto;
+  if (!texto || texto.length < 200) throw new Error('No se pudo leer contenido suficiente en esa página. Prueba con otro link.');
+
+  var dominio = url.replace(/^https?:\/\//i, '').split('/')[0];
+  var prompt = 'Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. ' +
+    'Analiza el siguiente artículo (dominio: ' + dominio + ', título aproximado: "' + titulo + '") sobre temas de trabajo, empleo o mercado laboral:\n\n' +
+    texto.slice(0, 6000) + '\n\n' +
+    'Responde SOLO con un objeto JSON válido, sin markdown, con esta forma exacta:\n' +
+    '{"titulo":"título breve y claro de la noticia","pais":"país principal del que habla (o \\"Internacional\\")","fuente":"nombre de la fuente/medio","indicador":"uno de: Empleo formal, Desempleo, Salario mínimo, Informalidad, Trabajo digno, Brecha salarial, Trabajo infantil, Sindicatos, Precarización, Productividad, Automatización, Migración laboral","resumenFactual":"3 a 4 oraciones resumiendo los hallazgos concretos del artículo, en tono neutral","interpretacion":"1 a 2 párrafos con tu voz analítica característica — partes desde los trabajadores nunca desde los mercados, mezclas teoría (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano, sostienes contradicciones sin resolverlas, cierras abriendo preguntas"}';
+
+  var data = llamarGeminiConReintento_(prompt);
   var candidato = data.candidates && data.candidates[0];
   if (!candidato) throw new Error('Gemini no devolvió resultados.' + (data.promptFeedback ? ' (' + JSON.stringify(data.promptFeedback) + ')' : ''));
   var partes = (candidato.content && candidato.content.parts) || [];
