@@ -125,13 +125,11 @@ function analizarUrl(url) {
       payload: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: {
-          maxOutputTokens: 3000,
-          responseMimeType: 'application/json',
-          // Los modelos "flash" recientes razonan internamente antes de
-          // responder, y ese razonamiento consume el mismo presupuesto de
-          // tokens de salida — si no se limita, a veces se gasta todo el
-          // presupuesto pensando y no queda nada para el JSON final.
-          thinkingConfig: { thinkingBudget: 0 }
+          // Se deja un margen amplio: los modelos "flash" recientes razonan
+          // internamente antes de responder, y ese razonamiento consume el
+          // mismo presupuesto de tokens de salida.
+          maxOutputTokens: 4000,
+          responseMimeType: 'application/json'
         }
       })
     }

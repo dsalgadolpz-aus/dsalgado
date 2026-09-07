@@ -217,8 +217,8 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
   <div class="sb-footer">
     <div class="sync-info" id="syncInfo">Sincroniza con Google Sheet automáticamente.</div>
     <button class="sync-btn" onclick="loadFromSheet()">⟳ Buscar notas ahora</button>
-    <button class="cfg-btn" onclick="configurarGeminiKey()">⚙ Configurar IA (Gemini)</button>
-    <button class="cfg-btn" onclick="configurarAdmin()" id="adminCfgBtn">🔑 Acceso administrador</button>
+    <button class="cfg-btn" onclick="configurarGeminiKey()" id="btnGeminiCfg" hidden>⚙ Configurar IA (Gemini)</button>
+    <button class="cfg-btn" onclick="configurarAdmin()" id="adminCfgBtn" hidden>Acceso administrador</button>
   </div>
 </aside>
 
@@ -395,12 +395,10 @@ async function callGemini(promptText, maxTokens) {
     body: JSON.stringify({
       contents: [{ parts: [{ text: promptText }] }],
       generationConfig: {
-        maxOutputTokens: maxTokens || 1200,
-        // Los modelos "flash" recientes razonan internamente antes de
-        // responder, y ese razonamiento consume el mismo presupuesto de
-        // tokens de salida — sin este límite, a veces se gasta todo el
-        // presupuesto pensando y no queda nada para la respuesta final.
-        thinkingConfig: { thinkingBudget: 0 }
+        // Se deja un margen amplio: los modelos "flash" recientes razonan
+        // internamente antes de responder, y ese razonamiento consume el
+        // mismo presupuesto de tokens de salida.
+        maxOutputTokens: Math.max((maxTokens || 1200) * 3, 2000)
       }
     })
   });
@@ -844,9 +842,10 @@ function goTab(t,el) {
 // explorar — nunca crear, editar ni eliminar notas. ──
 function refrescarUIAdmin() {
   const admin = isAdmin();
-  ['navAgregar','navIA','navGestionarLabel'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = !admin; });
+  ['navAgregar','navIA','navGestionarLabel','btnGeminiCfg'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = !admin; });
   const btnResumen = document.getElementById('btnResumenSemanal'); if (btnResumen) btnResumen.hidden = !admin;
-  const cfgBtn = document.getElementById('adminCfgBtn'); if (cfgBtn) cfgBtn.textContent = admin ? '🔑 Administrador activo' : '🔑 Acceso administrador';
+  const cfgBtn = document.getElementById('adminCfgBtn');
+  if (cfgBtn) { cfgBtn.hidden = !admin; cfgBtn.textContent = admin ? 'Administrador activo — cambiar' : 'Acceso administrador'; }
   if (!admin) {
     const agregarOn = document.getElementById('tab-agregar').classList.contains('on');
     const iaOn = document.getElementById('tab-ia').classList.contains('on');
