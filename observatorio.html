@@ -376,7 +376,7 @@ window.storage = {
 // ── Gemini (gratuito) — la clave se guarda solo en este navegador,
 // nunca en el código publicado del sitio. Cada visitante necesitaría
 // configurar la suya propia para usar los botones de IA. ──
-const MODEL = 'gemini-2.5-flash';
+const MODEL = 'gemini-3.6-flash';
 function getGeminiKey() { try { return localStorage.getItem('gemini_api_key') || ''; } catch(e) { return ''; } }
 function configurarGeminiKey() {
   const actual = getGeminiKey();
@@ -558,13 +558,6 @@ async function llamarBackend(accion, datos) {
   return data;
 }
 
-function makeResumenNotaIndividual(n) {
-  let t = `Nota compartida por un visitante del Observatorio, sobre ${n.pais} (fuente: ${n.fuente}).\n\n`;
-  t += `${n.titulo}. ${n.resumenFactual}\n\n`;
-  t += `Se registra bajo el indicador "${n.indicador}".`;
-  return t;
-}
-
 let notaCompartidaActual = null;
 
 async function analizarNoticiaCompartida() {
@@ -579,10 +572,11 @@ async function analizarNoticiaCompartida() {
     const n = data.nota; n.fecha = new Date().toISOString().split('T')[0];
     notaCompartidaActual = n;
     status.textContent = 'Análisis listo.';
-    const resumenTexto = makeResumenNotaIndividual(n);
     resultado.innerHTML = `
-      <div class="semanal-label">Síntesis de lectura</div>
-      <div class="semanal-analisis">${resumenTexto.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>
+      <div class="nota-meta" style="margin-top:1rem;"><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div>
+      <div class="nota-titulo" style="margin-top:.5rem;">${n.titulo}</div>
+      <div class="semanal-label">Resumen</div>
+      <div class="nota-resumen">${n.resumenFactual || 'No se pudo generar un resumen de esta página.'}</div>
       ${n.interpretacion ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${n.interpretacion.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>` : ''}
       <div class="nota-acciones" style="margin-top:1rem;">
         <button class="btn btn-sm btn-purple" onclick="guardarNoticiaCompartida()">Guardar en el Observatorio</button>
@@ -608,7 +602,7 @@ async function guardarNoticiaCompartida() {
 function descargarNoticiaCompartida() {
   if (!notaCompartidaActual) return;
   const n = notaCompartidaActual;
-  const txt = `NOTICIA ANALIZADA — OBSERVATORIO DEL TRABAJO\n${'─'.repeat(50)}\n\n${n.titulo}\nFuente: ${n.fuente} · País: ${n.pais}\nLink: ${n.url}\n\nSÍNTESIS DE LECTURA\n\n${makeResumenNotaIndividual(n)}\n\nINTERPRETACIÓN ACADÉMICA\n\n${n.interpretacion || ''}\n`;
+  const txt = `NOTICIA ANALIZADA — OBSERVATORIO DEL TRABAJO\n${'─'.repeat(50)}\n\n${n.titulo}\nPaís: ${n.pais} · Fuente: ${n.fuente} · Indicador: ${n.indicador}\nLink: ${n.url}\n\nRESUMEN\n\n${n.resumenFactual || ''}\n\nINTERPRETACIÓN ACADÉMICA\n\n${n.interpretacion || ''}\n`;
   const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');

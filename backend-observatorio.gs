@@ -46,7 +46,7 @@
  */
 
 var HOJA_COMUNIDAD = 'Notas_Comunidad';
-var MODELO_GEMINI = 'gemini-2.5-flash';
+var MODELO_GEMINI = 'gemini-3.6-flash';
 
 function configurar() {
   var ui = SpreadsheetApp.getUi();
