@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hablar para Influir: Módulos 1 y 2 — David Salgado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--negro:#18181B;--blanco:#fff;--g1:#18181B;--g2:#2d2d2d;--g3:#52525B;--g4:#9a9a9a;--g5:#E4E4E7;--g6:#F5F3FF;--g7:#FAFAF8;--nar:#C45F00;--mor:#6D28D9;--osc:#13111C;--ver:#1A5C2A;--roj:#8B2020;--azu:#6D28D9;--ns:rgba(196,95,0,.08);--ms:rgba(109,40,217,.09);--vs:rgba(26,92,42,.09);--rs:rgba(139,32,32,.08);--as:rgba(109,40,217,.08);--r:4px;--rl:6px;--sh:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;font-size:16px;line-height:1.65;color:var(--negro);background:var(--blanco);-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;line-height:1.2;}
+p{color:var(--g3);}
+a{color:inherit;text-decoration:none;}
+em{font-style:italic;color:var(--nar);}
+strong{color:var(--negro);font-weight:700;}
+code{font-family:'DM Mono',monospace;font-size:.82em;background:var(--g6);padding:.15em .4em;border-radius:4px;color:var(--mor);}
+.app-wrap{display:flex;min-height:100vh;}
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--g5);height:56px;display:flex;align-items:center;padding:0 1.5rem 0 0;}
+.tl{width:260px;min-width:260px;display:flex;align-items:center;gap:.6rem;padding:0 1.2rem;border-right:1px solid var(--g5);height:100%;}
+.tl img{height:30px;}
+.tl span{font-size:.74rem;font-weight:600;color:var(--g4);}
+.tc{flex:1;padding:0 1.5rem;}
+.tc .cn{font-size:.82rem;font-weight:700;color:var(--negro);}
+.tc .cs{font-size:.71rem;color:var(--g4);}
+.tp{display:flex;align-items:center;gap:.8rem;padding-right:.5rem;}
+.tp .pct{font-size:.75rem;font-weight:700;color:var(--nar);white-space:nowrap;}
+.mb{width:120px;height:4px;background:var(--g5);border-radius:99px;overflow:hidden;}
+.mbf{height:4px;background:linear-gradient(90deg,var(--nar),var(--mor));border-radius:99px;transition:width .5s ease;}
+/* SIDEBAR */
+.sidebar{width:260px;min-width:260px;position:fixed;top:70px;left:0;height:calc(100vh - 70px);overflow-y:auto;background:var(--blanco);border-right:1px solid var(--g5);padding:1rem 0 3rem;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--g5);border-radius:99px;}
+.smh{padding:.55rem 1.2rem;display:flex;align-items:center;gap:.6rem;cursor:pointer;user-select:none;border-left:3px solid transparent;transition:all .15s;}
+.smh:hover{background:var(--g7);}
+.smh.active{border-left-color:var(--nar);background:var(--ns);}
+.smh.done{border-left-color:var(--ver);}
+.smh.locked{opacity:.4;cursor:not-allowed;}
+.sb{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0;}
+.sb.p{background:var(--g5);color:var(--g3);}
+.sb.c{background:var(--nar);color:white;}
+.sb.ok{background:var(--ver);color:white;}
+.sb.lk{background:var(--g5);color:var(--g4);}
+.smt{font-size:.78rem;font-weight:700;color:var(--negro);flex:1;line-height:1.3;}
+.smh2{font-size:.67rem;color:var(--g4);white-space:nowrap;}
+.sil{padding:0 0 .3rem 0;}
+.si{display:flex;align-items:center;gap:.45rem;padding:.35rem 1.2rem .35rem 2.8rem;cursor:pointer;font-size:.76rem;color:var(--g3);transition:background .12s;border-left:3px solid transparent;line-height:1.3;}
+.si:hover{background:var(--g7);color:var(--negro);}
+.si.active{color:var(--mor);font-weight:600;background:var(--ms);}
+.si.done{color:var(--ver);}
+.si.locked{color:var(--g5);cursor:not-allowed;pointer-events:none;}
+.si-ico{font-size:.68rem;width:12px;text-align:center;flex-shrink:0;}
+.sdiv{height:1px;background:var(--g5);margin:.5rem 1.2rem;}
+.slbl{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g4);padding:.5rem 1.2rem .2rem;}
+/* MAIN */
+.main{margin-left:260px;margin-top:70px;flex:1;min-height:calc(100vh - 70px);background:var(--g7);}
+.mi{max-width:780px;margin:0 auto;padding:2.5rem 2rem 6rem;}
+/* BREADCRUMB */
+.bc{display:flex;align-items:center;gap:.45rem;font-size:.72rem;color:var(--g4);margin-bottom:1.5rem;flex-wrap:wrap;}
+.bc span{color:var(--nar);font-weight:600;}
+.bc .sep{color:var(--g5);}
+/* MOD COVER */
+.mc{background:var(--negro);border-radius:var(--rl);padding:2.5rem 2.2rem;margin-bottom:2rem;position:relative;overflow:hidden;}
+.mc::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(255,122,47,.2) 0%,transparent 70%);pointer-events:none;}
+.mc::after{content:'';position:absolute;bottom:-50px;left:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(107,47,255,.18) 0%,transparent 70%);pointer-events:none;}
+.mc-num{display:inline-flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nar);background:rgba(255,122,47,.15);border-radius:99px;padding:.25rem .8rem;margin-bottom:1.2rem;}
+.mc h1{font-size:clamp(1.7rem,3vw,2.2rem);font-weight:800;color:var(--blanco);margin-bottom:.7rem;letter-spacing:-.02em;position:relative;z-index:1;}
+.mc-desc{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:1.8rem;max-width:520px;position:relative;z-index:1;}
+.mc-meta{display:flex;gap:1.5rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:1.2rem;position:relative;z-index:1;}
+.mc-stat strong{display:block;font-size:1.2rem;font-weight:800;color:var(--nar);font-family:'Playfair Display',serif;}
+.mc-stat span{font-size:.73rem;color:rgba(255,255,255,.4);}
+.mc-tags{margin-top:1.5rem;position:relative;z-index:1;display:flex;gap:.5rem;flex-wrap:wrap;}
+.mc-tag{font-size:.72rem;font-weight:600;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.1);border-radius:99px;padding:.22rem .75rem;}
+/* TEMA HEADER */
+.th{background:var(--blanco);border-radius:var(--rl);border:1px solid var(--g5);padding:1.5rem 1.8rem;margin-bottom:1rem;}
+.te{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--nar);margin-bottom:.5rem;}
+.th h2{font-size:1.35rem;font-weight:800;color:var(--negro);margin-bottom:.4rem;letter-spacing:-.015em;}
+.th p{font-size:.85rem;color:var(--g3);line-height:1.65;}
+/* CONTENT BLOCKS */
+.cb{background:var(--blanco);border-radius:var(--rl);border:1px solid var(--g5);padding:1.8rem;margin-bottom:1rem;transition:box-shadow .2s;}
+.cb:hover{box-shadow:var(--sh);}
+.bl{display:flex;align-items:center;gap:.5rem;font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g4);margin-bottom:1rem;}
+.bl .dot{width:6px;height:6px;border-radius:50%;background:var(--g5);flex-shrink:0;}
+.bl.concept .dot{background:var(--mor);}
+.bl.tool .dot{background:var(--azu);}
+.bl.warn .dot{background:var(--roj);}
+.bt{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--negro);margin-bottom:.8rem;letter-spacing:-.01em;}
+.bb{font-size:.875rem;color:var(--g2);line-height:1.78;}
+.bb p{margin-bottom:.9rem;color:var(--g2);}
+.bb p:last-child{margin-bottom:0;}
+.bb ul,.bb ol{padding-left:1.3rem;margin-bottom:.9rem;}
+.bb li{margin-bottom:.4rem;color:var(--g2);line-height:1.65;}
+.bb strong{color:var(--negro);}
+.bb em{color:var(--nar);font-style:italic;}
+/* QUOTE */
+.aq{border-left:3px solid var(--nar);background:var(--ns);border-radius:0 var(--rl) var(--rl) 0;padding:1.1rem 1.3rem;margin:1rem 0;}
+.aq .qt{font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;color:var(--g1);line-height:1.65;margin-bottom:.5rem;}
+.aq .qr{font-size:.74rem;font-weight:600;color:var(--nar);}
+/* CONCEPT BOX */
+.cbox{background:var(--ms);border:1px solid rgba(107,47,255,.15);border-radius:var(--rl);padding:1.1rem 1.3rem;margin:1rem 0;}
+.cbox .ct{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mor);margin-bottom:.35rem;}
+.cbox .cd{font-size:.88rem;color:var(--g1);line-height:1.68;}
+/* TENSION BOX */
+.tbox{background:var(--rs);border-left:3px solid var(--roj);border-radius:0 var(--rl) var(--rl) 0;padding:.9rem 1.2rem;margin:1rem 0;}
+.tbox .tl2{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--roj);margin-bottom:.3rem;}
+.tbox p{font-size:.85rem;color:var(--g1);line-height:1.65;}
+/* EXAMPLE BOX */
+.ebox{background:var(--vs);border:1px solid rgba(26,122,80,.15);border-radius:var(--rl);padding:1.1rem 1.3rem;margin:1rem 0;}
+.ebox .el{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ver);margin-bottom:.35rem;}
+.ebox p{font-size:.86rem;color:var(--g1);line-height:1.65;}
+/* AXIOM LIST */
+.al{list-style:none;padding:0;margin:1rem 0;}
+.ai{display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 1rem;border-bottom:1px solid var(--g5);}
+.ai:last-child{border-bottom:none;}
+.an{width:26px;height:26px;border-radius:50%;background:var(--nar);color:white;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;flex-shrink:0;margin-top:2px;}
+.ac strong{font-size:.87rem;color:var(--negro);display:block;margin-bottom:.2rem;}
+.ac p{font-size:.82rem;color:var(--g3);line-height:1.6;margin:0;}
+/* FORMULA */
+.fbox{background:var(--as);border:1px solid rgba(26,94,255,.15);border-radius:var(--rl);padding:1.2rem 1.5rem;text-align:center;margin:1.2rem 0;}
+.fbox .ft{font-family:'DM Mono',monospace;font-size:1rem;font-weight:600;color:var(--osc);margin-bottom:.4rem;line-height:1.5;}
+.fbox .fd{font-size:.78rem;color:var(--g4);}
+/* COMPARE TABLE */
+.ctbl{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem;}
+.ctbl th{background:var(--negro);color:white;padding:.7rem 1rem;text-align:left;font-weight:700;font-size:.75rem;letter-spacing:.04em;}
+.ctbl th:first-child{border-radius:var(--r) 0 0 0;}
+.ctbl th:last-child{border-radius:0 var(--r) 0 0;}
+.ctbl td{padding:.65rem 1rem;border-bottom:1px solid var(--g5);color:var(--g2);line-height:1.55;vertical-align:top;}
+.ctbl tr:nth-child(even) td{background:var(--g7);}
+.ctbl tr:last-child td{border-bottom:none;}
+.ctbl td:first-child{font-weight:600;color:var(--negro);}
+/* PDF BLOCK */
+.pdfb{background:var(--blanco);border-radius:var(--rl);border:1.5px solid var(--g5);padding:1.4rem 1.6rem;margin-bottom:1rem;display:flex;align-items:center;gap:1.2rem;transition:all .2s;}
+.pdfb:hover{border-color:var(--mor);box-shadow:var(--sh);}
+.pdfic{width:48px;height:48px;background:var(--ms);border-radius:var(--rl);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.pdfi h4{font-size:.9rem;font-weight:700;color:var(--negro);margin-bottom:.2rem;}
+.pdfi p{font-size:.78rem;color:var(--g4);margin:0;}
+.pdft{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem;}
+.pdftag{font-size:.67rem;font-weight:600;color:var(--mor);background:var(--ms);border-radius:99px;padding:.15rem .55rem;}
+.pdfbtn{display:flex;align-items:center;gap:.4rem;background:var(--negro);color:white;border:none;border-radius:var(--r);padding:.6rem 1.1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Lato',sans-serif;transition:background .2s;text-decoration:none;margin-left:auto;}
+.pdfbtn:hover{background:var(--mor);}
+/* ACTIVIDADES */
+.acard{background:var(--blanco);border-radius:var(--rl);border:1px solid var(--g5);margin-bottom:1rem;overflow:hidden;}
+.ah{padding:1.2rem 1.6rem;display:flex;align-items:flex-start;gap:1rem;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:all .2s;}
+.ah:hover{background:var(--g7);}
+.ah.open{border-bottom-color:var(--g5);}
+.atipo{display:inline-flex;align-items:center;gap:.35rem;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:.22rem .7rem;flex-shrink:0;white-space:nowrap;}
+.atr{background:var(--ns);color:var(--nar);}
+.atp{background:var(--ms);color:var(--mor);}
+.atc{background:var(--as);color:var(--azu);}
+.aht{flex:1;}
+.aht h4{font-size:.92rem;font-weight:700;color:var(--negro);margin-bottom:.2rem;line-height:1.35;}
+.aht p{font-size:.78rem;color:var(--g4);margin:0;}
+.achv{font-size:.7rem;color:var(--g4);transition:transform .25s;flex-shrink:0;margin-top:3px;}
+.achv.open{transform:rotate(90deg);}
+.abody{display:none;padding:1.4rem 1.6rem;}
+.abody.open{display:block;}
+/* REFLEXIÓN */
+.rp{background:var(--ns);border-radius:var(--rl);padding:1.1rem 1.3rem;margin-bottom:1.1rem;font-size:.87rem;color:var(--g1);line-height:1.7;}
+.rp strong{color:var(--nar);}
+.rta{width:100%;min-height:120px;border:1.5px solid var(--g5);border-radius:var(--r);padding:.75rem .9rem;font-size:.86rem;font-family:'Lato',sans-serif;color:var(--negro);resize:vertical;transition:border-color .2s;line-height:1.65;background:var(--g7);}
+.rta:focus{outline:none;border-color:var(--nar);background:var(--blanco);}
+.rta::placeholder{color:var(--g4);}
+.rsave{display:inline-flex;align-items:center;gap:.4rem;margin-top:.7rem;background:var(--nar);color:white;border:none;border-radius:var(--r);padding:.55rem 1.1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;transition:background .2s;}
+.rsave:hover{background:#e56920;}
+.rsaved{display:none;font-size:.75rem;color:var(--ver);margin-top:.5rem;font-weight:600;}
+/* PRÁCTICA */
+.psc{background:var(--g7);border:1px solid var(--g5);border-radius:var(--rl);padding:1.1rem 1.3rem;margin-bottom:1.1rem;}
+.psc .psl{font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mor);margin-bottom:.4rem;}
+.psc p{font-size:.87rem;color:var(--g1);line-height:1.68;}
+.psteps{list-style:none;padding:0;margin-bottom:1.1rem;}
+.pst{display:flex;gap:.7rem;align-items:flex-start;padding:.55rem 0;border-bottom:1px solid var(--g5);}
+.pst:last-child{border-bottom:none;}
+.psn{width:22px;height:22px;border-radius:50%;background:var(--mor);color:white;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;margin-top:1px;}
+.pstx{font-size:.84rem;color:var(--g1);line-height:1.6;}
+.pia{width:100%;min-height:100px;border:1.5px solid var(--g5);border-radius:var(--r);padding:.7rem .9rem;font-size:.86rem;font-family:'Lato',sans-serif;resize:vertical;transition:border-color .2s;background:var(--g7);color:var(--negro);}
+.pia:focus{outline:none;border-color:var(--mor);background:var(--blanco);}
+.psave{display:inline-flex;align-items:center;gap:.4rem;margin-top:.65rem;background:var(--mor);color:white;border:none;border-radius:var(--r);padding:.55rem 1.1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;transition:background .2s;}
+.psave:hover{background:#5520dd;}
+.ptip{background:var(--vs);border-radius:var(--r);padding:.7rem .9rem;margin-top:.8rem;font-size:.78rem;color:var(--ver);line-height:1.6;}
+.ptip strong{color:var(--ver);}
+/* CUESTIONARIO */
+.qi{margin-bottom:1.4rem;}
+.qq{font-size:.88rem;font-weight:600;color:var(--negro);margin-bottom:.7rem;line-height:1.5;}
+.qopts{display:flex;flex-direction:column;gap:.4rem;}
+.qo{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem .8rem;border:1.5px solid var(--g5);border-radius:var(--r);cursor:pointer;transition:all .15s;font-size:.84rem;color:var(--g2);}
+.qo:hover{border-color:var(--azu);background:var(--as);}
+.qo.sel{border-color:var(--azu);background:var(--as);color:var(--azu);font-weight:600;}
+.qo.rok{border-color:var(--ver);background:var(--vs);color:var(--ver);}
+.qo.rno{border-color:var(--roj);background:var(--rs);color:var(--roj);}
+.qo input{margin-top:2px;flex-shrink:0;}
+.qfb{display:none;margin-top:.8rem;padding:.8rem 1rem;border-radius:var(--r);font-size:.82rem;line-height:1.6;}
+.qfb.ok{background:var(--vs);color:var(--ver);border-left:3px solid var(--ver);}
+.qfb.no{background:var(--rs);color:var(--roj);border-left:3px solid var(--roj);}
+.qsend{background:var(--azu);color:white;border:none;border-radius:var(--r);padding:.65rem 1.4rem;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;margin-top:.5rem;transition:background .2s;}
+.qsend:hover{background:#0f4fdd;}
+.qsend:disabled{background:var(--g5);color:var(--g4);cursor:not-allowed;}
+/* NAV TEMAS */
+.nt{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--g5);}
+.nb{display:flex;align-items:center;gap:.5rem;background:var(--blanco);border:1.5px solid var(--g5);border-radius:var(--r);padding:.65rem 1.1rem;font-size:.8rem;font-weight:600;color:var(--negro);cursor:pointer;transition:all .2s;font-family:'Lato',sans-serif;}
+.nb:hover{border-color:var(--negro);}
+.nb.pri{background:var(--negro);color:var(--blanco);border-color:var(--negro);}
+.nb.pri:hover{background:var(--nar);border-color:var(--nar);}
+.nb.dis{opacity:.35;cursor:not-allowed;pointer-events:none;}
+/* PROGRESO BAR */
+.mpb{background:var(--g5);border-radius:99px;height:4px;margin-bottom:2rem;overflow:hidden;}
+.mpbf{height:4px;background:linear-gradient(90deg,var(--nar),var(--mor));border-radius:99px;transition:width .5s ease;}
+/* SPLASH */
+.splash{background:var(--blanco);border-radius:var(--rl);border:1px solid var(--g5);padding:2.5rem 2rem;text-align:center;}
+.sp-ico{font-size:2.5rem;margin-bottom:1rem;}
+.splash h2{font-size:1.6rem;font-weight:800;color:var(--negro);margin-bottom:.6rem;}
+.splash p{font-size:.9rem;color:var(--g3);line-height:1.7;max-width:440px;margin:0 auto 1.5rem;}
+.spbtn{background:var(--negro);color:var(--blanco);border:none;border-radius:var(--r);padding:.8rem 1.8rem;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;transition:background .2s;}
+.spbtn:hover{background:var(--nar);}
+.spf{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid var(--g5);}
+.spfi{text-align:center;}
+.spfi strong{display:block;font-size:1.1rem;font-weight:800;color:var(--negro);font-family:'Playfair Display',serif;}
+.spfi span{font-size:.72rem;color:var(--g4);}
+@media(max-width:860px){.sidebar{display:none;}.main{margin-left:0;}.tl{width:auto;border-right:none;}.mb{width:80px;}}
+@media(max-width:600px){.mi{padding:1.2rem 1rem 5rem;}.mc{padding:1.5rem 1.3rem;}.cb{padding:1.3rem;}.ctbl{font-size:.75rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html"><img src="data:image/png;base64,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" alt="David Salgado"></a>
+    <ul class="nav-links">
+      <li><a href="index.html#inicio">Inicio</a></li>
+      <li><a href="index.html#servicios">Servicios</a></li>
+      <li><a href="cursos.html" id="nav-cursos">Formación</a></li>
+      <li><a href="index.html#publicaciones">Publicaciones</a></li>
+      <li><a href="index.html#portafolio">Portafolio</a></li>
+      <li><a href="observatorio.html" style="color:var(--pm);font-weight:700;">Observatorio ↗</a></li>
+    </ul>
+    <a class="nav-cta" href="index.html#contacto">Contactar</a>
+  </div>
+</nav>
+
+
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div style="padding:.5rem 1.2rem .2rem">
+    <div class="slbl" style="padding:0 0 .4rem">Módulos</div>
+  </div>
+
+  <!-- M1 -->
+  <div class="smh active" id="hdrM1" onclick="navClick('sm1')">
+    <div class="sb c" id="bdgM1">1</div>
+    <div class="smt">La comunicación como práctica social</div>
+    <div class="smh2">6h</div>
+  </div>
+  <div class="sil" id="itemsM1">
+    <div class="si active" id="ni-sm1" onclick="navClick('sm1')"><span class="si-ico">📋</span>Introducción al módulo</div>
+    <div class="si" id="ni-m1t1" onclick="navClick('m1t1')"><span class="si-ico">📖</span>T1 · ¿Qué es comunicarse?</div>
+    <div class="si" id="ni-m1t2" onclick="navClick('m1t2')"><span class="si-ico">📖</span>T2 · Estilos de comunicación</div>
+    <div class="si" id="ni-m1t3" onclick="navClick('m1t3')"><span class="si-ico">📖</span>T3 · La escucha activa</div>
+    <div class="si" id="ni-m1pdf" onclick="navClick('m1pdf')"><span class="si-ico">📄</span>PDF del módulo</div>
+  </div>
+
+  <div class="sdiv"></div>
+
+  <!-- M2 -->
+  <div class="smh" id="hdrM2" onclick="navClick('sm2')">
+    <div class="sb lk" id="bdgM2">2</div>
+    <div class="smt">Hablar en público con presencia y autoridad</div>
+    <div class="smh2">6h</div>
+  </div>
+  <div class="sil" id="itemsM2" style="display:none">
+    <div class="si locked" id="ni-sm2" onclick="navClick('sm2')"><span class="si-ico">📋</span>Introducción al módulo</div>
+    <div class="si locked" id="ni-m2t1" onclick="navClick('m2t1')"><span class="si-ico">📖</span>T1 · El miedo a hablar</div>
+    <div class="si locked" id="ni-m2t2" onclick="navClick('m2t2')"><span class="si-ico">📖</span>T2 · Estructuras discursivas</div>
+    <div class="si locked" id="ni-m2t3" onclick="navClick('m2t3')"><span class="si-ico">📖</span>T3 · Comunicación no verbal</div>
+    <div class="si locked" id="ni-m2pdf" onclick="navClick('m2pdf')"><span class="si-ico">📄</span>PDF del módulo</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="app-wrap">
+<main class="main">
+<div class="mi" id="mainC">
+<div id="v-sm1">
+<div class="mc" >
+  <div class="mc-num">Módulo 01 · 6 horas · 3 temas</div>
+  <h1>La comunicación como<br>práctica social</h1>
+  <p class="mc-desc">La comunicación no es un conjunto de técnicas: es una práctica social que estructura relaciones, reproduce poder y puede transformarse. Este módulo sienta las bases conceptuales desde las que todo lo demás del curso tiene sentido.</p>
+  <div class="mc-meta">
+    <div class="mc-stat"><strong>3</strong><span>Temas</span></div>
+    <div class="mc-stat"><strong>9</strong><span>Actividades</span></div>
+    <div class="mc-stat"><strong>1</strong><span>PDF</span></div>
+    <div class="mc-stat"><strong>~2h</strong><span>Lectura</span></div>
+  </div>
+  <div class="mc-tags"><span class="mc-tag">Habermas · Watzlawick</span><span class="mc-tag">Estilos comunicativos</span><span class="mc-tag">Escucha activa · Rogers</span></div>
+</div>
+<div class="splash">
+  <div class="sp-ico">💬</div>
+  <h2>¿Listo para comenzar?</h2>
+  <p>Este módulo dura aproximadamente 2 horas de lectura activa. Puedes avanzar a tu ritmo: tu progreso se guarda automáticamente.</p>
+  <button class="spbtn" onclick="navClick('m1t1')">Comenzar módulo 1 →</button>
+  <div class="spf">
+    <div class="spfi"><strong>3</strong><span>temas</span></div>
+    <div class="spfi"><strong>3</strong><span>reflexiones</span></div>
+    <div class="spfi"><strong>3</strong><span>prácticas</span></div>
+    <div class="spfi"><strong>3</strong><span>cuestionarios</span></div>
+  </div>
+</div>
+</div>
+<div id="v-m1t1" style="display:none">
+<div class="bc"><span onclick="navClick('sm1')" style="cursor:pointer">Módulo 1</span><span class="sep">›</span>Tema 1 — ¿Qué es realmente comunicarse?</div>
+<div class="mpb"><div class="mpbf" style="width:16%"></div></div>
+<div class="th"><div class="te">Tema 1 de 3 · Módulo 1</div><h2>¿Qué es realmente comunicarse?</h2><p>Más allá del modelo emisor-receptor: la comunicación como sistema de relaciones, poder y significado.</p></div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Marco conceptual</div>
+  <div class="bt">El problema con la definición técnica</div>
+  <div class="bb">
+    <p>La definición más extendida de comunicación —un <em>emisor</em> que codifica un <em>mensaje</em> y lo envía por un <em>canal</em> a un <em>receptor</em>— proviene del modelo matemático de Shannon y Weaver (1949), diseñado para optimizar señales telefónicas. Era un modelo de ingeniería, no de ciencias sociales.</p>
+    <p>Ese modelo no explica nada de lo que nos importa cuando nos comunicamos con personas: los malentendidos, las relaciones de poder, el silencio que dice más que las palabras. Para eso necesitamos otro punto de partida.</p>
+  </div>
+  <div class="aq"><div class="qt">"El modelo matemático de la comunicación abstrae el contenido semántico de los mensajes y, con ello, precisamente aquello que hace de la comunicación un fenómeno humano."</div><div class="qr">Habermas, J. (1984). <em>The Theory of Communicative Action</em>, Vol. 1 (p. 279). Beacon Press.</div></div>
+</div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Teoría social</div>
+  <div class="bt">Habermas: acción comunicativa vs. acción estratégica</div>
+  <div class="bb"><p>Jürgen Habermas propone una distinción que resulta extraordinariamente útil para entender lo que sucede en las organizaciones y entornos laborales.</p></div>
+  <div class="cbox"><div class="ct">Acción estratégica</div><div class="cd">Orientada al <strong>éxito individual</strong>. El otro es tratado como medio para alcanzar un fin. El parámetro de éxito es conseguir el resultado deseado, independientemente del entendimiento mutuo.</div></div>
+  <div class="cbox"><div class="ct">Acción comunicativa</div><div class="cd">Orientada al <strong>entendimiento mutuo</strong>. Los participantes coordinan sus planes mediante el reconocimiento recíproco de pretensiones de validez. El parámetro de éxito es el acuerdo libremente alcanzado.</div></div>
+  <div class="bb"><p>En la práctica profesional, mezclamos estas dos lógicas constantemente. El problema surge cuando dejamos de notar cuándo estamos en modo estratégico y confundimos esa lógica con la comunicación genuina.</p></div>
+  <div class="tbox"><div class="tl2">⚠️ Tensión para reflexionar</div><p>Una organización que funciona <strong>solo</strong> con lógica estratégica desarrolla una cultura de desconfianza sistémica. Una que opera <strong>solo</strong> con lógica comunicativa es una idealización que no existe. La pregunta no es cuál elegir, sino cuándo y cómo transitar entre ambas con transparencia.</p></div>
+</div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Axiomas de la comunicación</div>
+  <div class="bt">Watzlawick: cinco axiomas que lo cambian todo</div>
+  <div class="bb"><p>Paul Watzlawick y el Grupo de Palo Alto formularon cinco <strong>axiomas metacomunicacionales</strong> —proposiciones sobre la comunicación que describen condiciones estructurales. Son la herramienta conceptual más útil para diagnosticar problemas de comunicación en organizaciones y equipos.</p></div>
+  <ul class="al">
+    <li class="ai"><div class="an" style="background:var(--nar)">1</div><div class="ac"><strong>Es imposible no comunicarse</strong><p>Todo comportamiento en presencia de otro tiene valor de mensaje: el silencio comunica, la ausencia comunica, el gesto distraído comunica. No existe el &quot;no comunicar&quot;.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">2</div><div class="ac"><strong>Toda comunicación tiene aspecto de contenido y aspecto de relación</strong><p>El aspecto de <em>contenido</em> transmite información; el de <em>relación</em> define cómo debe entenderse según la relación entre los participantes. El segundo siempre condiciona al primero.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">3</div><div class="ac"><strong>La naturaleza de la relación depende de la puntuación de las secuencias</strong><p>Los interlocutores puntualizan la secuencia de hechos de forma diferente: cada uno siente que reacciona al otro. La mayoría de los conflictos son conflictos sobre quién &quot;empezó&quot;.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">4</div><div class="ac"><strong>La comunicación es digital y analógica simultáneamente</strong><p>El canal <em>digital</em> es el lenguaje verbal: preciso, transmite el contenido. El <em>analógico</em> es el no verbal: tono, postura, ritmo. Cuando ambos contradicen, la audiencia cree al analógico.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">5</div><div class="ac"><strong>La comunicación es simétrica o complementaria</strong><p>Las interacciones simétricas se basan en la igualdad; las complementarias, en la diferencia. Ninguna es mejor: los problemas surgen cuando se aplica el patrón equivocado al contexto equivocado.</p></div></li>
+  </ul>
+  <div class="ebox"><div class="el">🔍 Aplicación al trabajo</div><p>El <strong>axioma 2</strong> es el más poderoso para el entorno profesional. Cuando un jefe dice a su equipo "necesito que entreguen esto para mañana", el <em>contenido</em> es la tarea. Pero la <em>relación</em> que define ese mensaje depende de cómo se diga: puede comunicar confianza, urgencia compartida o control jerárquico. El equipo responderá no solo al contenido sino a la relación que percibió.</p></div>
+  <div class="aq"><div class="qt">"No es posible no comunicarse. La actividad o la inactividad, las palabras o el silencio tienen siempre valor de mensaje: influyen sobre los demás, quienes no pueden dejar de responder a tales comunicaciones."</div><div class="qr">Watzlawick, P., Bavelas, J. B. y Jackson, D. D. (1985). <em>Teoría de la comunicación humana</em> (p. 49). Herder.</div></div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atr">✍️ Reflexión personal</div>
+    <div class="aht"><h4>El axioma que más me incomoda</h4><p>Identificar cuál desafía más tu manera habitual de comunicarte</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="rp"><strong>Instrucción:</strong> Relee los cinco axiomas de Watzlawick. Elige el que más te incomoda o que más contradice algo que creías sobre la comunicación. Escribe: ¿cuál es? ¿Por qué te incomoda? ¿Recuerdas una situación laboral donde ese axioma estuvo en juego y no lo veías?</div>
+    <textarea class="rta" id="ta-m1t1r" placeholder="Escribe tu reflexión aquí..."></textarea>
+    <button class="rsave" onclick="guardar('ta-m1t1r','sv-m1t1r')">Guardar reflexión</button>
+    <div class="rsaved" id="sv-m1t1r">✓ Guardado en este navegador</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atp">🎯 Ejercicio práctico</div>
+    <div class="aht"><h4>Diagnóstico de una situación real</h4><p>Aplicar los conceptos de Habermas y Watzlawick a un conflicto comunicativo vivido</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="psc"><div class="psl">📋 Escenario</div><p>Piensa en una situación comunicativa difícil que hayas vivido recientemente: un conflicto, un malentendido, una conversación que salió mal.</p></div>
+    <ul class="psteps"><li class="pst"><div class="psn">1</div><div class="pstx"><strong>Describe la situación</strong> en dos o tres líneas. ¿Qué pasó? ¿Quiénes estaban involucrados?</div></li><li class="pst"><div class="psn">2</div><div class="pstx"><strong>¿Qué lógica predominó?</strong> ¿Fue principalmente acción estratégica o comunicativa? ¿Cambiaron en algún momento?</div></li><li class="pst"><div class="psn">3</div><div class="pstx"><strong>¿Cuál axioma de Watzlawick ilumina mejor lo que pasó?</strong> Nómbralo y explica cómo.</div></li><li class="pst"><div class="psn">4</div><div class="pstx"><strong>¿Qué harías diferente ahora</strong> con estos conceptos disponibles?</div></li></ul>
+    <textarea class="pia" id="ta-m1t1p" placeholder="Escribe tu respuesta aquí..."></textarea>
+    <button class="psave" onclick="guardar('ta-m1t1p','sv-m1t1p')">Guardar ejercicio</button>
+    <div class="rsaved" id="sv-m1t1p">✓ Guardado</div>
+    <div class="ptip"><strong>💡 Nota:</strong> No busques una situación &quot;dramática&quot;. Los axiomas operan en las conversaciones cotidianas: una reunión, un correo, una retroalimentación. Cuanto más ordinaria la situación, más revelador suele ser el análisis.</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atc">🧠 Cuestionario de aplicación</div>
+    <div class="aht"><h4>Conceptos en situaciones reales</h4><p>Tres preguntas para aplicar Habermas y Watzlawick a contextos laborales</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody"><div class="qi" >
+  <div class="qq">1. Una coordinadora llega tarde a una reunión y se sienta en silencio sin decir nada. Según el primer axioma de Watzlawick, esto significa que:</div>
+  <div class="qopts" id="cg_Conc_0"><label class="qo" onclick="selOpt(this,'cg_Conc_0',0)"><input type="radio" name="cg_Conc_0"> No está comunicando nada, porque no habló</label><label class="qo" onclick="selOpt(this,'cg_Conc_0',1)"><input type="radio" name="cg_Conc_0"> Está comunicando algo, aunque no haya dicho ninguna palabra</label><label class="qo" onclick="selOpt(this,'cg_Conc_0',2)"><input type="radio" name="cg_Conc_0"> Solo comunica si alguien le pregunta qué le pasa</label><label class="qo" onclick="selOpt(this,'cg_Conc_0',3)"><input type="radio" name="cg_Conc_0"> La comunicación no verbal no cuenta como comunicación real</label></div>
+  <div class="qfb ok" id="fb_cg_Conc_0_ok">✓ Correcto. Su silencio, su llegada tardía y su postura comunican activamente. El axioma 1 dice precisamente esto: todo comportamiento tiene valor de mensaje. El equipo ya está interpretando esos mensajes, aunque nadie los haya verbalizado.</div>
+  <div class="qfb no" id="fb_cg_Conc_0_no">Recuerda el axioma 1: "Es imposible no comunicarse." La ausencia de palabras no significa ausencia de comunicación. Su llegada tardía y su silencio son mensajes que el equipo ya decodifica.</div>
+  <button class="qsend" onclick="revelar('cg_Conc_0',1,'fb_cg_Conc_0')" disabled id="btn_cg_Conc_0">Ver retroalimentación</button>
+</div><div class="qi" style="margin-top:1.2rem">
+  <div class="qq">2. Un gerente dice "Me encantaría escuchar sus ideas" pero lo dice revisando su teléfono con brazos cruzados. Según los axiomas 2 y 4, ¿qué ocurre?</div>
+  <div class="qopts" id="cg_Conc_1"><label class="qo" onclick="selOpt(this,'cg_Conc_1',0)"><input type="radio" name="cg_Conc_1"> El mensaje verbal es claro: está invitando a participar</label><label class="qo" onclick="selOpt(this,'cg_Conc_1',1)"><input type="radio" name="cg_Conc_1"> Hay contradicción entre el canal digital (palabras) y el analógico (cuerpo), y el equipo creerá al cuerpo</label><label class="qo" onclick="selOpt(this,'cg_Conc_1',2)"><input type="radio" name="cg_Conc_1"> El problema es solo de forma: bastaría con que dejara el teléfono</label><label class="qo" onclick="selOpt(this,'cg_Conc_1',3)"><input type="radio" name="cg_Conc_1"> La comunicación no verbal no es relevante en contextos profesionales</label></div>
+  <div class="qfb ok" id="fb_cg_Conc_1_ok">✓ Exacto. El axioma 4 dice que cuando los canales digital y analógico se contradicen, el receptor cree al analógico. Y el axioma 2 añade que el nivel relacional siempre condiciona la interpretación del contenido. El equipo escucha "me encantaría" pero ve "no te estoy prestando atención".</div>
+  <div class="qfb no" id="fb_cg_Conc_1_no">Los axiomas 4 y 2 trabajan juntos aquí: el canal analógico (cuerpo, teléfono) contradice al digital (palabras), y el nivel de relación —definido por la postura y la atención real— condiciona cómo se interpreta el contenido verbal.</div>
+  <button class="qsend" onclick="revelar('cg_Conc_1',1,'fb_cg_Conc_1')" disabled id="btn_cg_Conc_1">Ver retroalimentación</button>
+</div></div>
+</div>
+<div class="nt"><button class="nb dis">← Anterior</button><button class="nb pri" onclick="navClick('m1t2')">Siguiente tema →</button></div>
+</div>
+<div id="v-m1t2" style="display:none">
+<div class="bc"><span onclick="navClick('sm1')" style="cursor:pointer">Módulo 1</span><span class="sep">›</span>Tema 2 — Estilos de comunicación</div>
+<div class="mpb"><div class="mpbf" style="width:50%"></div></div>
+<div class="th"><div class="te">Tema 2 de 3 · Módulo 1</div><h2>Estilos de comunicación: pasivo, agresivo y asertivo</h2><p>Una herramienta de diagnóstico —no de etiquetado— para comprender los patrones aprendidos que gobiernan cómo nos expresamos bajo presión.</p></div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Marco conceptual</div>
+  <div class="bt">Por qué los estilos no son rasgos de personalidad</div>
+  <div class="bb">
+    <p>Uno de los errores más frecuentes es tratar los estilos como tipos fijos: "esa persona es agresiva", "yo soy pasivo". La investigación en psicología social señala algo distinto: los estilos son <strong>patrones conductuales aprendidos</strong> que se activan de forma diferencial según el contexto, el interlocutor y el nivel de amenaza percibido.</p>
+    <p>Esto tiene dos implicaciones importantes: la misma persona puede ser asertiva con sus pares y pasiva con su jefe; y, más importante, los estilos pueden modificarse. No se trata de cambiar quién eres, sino de ampliar el repertorio de respuestas disponibles.</p>
+  </div>
+  <div class="tbox"><div class="tl2">⚠️ Advertencia metodológica</div><p>El modelo de tres estilos es una simplificación útil, no una taxonomía exhaustiva. Su valor es diagnóstico: ayuda a identificar patrones habituales. No debe usarse para etiquetar a otras personas sin reconocer que cualquier estilo que observamos en otros es siempre parcial y contextual.</p></div>
+</div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Los tres estilos</div>
+  <div class="bt">Descripción y consecuencias de cada estilo</div>
+  <table class="ctbl">
+    <thead><tr><th>Dimensión</th><th>Pasivo</th><th>Agresivo</th><th>Asertivo</th></tr></thead>
+    <tbody>
+      <tr><td>Orientación básica</td><td>Ceder los propios derechos para evitar el conflicto</td><td>Imponer las propias necesidades sin respetar las del otro</td><td>Expresar necesidades propias respetando las del otro</td></tr>
+      <tr><td>Mensaje implícito</td><td>"Tus necesidades importan más que las mías"</td><td>"Mis necesidades importan más que las tuyas"</td><td>"Mis necesidades y las tuyas importan por igual"</td></tr>
+      <tr><td>Señales conductuales</td><td>Voz baja, contacto visual evasivo, aceptar sin estar de acuerdo</td><td>Interrumpe, eleva el tono, sarcasmo, señala con el dedo</td><td>Tono firme pero cálido, contacto visual directo, postura abierta</td></tr>
+      <tr><td>Consecuencia a corto plazo</td><td>Evita el conflicto inmediato</td><td>Obtiene el resultado deseado</td><td>Puede generar tensión transitoria</td></tr>
+      <tr><td>Consecuencia a largo plazo</td><td>Resentimiento acumulado, pérdida de credibilidad</td><td>Deterioro de relaciones, desconfianza del equipo</td><td>Relaciones más sólidas, credibilidad sostenida</td></tr>
+    </tbody>
+  </table>
+  <div class="aq"><div class="qt">"La conducta asertiva implica la expresión directa, honesta y adecuada de los pensamientos, sentimientos y opiniones propios. Incluye el respeto hacia uno mismo y hacia los demás, y reconoce los derechos de ambos."</div><div class="qr">Alberti, R. E. y Emmons, M. L. (2017). <em>Your Perfect Right</em> (10ª ed., p. 8). Impact Publishers.</div></div>
+</div>
+<div class="cb">
+  <div class="bl tool"><span class="dot"></span>Herramienta aplicada</div>
+  <div class="bt">El mensaje en primera persona: la técnica central de la asertividad</div>
+  <div class="bb"><p>La comunicación asertiva tiene una sintaxis concreta. El <strong>mensaje en primera persona</strong>, desarrollado por Thomas Gordon, es la herramienta más estudiada y validada. La diferencia entre un mensaje acusatorio y uno asertivo no está en la intensidad del sentimiento sino en la estructura gramatical: el sujeto de la oración.</p></div>
+  <div class="fbox"><div class="ft">Cuando [hecho observable y objetivo]<br>yo siento / me genera [emoción o impacto concreto]<br>porque [necesidad o valor afectado]<br>necesito / quisiera [petición específica y realizable]</div><div class="fd">Estructura del mensaje asertivo en primera persona (Gordon, 1970, adaptación)</div></div>
+  <div class="ebox"><div class="el">🔍 Comparación: acusatorio vs. asertivo</div><p><strong>Agresivo:</strong> "Siempre llegas tarde y eso es una falta de respeto al equipo." — Ataca la identidad ("siempre"), asume intención, no genera apertura.<br><br><strong>Pasivo:</strong> [Silencio. Cara de molestia. Comentario sarcástico después con otra persona.] — No expresa la necesidad, acumula resentimiento.<br><br><strong>Asertivo:</strong> "Cuando las reuniones comienzan después de la hora acordada, me cuesta cumplir el resto de mi agenda y eso me genera estrés. Necesito que encontremos una forma de comenzar a tiempo o de avisarnos con anticipación." — Nombra el hecho, expresa el impacto real, hace una petición concreta y negociable.</p></div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atr">✍️ Reflexión personal</div>
+    <div class="aht"><h4>Mi estilo dominante y sus costos</h4><p>Identificar el patrón que más activas bajo presión y lo que te ha costado</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="rp"><strong>Instrucción:</strong> Piensa en los últimos tres meses de trabajo. Cuando hubo tensión o un desacuerdo, ¿qué patrón activaste con mayor frecuencia? No se trata de evaluarte moralmente: se trata de reconocer el patrón para poder elegir. ¿Qué estilo tiendes a usar más? ¿En qué tipo de relaciones (jefes, pares, personas que te reportan)? ¿Qué te costó ese estilo en alguna situación concreta?</div>
+    <textarea class="rta" id="ta-m1t2r" placeholder="Escribe tu reflexión aquí..."></textarea>
+    <button class="rsave" onclick="guardar('ta-m1t2r','sv-m1t2r')">Guardar reflexión</button>
+    <div class="rsaved" id="sv-m1t2r">✓ Guardado en este navegador</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atp">🎯 Ejercicio práctico</div>
+    <div class="aht"><h4>Reescribir en clave asertiva</h4><p>Transformar tres mensajes reales usando la estructura del mensaje en primera persona</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="psc"><div class="psl">📋 Escenario</div><p>Elige tres situaciones reales de tu entorno profesional donde hayas dicho (o querido decir) algo de forma pasiva o agresiva. Reescribe cada una usando la fórmula: <strong>Cuando [hecho] + yo siento [emoción] + porque [necesidad] + necesito [petición].</strong></p></div>
+    <ul class="psteps"><li class="pst"><div class="psn">1</div><div class="pstx"><strong>Describe brevemente</strong> la situación original y cómo reaccionaste (o callaste).</div></li><li class="pst"><div class="psn">2</div><div class="pstx"><strong>Escribe la versión asertiva</strong> usando exactamente la fórmula. No la parafrasees: usa las cuatro partes.</div></li><li class="pst"><div class="psn">3</div><div class="pstx"><strong>¿Qué parte de la fórmula te costó más formular?</strong> ¿La emoción, la necesidad o la petición?</div></li></ul>
+    <textarea class="pia" id="ta-m1t2p" placeholder="Escribe tu respuesta aquí..."></textarea>
+    <button class="psave" onclick="guardar('ta-m1t2p','sv-m1t2p')">Guardar ejercicio</button>
+    <div class="rsaved" id="sv-m1t2p">✓ Guardado</div>
+    <div class="ptip"><strong>💡 Nota:</strong> La parte más difícil suele ser la <em>petición</em>: muchas personas saben lo que sienten pero no han pensado qué necesitan concretamente. Si tu petición empieza con "que no haga X", no es suficiente: una petición asertiva propone algo que el otro puede hacer, no solo algo que debe dejar de hacer.</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atc">🧠 Cuestionario de aplicación</div>
+    <div class="aht"><h4>Reconocer estilos en situaciones laborales</h4><p>Dos casos para identificar patrones y sus consecuencias</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody"><div class="qi" >
+  <div class="qq">1. En una reunión de planeación, Rodrigo tiene una idea que contradice la propuesta del director. En lugar de plantearla, espera a que termine la reunión y después se la comenta solo a su colega cercana. ¿Qué patrón predomina y cuál es su costo más probable?</div>
+  <div class="qopts" id="cg_Reco_0"><label class="qo" onclick="selOpt(this,'cg_Reco_0',0)"><input type="radio" name="cg_Reco_0"> Comunicación agresiva — el costo es el conflicto inmediato con el director</label><label class="qo" onclick="selOpt(this,'cg_Reco_0',1)"><input type="radio" name="cg_Reco_0"> Comunicación pasiva — el costo es que su idea no se escucha y puede acumular resentimiento</label><label class="qo" onclick="selOpt(this,'cg_Reco_0',2)"><input type="radio" name="cg_Reco_0"> Comunicación asertiva — está siendo estratégico al elegir el momento</label><label class="qo" onclick="selOpt(this,'cg_Reco_0',3)"><input type="radio" name="cg_Reco_0"> No hay suficiente información para saberlo</label></div>
+  <div class="qfb ok" id="fb_cg_Reco_0_ok">✓ Correcto. El patrón pasivo se caracteriza por no expresar la necesidad o la opinión en el momento y lugar apropiados. El costo de corto plazo es evitar la incomodidad del conflicto; el de largo plazo es el resentimiento acumulado y la pérdida de influencia real en la organización.</div>
+  <div class="qfb no" id="fb_cg_Reco_0_no">Rodrigo no expresa su desacuerdo cuando podría hacerlo; lo deriva a una conversación lateral que no cambia la decisión. Eso es pasivo, no estratégico: la asertividad estratégica elegiría el momento pero no renunciaría a la expresión.</div>
+  <button class="qsend" onclick="revelar('cg_Reco_0',1,'fb_cg_Reco_0')" disabled id="btn_cg_Reco_0">Ver retroalimentación</button>
+</div><div class="qi" style="margin-top:1.2rem">
+  <div class="qq">2. ¿Cuál de los siguientes es un ejemplo de mensaje asertivo en primera persona?</div>
+  <div class="qopts" id="cg_Reco_1"><label class="qo" onclick="selOpt(this,'cg_Reco_1',0)"><input type="radio" name="cg_Reco_1"> "Tu forma de hablar en las reuniones es irrespetuosa con el equipo."</label><label class="qo" onclick="selOpt(this,'cg_Reco_1',1)"><input type="radio" name="cg_Reco_1"> "Cuando interrumpes mientras alguien está hablando, me resulta difícil seguir el hilo. Necesito que acordemos un turno de palabra."</label><label class="qo" onclick="selOpt(this,'cg_Reco_1',2)"><input type="radio" name="cg_Reco_1"> "Está bien, no pasa nada, ya lo resolvemos después." (pensando que sí pasa)</label><label class="qo" onclick="selOpt(this,'cg_Reco_1',3)"><input type="radio" name="cg_Reco_1"> "Todo el equipo opina que las reuniones no funcionan bien."</label></div>
+  <div class="qfb ok" id="fb_cg_Reco_1_ok">✓ Perfecto. Esta opción cumple las cuatro partes: hecho observable ("cuando interrumpes"), impacto concreto ("me resulta difícil"), y petición específica ("acordemos un turno de palabra"). Habla desde el "yo" y no ataca la identidad del otro.</div>
+  <div class="qfb no" id="fb_cg_Reco_1_no">La opción b cumple la fórmula. Las otras opciones atacan la identidad (a), evitan el conflicto (c) o usan generalización para presionar (d).</div>
+  <button class="qsend" onclick="revelar('cg_Reco_1',1,'fb_cg_Reco_1')" disabled id="btn_cg_Reco_1">Ver retroalimentación</button>
+</div></div>
+</div>
+<div class="nt"><button class="nb" onclick="navClick('m1t1')">← Tema anterior</button><button class="nb pri" onclick="navClick('m1t3')">Siguiente tema →</button></div>
+</div>
+<div id="v-m1t3" style="display:none">
+<div class="bc"><span onclick="navClick('sm1')" style="cursor:pointer">Módulo 1</span><span class="sep">›</span>Tema 3 — La escucha activa</div>
+<div class="mpb"><div class="mpbf" style="width:83%"></div></div>
+<div class="th"><div class="te">Tema 3 de 3 · Módulo 1</div><h2>La escucha activa: el arte de estar presente</h2><p>La habilidad más subestimada de la comunicación profesional —y la más rentable en términos de influencia, confianza y resolución de problemas.</p></div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Fundamento</div>
+  <div class="bt">La paradoja de la escucha</div>
+  <div class="bb">
+    <p>Existe una paradoja en el corazón de la comunicación profesional: la habilidad que más necesitamos —escuchar— es la que menos formación recibimos. Pasamos años aprendiendo a hablar en público y a estructurar argumentos. Casi ningún programa de formación profesional enseña a escuchar.</p>
+    <p>La investigación de Ralph Nichols y Leonard Stevens (<em>Harvard Business Review</em>, 1957) documentó que las personas recuerdan aproximadamente el 25% de lo que escuchan inmediatamente después de una conversación. El problema no es la memoria: es que en la mayoría de las conversaciones no estamos escuchando. Estamos <strong>esperando nuestro turno</strong>.</p>
+  </div>
+  <div class="cbox"><div class="ct">Distinción clave</div><div class="cd"><strong>Oír</strong> es un proceso fisiológico: las ondas sonoras activan el nervio auditivo. <strong>Escuchar</strong> es un proceso cognitivo y relacional: implica atención, interpretación, retención y respuesta. La escucha activa añade una dimensión ética: la disposición genuina a ser afectado por lo que el otro dice.</div></div>
+  <div class="aq"><div class="qt">"Para comprenderme, necesitas escucharme. Para escucharme, necesitas silenciar tu propio diálogo interno. Y para silenciar tu diálogo interno, necesitas confiar en que tu perspectiva no desaparecerá si dejas de defenderla por un momento."</div><div class="qr">Rogers, C. R. y Farson, R. E. (1957). <em>Active Listening</em>. Industrial Relations Center, University of Chicago.</div></div>
+</div>
+<div class="cb">
+  <div class="bl tool"><span class="dot"></span>Técnicas</div>
+  <div class="bt">Cinco técnicas de escucha activa</div>
+  <div class="bb"><p>Las técnicas de escucha activa estructuran la atención y la retroalimentación de forma que la otra persona pueda verificar que fue comprendida. Esta verificación es lo que cambia la calidad de la conversación.</p></div>
+  <ul class="al">
+    <li class="ai"><div class="an" style="background:var(--mor)">1</div><div class="ac"><strong>Parafrasear</strong><p>Reformular con tus propias palabras lo que entendiste. <em>Ejemplo:</em> "Si entiendo bien, lo que más te preocupa no es el plazo en sí sino no tener suficiente información para decidir. ¿Es así?" — Permite corregir malentendidos antes de que escalen.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--mor)">2</div><div class="ac"><strong>Preguntas abiertas</strong><p>Preguntas que no se responden con sí/no e invitan a elaborar. <em>Ejemplo:</em> "¿Qué es lo que más te preocupa de esta propuesta?" en lugar de "¿Estás de acuerdo?" — Abren el espacio de la conversación.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--mor)">3</div><div class="ac"><strong>Validación emocional</strong><p>Reconocer la emoción del otro sin necesariamente estar de acuerdo con su posición. <em>Ejemplo:</em> "Entiendo que esta situación te genera frustración." — No valida el contenido; valida la experiencia. Es la distinción más difícil y más poderosa.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--mor)">4</div><div class="ac"><strong>Silencios activos</strong><p>Resistir el impulso de llenar el silencio y dar espacio para que el otro complete su pensamiento. El silencio de 3-5 segundos después de que alguien termina de hablar suele producir la información más relevante de la conversación.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--mor)">5</div><div class="ac"><strong>Lenguaje corporal congruente</strong><p>Postura orientada hacia el interlocutor, contacto visual sostenido, asentimiento con la cabeza, microexpresiones de comprensión. El cuerpo que escucha genera la condición para que el otro se sienta seguro hablando.</p></div></li>
+  </ul>
+  <div class="ebox"><div class="el">🔍 Por qué escuchar bien es una estrategia de influencia</div><p>La investigación de Carnegie y la más reciente de Adam Grant convergen en un hallazgo contraintuitivo: las personas que escuchan mejor son percibidas como más inteligentes, más confiables y más influyentes. El mecanismo es simple: sentirse escuchado activa la disposición a escuchar. Quien escucha primero, habla después con más autoridad.</p></div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atr">✍️ Reflexión personal</div>
+    <div class="aht"><h4>¿Cuándo dejo de escuchar?</h4><p>Identificar los desencadenantes que interrumpen tu capacidad de escucha genuina</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="rp"><strong>Instrucción:</strong> Piensa en las situaciones donde más te cuesta escuchar realmente. Responde: 1. ¿Qué te saca de la escucha activa con mayor frecuencia? (El impulso de responder, la desconexión emocional, la multitarea, el juicio anticipado, otro.) 2. ¿Hay alguna persona con quien escuches mejor? ¿Qué tiene esa relación que facilita tu atención? 3. ¿Qué consiguió alguien que te escuchó bien? ¿Qué cambió en ti después de sentirte escuchado genuinamente?</div>
+    <textarea class="rta" id="ta-m1t3r" placeholder="Escribe tu reflexión aquí..."></textarea>
+    <button class="rsave" onclick="guardar('ta-m1t3r','sv-m1t3r')">Guardar reflexión</button>
+    <div class="rsaved" id="sv-m1t3r">✓ Guardado en este navegador</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atp">🎯 Ejercicio práctico</div>
+    <div class="aht"><h4>La conversación de 10 minutos</h4><p>Un experimento de escucha activa para realizar esta semana</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="psc"><div class="psl">📋 Escenario</div><p>Esta semana, elige a alguien de tu entorno profesional con quien tengas una conversación de al menos 10 minutos. Tu única tarea: aplicar conscientemente las cinco técnicas de escucha activa. Nada más. No tienes que solucionar nada ni persuadir a nadie.</p></div>
+    <ul class="psteps"><li class="pst"><div class="psn">1</div><div class="pstx"><strong>Antes:</strong> decide qué técnica vas a monitorear especialmente. Elige la que menos usas habitualmente.</div></li><li class="pst"><div class="psn">2</div><div class="pstx"><strong>Durante:</strong> en algún momento de la conversación, usa el parafraseo. Di literalmente: "Si te entiendo bien..." y reformula lo que escuchaste.</div></li><li class="pst"><div class="psn">3</div><div class="pstx"><strong>Después:</strong> escribe aquí qué observaste —en el otro y en ti mismo.</div></li></ul>
+    <textarea class="pia" id="ta-m1t3p" placeholder="Escribe tu respuesta aquí..."></textarea>
+    <button class="psave" onclick="guardar('ta-m1t3p','sv-m1t3p')">Guardar ejercicio</button>
+    <div class="rsaved" id="sv-m1t3p">✓ Guardado</div>
+    <div class="ptip"><strong>💡 Nota:</strong> El objetivo no es hacer que la otra persona note que estás "aplicando técnicas". Si lo nota, estás haciendo teatro. El objetivo es que <em>tú</em> estés genuinamente presente. La diferencia entre ambas cosas es exactamente lo que Rogers llamaba la condición de la escucha real.</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atc">🧠 Cuestionario de aplicación</div>
+    <div class="aht"><h4>Distinguir técnicas y aplicarlas</h4><p>Dos situaciones donde identificar qué respuesta es más adecuada</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody"><div class="qi" >
+  <div class="qq">1. Tu colega te dice: "Estoy harta de que en esta organización nadie tome en serio las ideas del equipo de campo. Siempre deciden los mismos desde arriba." ¿Cuál es la respuesta más adecuada de escucha activa?</div>
+  <div class="qopts" id="cg_Dist_0"><label class="qo" onclick="selOpt(this,'cg_Dist_0',0)"><input type="radio" name="cg_Dist_0"> "No es para tanto, la dirección también tiene sus razones."</label><label class="qo" onclick="selOpt(this,'cg_Dist_0',1)"><input type="radio" name="cg_Dist_0"> "Parece que sientes que el trabajo del equipo de campo no está siendo valorado en las decisiones que importan. ¿Hay algo en particular que pasó recientemente?"</label><label class="qo" onclick="selOpt(this,'cg_Dist_0',2)"><input type="radio" name="cg_Dist_0"> "Sí, a mí también me pasa lo mismo, el otro día precisamente..."</label><label class="qo" onclick="selOpt(this,'cg_Dist_0',3)"><input type="radio" name="cg_Dist_0"> "¿Ya hablaste con la directora sobre esto?"</label></div>
+  <div class="qfb ok" id="fb_cg_Dist_0_ok">✓ Excelente. Esta respuesta combina parafraseo ("parece que sientes que..."), validación emocional y una pregunta abierta que invita a profundizar. No invalida, no desvía la conversación hacia ti misma, no da consejos no pedidos. Da espacio para que el otro continúe.</div>
+  <div class="qfb no" id="fb_cg_Dist_0_no">La respuesta más efectiva es la b). La a) invalida la emoción. La c) desvía la conversación hacia ti misma (error muy común). La d) da un consejo prematuro. La escucha activa prioriza comprender antes de resolver o aconsejar.</div>
+  <button class="qsend" onclick="revelar('cg_Dist_0',1,'fb_cg_Dist_0')" disabled id="btn_cg_Dist_0">Ver retroalimentación</button>
+</div><div class="qi" style="margin-top:1.2rem">
+  <div class="qq">2. En una reunión, después de que alguien termina de presentar su propuesta, hay un silencio de 4 segundos. ¿Cuál es la lectura más adecuada desde la perspectiva de la escucha activa?</div>
+  <div class="qopts" id="cg_Dist_1"><label class="qo" onclick="selOpt(this,'cg_Dist_1',0)"><input type="radio" name="cg_Dist_1"> El silencio indica que la propuesta fue mala o no gustó</label><label class="qo" onclick="selOpt(this,'cg_Dist_1',1)"><input type="radio" name="cg_Dist_1"> Hay que llenarlo rápido para evitar la incomodidad</label><label class="qo" onclick="selOpt(this,'cg_Dist_1',2)"><input type="radio" name="cg_Dist_1"> El silencio es parte del procesamiento: las personas están pensando, y llenarlo prematuramente corta ese proceso</label><label class="qo" onclick="selOpt(this,'cg_Dist_1',3)"><input type="radio" name="cg_Dist_1"> Solo el facilitador de la reunión debe hablar en ese momento</label></div>
+  <div class="qfb ok" id="fb_cg_Dist_1_ok">✓ Correcto. El silencio activo es una de las técnicas más poderosas y menos usadas. Un silencio de 3-5 segundos produce la reacción más honesta del grupo: permite que la persona que acaba de hablar añada algo importante, y que quien escuchó formule una respuesta más reflexiva en lugar de una reactiva.</div>
+  <div class="qfb no" id="fb_cg_Dist_1_no">La lectura más adecuada es la c). El silencio no significa rechazo: significa procesamiento. Llenarlo prematuramente interrumpe ese procesamiento y suele producir respuestas más superficiales.</div>
+  <button class="qsend" onclick="revelar('cg_Dist_1',2,'fb_cg_Dist_1')" disabled id="btn_cg_Dist_1">Ver retroalimentación</button>
+</div></div>
+</div>
+<div class="nt"><button class="nb" onclick="navClick('m1t2')">← Tema anterior</button><button class="nb pri" onclick="navClick('m1pdf')">Ver PDF del módulo →</button></div>
+</div>
+<div id="v-m1pdf" style="display:none">
+<div class="bc"><span onclick="navClick('sm1')" style="cursor:pointer">Módulo 1</span><span class="sep">›</span>Material de referencia</div>
+<div class="mpb"><div class="mpbf" style="width:100%"></div></div>
+<div class="th"><div class="te">Material de referencia · Módulo 1</div><h2>PDF: Comunicación, poder y práctica social</h2><p>Marco teórico ampliado del módulo con referencias completas, esquemas conceptuales y lecturas recomendadas para profundizar.</p></div>
+<div class="pdfb">
+  <div class="pdfic">📄</div>
+  <div class="pdfi"><h4>M1 — Comunicación, poder y práctica social</h4><p>Marco teórico ampliado · Habermas, Watzlawick, Rogers, Alberti &amp; Emmons</p><div class="pdft"><span class="pdftag">Teoría de la comunicación</span><span class="pdftag">Estilos comunicativos</span><span class="pdftag">Escucha activa</span><span class="pdftag">Referencias APA 7</span></div></div>
+  <a class="pdfbtn" href="https://dsalgadolpz-aus.github.io/dsalgado/pdfs/HPI_M1_Comunicacion_Practica_Social.pdf" target="_blank">⬇ Descargar PDF</a>
+</div>
+<div class="cb">
+  <div class="bl"><span class="dot"></span>Contenido del PDF</div>
+  <div class="bt">¿Qué encontrarás en este documento?</div>
+  <div class="bb">
+    <ul>
+      <li>Desarrollo ampliado de la Teoría de la Acción Comunicativa de Habermas con contexto histórico e implicaciones organizacionales</li>
+      <li>Los cinco axiomas de Watzlawick con ejemplos aplicados a entornos laborales mexicanos y latinoamericanos</li>
+      <li>Esquema comparativo de los tres estilos comunicativos con indicadores conductuales observables</li>
+      <li>Protocolo completo del mensaje en primera persona con casos de aplicación</li>
+      <li>Guía de técnicas de escucha activa con ejercicios de práctica individual</li>
+      <li>Glosario de términos técnicos del módulo</li>
+      <li>18 referencias en formato APA 7.ª edición para profundización</li>
+    </ul>
+  </div>
+</div>
+<div class="cb" style="background:var(--g7);border-color:var(--g5);">
+  <div class="bl"><span class="dot"></span>Lecturas recomendadas</div>
+  <div class="bt">Para ir más lejos</div>
+  <div class="bb">
+    <p><strong>Habermas, J. (1984).</strong> <em>The Theory of Communicative Action</em> (Vol. 1). Beacon Press.<br><em>Punto de entrada:</em> Capítulos 1 y 2 para la distinción acción estratégica / acción comunicativa.</p><br>
+    <p><strong>Watzlawick, P., Bavelas, J. B. y Jackson, D. D. (1985).</strong> <em>Teoría de la comunicación humana.</em> Herder.<br><em>Punto de entrada:</em> Capítulo 2 (axiomas). Es de lectura directa y muy accesible.</p><br>
+    <p><strong>Alberti, R. E. y Emmons, M. L. (2017).</strong> <em>Your Perfect Right</em> (10ª ed.). Impact Publishers.<br><em>Punto de entrada:</em> Capítulos 3-5 sobre la práctica de la asertividad.</p><br>
+    <p><strong>Rogers, C. R. y Farson, R. E. (1957).</strong> <em>Active Listening.</em> Industrial Relations Center, University of Chicago.<br><em>Nota:</em> Texto breve (20 páginas) y de lectura obligatoria para entender la escucha desde la psicología humanista.</p>
+  </div>
+</div>
+<div class="nt">
+  <button class="nb" onclick="navClick('m1t3')">← Último tema</button>
+  <button class="nb pri" onclick="completarM1()">Completar módulo 1 y continuar →</button>
+</div>
+</div>
+<div id="v-sm2" style="display:none">
+<div class="mc" style="background:linear-gradient(135deg,#1A0050,#2d0080);">
+  <div class="mc-num">Módulo 02 · 6 horas · 3 temas</div>
+  <h1>Hablar en público con<br>presencia y autoridad</h1>
+  <p class="mc-desc">El miedo a hablar en público tiene una base neurológica conocida y una solución documentada. Este módulo combina neurociencia aplicada, retórica clásica y técnicas corporales para transformar la forma en que te presentas ante cualquier audiencia.</p>
+  <div class="mc-meta">
+    <div class="mc-stat"><strong>3</strong><span>Temas</span></div>
+    <div class="mc-stat"><strong>9</strong><span>Actividades</span></div>
+    <div class="mc-stat"><strong>1</strong><span>PDF</span></div>
+    <div class="mc-stat"><strong>~2h</strong><span>Lectura</span></div>
+  </div>
+  <div class="mc-tags"><span class="mc-tag">Neurociencia del miedo escénico</span><span class="mc-tag">PREP · Minto · Storytelling</span><span class="mc-tag">Comunicación no verbal</span></div>
+</div>
+<div class="splash">
+  <div class="sp-ico">🎤</div>
+  <h2>Módulo 2 desbloqueado</h2>
+  <p>Completaste el módulo 1. Ahora trabajaremos con la dimensión más visible —y más temida— de la comunicación profesional.</p>
+  <button class="spbtn" onclick="navClick('m2t1')">Comenzar módulo 2 →</button>
+  <div class="spf">
+    <div class="spfi"><strong>3</strong><span>temas</span></div>
+    <div class="spfi"><strong>3</strong><span>reflexiones</span></div>
+    <div class="spfi"><strong>3</strong><span>prácticas</span></div>
+    <div class="spfi"><strong>3</strong><span>cuestionarios</span></div>
+  </div>
+</div>
+</div>
+<div id="v-m2t1" style="display:none">
+<div class="bc"><span onclick="navClick('sm2')" style="cursor:pointer">Módulo 2</span><span class="sep">›</span>Tema 1 — El miedo a hablar en público</div>
+<div class="mpb"><div class="mpbf" style="width:16%"></div></div>
+<div class="th"><div class="te">Tema 1 de 3 · Módulo 2</div><h2>El miedo a hablar en público: neurociencia y estrategia</h2><p>Por qué el cerebro reacciona ante un micrófono como ante un depredador, y cómo transformar esa reacción en ventaja.</p></div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Fundamento neurológico</div>
+  <div class="bt">La amígdala y la respuesta de estrés</div>
+  <div class="bb">
+    <p>La <em>glosofobia</em> aparece de forma consistente en estudios sobre miedos en adultos como uno de los más extendidos. Esta jerarquía no es irracional: tiene una base evolutiva sólida.</p>
+    <p>La <strong>amígdala</strong>, especializada en la detección de amenazas, no distingue entre un depredador real y una audiencia de treinta personas mirándote. La evaluación social activa los mismos circuitos que una amenaza física. La respuesta es idéntica: aumento del ritmo cardíaco, vasoconstricción periférica, liberación de cortisol y adrenalina.</p>
+  </div>
+  <div class="cbox"><div class="ct">Reencuadre cognitivo</div><div class="cd">Técnica psicológica que consiste en reinterpretar el significado de una experiencia sin cambiar los hechos físicos. Los síntomas fisiológicos del estrés (taquicardia, manos sudorosas) son <strong>idénticos</strong> a los síntomas de la excitación positiva. La diferencia no está en el cuerpo: está en la etiqueta que ponemos.</div></div>
+  <div class="aq"><div class="qt">"Decirse a uno mismo &quot;estoy emocionado&quot; antes de hablar en público produce mejor rendimiento que intentar calmarse. La excitación es un estado de alta activación que se puede redirigir; la calma requiere un cambio de estado más profundo y difícil de conseguir en el corto plazo."</div><div class="qr">Brooks, A. W. (2014). Get excited: Reappraising pre-performance anxiety as excitement. <em>Journal of Experimental Psychology: General, 143</em>(3), 1144–1158. https://doi.org/10.1037/a0035325</div></div>
+  <div class="bb">
+    <p>El <strong>efecto spotlight</strong> (Gilovich et al., 1999) describe otra distorsión cognitiva central: la tendencia sistemática a sobrestimar cuánto nos observan y evalúan los demás. En el experimento original, los participantes estimaban que el 50% de sus compañeros había notado algo embarazoso en ellos. La cifra real era inferior al 25%.</p>
+  </div>
+  <div class="ebox"><div class="el">🔍 Implicación práctica</div><p>La audiencia no nota la mayor parte de los errores que el orador percibe en sí mismo: el temblor de las manos que siente pero no se ve, la pausa que le pareció eterna pero duró dos segundos. Esto no elimina el miedo, pero lo calibra: la magnitud del error percibido por el orador es sistemáticamente mayor que la percibida por la audiencia.</p></div>
+</div>
+<div class="cb">
+  <div class="bl tool"><span class="dot"></span>Estrategias</div>
+  <div class="bt">Cuatro estrategias con respaldo empírico</div>
+  <ul class="al">
+    <li class="ai"><div class="an" style="background:var(--azu)">1</div><div class="ac"><strong>Preparación profunda, no memorización</strong><p>Conocer el material en profundidad genera confianza real y resistente. Memorizar el guión genera confianza frágil: un pequeño desvío activa el pánico. La preparación debe orientarse a dominar las <em>ideas</em>, no las palabras exactas.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--azu)">2</div><div class="ac"><strong>Respiración diafragmática</strong><p>El ciclo 4-4-6 (inhalar 4 tiempos, sostener 4, exhalar 6) activa el sistema nervioso parasimpático y reduce la frecuencia cardíaca. Practicado durante 3 minutos antes de hablar, produce cambios fisiológicos medibles.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--azu)">3</div><div class="ac"><strong>Reencuadre cognitivo activo</strong><p>En lugar de &quot;calma, calma&quot;, decirse explícitamente: &quot;Estoy emocionado/a. Tengo energía. Voy a usar esta energía.&quot; Esta verbalización redirige la activación simpática en lugar de intentar suprimirla (Brooks, 2014).</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--azu)">4</div><div class="ac"><strong>Comienzo en tierra firme</strong><p>Iniciar con el material que más dominas produce un &quot;arranque exitoso&quot; que reduce la ansiedad para el resto. El inicio es el momento de mayor tensión: invertir en él produce rendimientos sobre el resto de la presentación.</p></div></li>
+  </ul>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atr">✍️ Reflexión personal</div>
+    <div class="aht"><h4>Mi historia con el miedo a hablar</h4><p>Reconstruir cuándo y cómo se formó tu relación con la exposición pública</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="rp"><strong>Instrucción:</strong> El miedo a hablar en público no es universal ni natural: se aprende en contextos específicos. Responde: 1. ¿Recuerdas algún momento donde hablar en público salió mal —o donde silenciaste algo por miedo? ¿Qué edad tenías? ¿Qué pasó exactamente? 2. ¿Cómo describirías hoy tu relación con la exposición pública? ¿Ha cambiado a lo largo de tu vida? 3. De las cuatro estrategias del tema, ¿cuál crees que sería más útil para ti? ¿Por qué?</div>
+    <textarea class="rta" id="ta-m2t1r" placeholder="Escribe tu reflexión aquí..."></textarea>
+    <button class="rsave" onclick="guardar('ta-m2t1r','sv-m2t1r')">Guardar reflexión</button>
+    <div class="rsaved" id="sv-m2t1r">✓ Guardado en este navegador</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atp">🎯 Ejercicio práctico</div>
+    <div class="aht"><h4>El experimento del reencuadre</h4><p>Aplicar la técnica de Brooks en una situación real de exposición esta semana</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="psc"><div class="psl">📋 Escenario</div><p>En los próximos 7 días, identifica una situación donde tengas que hablar ante otras personas —una reunión, una presentación, una clase. Antes de comenzar, aplica conscientemente el reencuadre: di en voz alta o mentalmente "Estoy emocionado/a".</p></div>
+    <ul class="psteps"><li class="pst"><div class="psn">1</div><div class="pstx"><strong>Identifica la situación</strong> con anticipación. ¿Cuándo es? ¿Ante quiénes vas a hablar?</div></li><li class="pst"><div class="psn">2</div><div class="pstx"><strong>Tres minutos antes:</strong> aplica la respiración 4-4-6 al menos dos ciclos. Luego di: &quot;Estoy emocionado/a, tengo energía para esto.&quot;</div></li><li class="pst"><div class="psn">3</div><div class="pstx"><strong>Después:</strong> registra qué pasó. ¿Notaste alguna diferencia en cómo te sentiste? ¿En cómo funcionó la presentación?</div></li></ul>
+    <textarea class="pia" id="ta-m2t1p" placeholder="Escribe tu respuesta aquí..."></textarea>
+    <button class="psave" onclick="guardar('ta-m2t1p','sv-m2t1p')">Guardar ejercicio</button>
+    <div class="rsaved" id="sv-m2t1p">✓ Guardado</div>
+    <div class="ptip"><strong>💡 Nota:</strong> Si no tienes una presentación formal en los próximos días, cualquier situación sirve: una conversación difícil, una llamada importante, hablar en una reunión cuando normalmente guardarías silencio. El reencuadre funciona en cualquier contexto de exposición percibida.</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atc">🧠 Cuestionario de aplicación</div>
+    <div class="aht"><h4>Neurociencia y estrategia del miedo escénico</h4><p>Dos preguntas para verificar la comprensión de los mecanismos</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody"><div class="qi" >
+  <div class="qq">1. Según la investigación de Brooks (2014), ¿cuál es la estrategia más efectiva para manejar la ansiedad antes de hablar en público?</div>
+  <div class="qopts" id="cg_Neur_0"><label class="qo" onclick="selOpt(this,'cg_Neur_0',0)"><input type="radio" name="cg_Neur_0"> Intentar calmarse y reducir la activación fisiológica</label><label class="qo" onclick="selOpt(this,'cg_Neur_0',1)"><input type="radio" name="cg_Neur_0"> Reinterpretar la activación como emoción positiva ("estoy emocionado/a")</label><label class="qo" onclick="selOpt(this,'cg_Neur_0',2)"><input type="radio" name="cg_Neur_0"> Ignorar los síntomas físicos y concentrarse en el contenido</label><label class="qo" onclick="selOpt(this,'cg_Neur_0',3)"><input type="radio" name="cg_Neur_0"> Practicar la respiración profunda hasta lograr calma total</label></div>
+  <div class="qfb ok" id="fb_cg_Neur_0_ok">✓ Correcto. Brooks demostró que reinterpretar la ansiedad como excitación produce mejor desempeño que intentar calmarse. La razón: tanto la ansiedad como la excitación son estados de alta activación. Redirigir la etiqueta es más eficiente que intentar cambiar el estado fisiológico.</div>
+  <div class="qfb no" id="fb_cg_Neur_0_no">La respuesta correcta es la b). El intento de calmarse requiere un cambio de estado fisiológico profundo, difícil de lograr en el corto plazo. El reencuadre cognitivo redirige la misma activación en lugar de suprimirla.</div>
+  <button class="qsend" onclick="revelar('cg_Neur_0',1,'fb_cg_Neur_0')" disabled id="btn_cg_Neur_0">Ver retroalimentación</button>
+</div><div class="qi" style="margin-top:1.2rem">
+  <div class="qq">2. ¿Qué describe el "efecto spotlight" en el contexto del miedo a hablar en público?</div>
+  <div class="qopts" id="cg_Neur_1"><label class="qo" onclick="selOpt(this,'cg_Neur_1',0)"><input type="radio" name="cg_Neur_1"> La importancia de tener buena iluminación en una presentación</label><label class="qo" onclick="selOpt(this,'cg_Neur_1',1)"><input type="radio" name="cg_Neur_1"> La tendencia a sobrestimar cuánto nos observan y evalúan los demás</label><label class="qo" onclick="selOpt(this,'cg_Neur_1',2)"><input type="radio" name="cg_Neur_1"> La sensación de que la audiencia está enfocada en nuestros errores específicos</label><label class="qo" onclick="selOpt(this,'cg_Neur_1',3)"><input type="radio" name="cg_Neur_1"> b y c son correctas</label></div>
+  <div class="qfb ok" id="fb_cg_Neur_1_ok">✓ Correcto. El efecto spotlight es específicamente la sobrestimación de cuánto nos observan. La distorsión es cuantitativa (cuánta atención recibimos) antes que cualitativa (cómo juzgan lo que hacemos).</div>
+  <div class="qfb no" id="fb_cg_Neur_1_no">La respuesta correcta es la b). El efecto spotlight es la tendencia a creer que los demás nos prestan más atención de la que realmente nos prestan. Gilovich documentó que estimamos que el doble de personas notó algo embarazoso en nosotros de las que realmente lo notaron.</div>
+  <button class="qsend" onclick="revelar('cg_Neur_1',1,'fb_cg_Neur_1')" disabled id="btn_cg_Neur_1">Ver retroalimentación</button>
+</div></div>
+</div>
+<div class="nt"><button class="nb" onclick="navClick('m1pdf')">← Módulo anterior</button><button class="nb pri" onclick="navClick('m2t2')">Siguiente tema →</button></div>
+</div>
+<div id="v-m2t2" style="display:none">
+<div class="bc"><span onclick="navClick('sm2')" style="cursor:pointer">Módulo 2</span><span class="sep">›</span>Tema 2 — Estructuras discursivas</div>
+<div class="mpb"><div class="mpbf" style="width:50%"></div></div>
+<div class="th"><div class="te">Tema 2 de 3 · Módulo 2</div><h2>Estructuras para un discurso efectivo</h2><p>Tres arquitecturas probadas: PREP para contextos cotidianos, storytelling para presentaciones formales, pirámide de Minto para audiencias ejecutivas.</p></div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Principio</div>
+  <div class="bt">Por qué la estructura no limita al orador</div>
+  <div class="bb">
+    <p>La estructura no reemplaza al contenido ni al estilo personal: es la <strong>arquitectura</strong> que permite que el contenido llegue con claridad. Un discurso sin estructura no es más auténtico: es más difícil de escuchar. La audiencia gasta energía cognitiva en preguntarse "¿a dónde va esto?" en lugar de procesando el contenido.</p>
+  </div>
+</div>
+<div class="cb">
+  <div class="bl tool"><span class="dot"></span>Estructura 1</div>
+  <div class="bt">PREP: para intervenciones cortas y espontáneas</div>
+  <div class="bb"><p>La estructura más versátil para contextos profesionales cotidianos: reuniones, entrevistas, respuestas en discusiones grupales.</p></div>
+  <div class="fbox"><div class="ft">P · Punto principal<br>R · Razón o argumento<br>E · Ejemplo concreto<br>P · Punto (de regreso, con más fuerza)</div><div class="fd">Estructura PREP — adaptación para comunicación profesional</div></div>
+  <div class="ebox"><div class="el">🔍 Ejemplo aplicado: respuesta en reunión de equipo</div><p><strong>Contexto:</strong> El director pregunta "¿Qué piensan del nuevo sistema de registro?"<br><br><strong>P:</strong> "Creo que el sistema tiene potencial pero necesita ajustes antes del lanzamiento."<br><strong>R:</strong> "El flujo de aprobación tiene tres pasos donde antes había uno, lo que va a ralentizar los procesos de campo."<br><strong>E:</strong> "Esta semana registré una actividad que con el sistema anterior tomaba 4 minutos y con el nuevo tomó 18."<br><strong>P:</strong> "Por eso propongo que revisemos el flujo de aprobación antes de que sea obligatorio para todo el equipo."<br><br><em>Total: aproximadamente 45 segundos. Claro, argumentado, con evidencia y con propuesta.</em></p></div>
+</div>
+<div class="cb">
+  <div class="bl tool"><span class="dot"></span>Estructura 2</div>
+  <div class="bt">Storytelling: para presentaciones formales y persuasión</div>
+  <div class="bb">
+    <p>El cerebro humano no está diseñado para recordar datos: está diseñado para recordar historias. La investigación en neurociencia cognitiva (Zak, 2015) documenta que cuando escuchamos una narrativa, se activan más regiones cerebrales y la retención es significativamente mayor que con información factual.</p>
+  </div>
+  <ul class="al">
+    <li class="ai"><div class="an" style="background:var(--nar)">1</div><div class="ac"><strong>Situación inicial</strong><p>El mundo tal como estaba antes del problema. Establece el contexto y conecta con la audiencia.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">2</div><div class="ac"><strong>Problema o tensión</strong><p>Lo que cambió, lo que rompió el equilibrio, la pregunta que no tenía respuesta. Sin tensión no hay historia.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">3</div><div class="ac"><strong>Camino recorrido</strong><p>Lo que se hizo, lo que se aprendió, las decisiones tomadas. La audiencia quiere ver el proceso, no solo el resultado.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">4</div><div class="ac"><strong>Resolución</strong><p>Qué cambió, qué se logró, cómo quedó el mundo después. Debe ser verificable: datos, testimonios, evidencia.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">5</div><div class="ac"><strong>Aprendizaje / Llamado a la acción</strong><p>Qué significa esto para la audiencia. Qué se les pide que hagan, piensen o decidan. Sin este cierre, la historia es entretenimiento, no comunicación profesional.</p></div></li>
+  </ul>
+</div>
+<div class="cb">
+  <div class="bl tool"><span class="dot"></span>Estructura 3</div>
+  <div class="bt">Pirámide de Minto: para audiencias ejecutivas</div>
+  <div class="bb">
+    <p>Barbara Minto desarrolló el <strong>Principio de la Pirámide</strong>: comenzar con la conclusión y añadir después los argumentos que la sostienen. Es contraintuitiva para quien fue formado en la lógica académica tradicional, pero es la que mejor se adapta a audiencias con tiempo limitado.</p>
+  </div>
+  <table class="ctbl">
+    <thead><tr><th>Estructura</th><th>Orden</th><th>Mejor para</th><th>Riesgo</th></tr></thead>
+    <tbody>
+      <tr><td>Lineal (tradicional)</td><td>Contexto → Argumento → Conclusión</td><td>Textos académicos, tesis, informes técnicos</td><td>El oyente no sabe adónde va; puede perderse</td></tr>
+      <tr><td>Pirámide de Minto</td><td>Conclusión → Argumentos → Evidencia</td><td>Presentaciones ejecutivas, reportes de gestión</td><td>Puede percibirse como abrupto si la audiencia no está lista</td></tr>
+      <tr><td>PREP</td><td>Punto → Razón → Ejemplo → Punto</td><td>Intervenciones cortas, reuniones, respuestas espontáneas</td><td>Poco adecuado para presentaciones largas</td></tr>
+      <tr><td>Storytelling</td><td>Situación → Tensión → Camino → Resolución → Acción</td><td>Presentaciones formales, conferencias, pitches</td><td>Requiere tiempo; no funciona en contextos muy breves</td></tr>
+    </tbody>
+  </table>
+  <div class="aq"><div class="qt">"Cualquier escrito tiene una estructura piramidal subyacente. La clave es hacerla explícita desde el principio en lugar de ocultar el punto principal al final como un gran descubrimiento."</div><div class="qr">Minto, B. (2009). <em>El principio de la pirámide</em> (p. 11). Pearson Educación.</div></div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atr">✍️ Reflexión personal</div>
+    <div class="aht"><h4>¿Cómo estructura mi mente cuando tengo que hablar?</h4><p>Identificar tu patrón natural de organización del discurso</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="rp"><strong>Instrucción:</strong> Piensa en cómo organizas naturalmente lo que dices cuando tienes que presentar algo sin mucha preparación. ¿Empiezas por el contexto? ¿Por la conclusión? ¿Por una historia? Responde: ¿Cuál de las tres estructuras te resulta más natural? ¿Cuál te parece más difícil de aplicar en tu contexto profesional? ¿Hay algún tipo de audiencia donde hayas notado que tu estructura natural no funciona?</div>
+    <textarea class="rta" id="ta-m2t2r" placeholder="Escribe tu reflexión aquí..."></textarea>
+    <button class="rsave" onclick="guardar('ta-m2t2r','sv-m2t2r')">Guardar reflexión</button>
+    <div class="rsaved" id="sv-m2t2r">✓ Guardado en este navegador</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atp">🎯 Ejercicio práctico</div>
+    <div class="aht"><h4>Construir tres versiones del mismo mensaje</h4><p>Aplicar las tres estructuras a una presentación o propuesta real</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="psc"><div class="psl">📋 Escenario</div><p>Elige un mensaje profesional que tengas que comunicar próximamente: un proyecto que quieres proponer, un resultado que debes reportar, una idea que quieres presentar a tu equipo. Escribe tres versiones del mismo mensaje usando cada estructura.</p></div>
+    <ul class="psteps"><li class="pst"><div class="psn">1</div><div class="pstx"><strong>PREP (máximo 60 segundos):</strong> Punto → Razón → Ejemplo → Punto.</div></li><li class="pst"><div class="psn">2</div><div class="pstx"><strong>Storytelling (2-3 minutos):</strong> Situación → Tensión → Camino → Resolución → Acción. Usa material real de tu contexto.</div></li><li class="pst"><div class="psn">3</div><div class="pstx"><strong>Pirámide de Minto (60 segundos):</strong> Comienza con la conclusión. Después los dos o tres argumentos principales. Sin preámbulo.</div></li><li class="pst"><div class="psn">4</div><div class="pstx"><strong>¿Cuál funciona mejor</strong> para tu audiencia específica? ¿Por qué?</div></li></ul>
+    <textarea class="pia" id="ta-m2t2p" placeholder="Escribe tu respuesta aquí..."></textarea>
+    <button class="psave" onclick="guardar('ta-m2t2p','sv-m2t2p')">Guardar ejercicio</button>
+    <div class="rsaved" id="sv-m2t2p">✓ Guardado</div>
+    <div class="ptip"><strong>💡 Nota:</strong> No existe una estructura universalmente superior. La elección correcta depende de la audiencia, el tiempo disponible y el objetivo. El ejercicio busca que desarrolles la <em>flexibilidad</em> para elegir conscientemente en lugar de usar siempre el mismo patrón.</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atc">🧠 Cuestionario de aplicación</div>
+    <div class="aht"><h4>¿Qué estructura usar en cada contexto?</h4><p>Dos situaciones donde elegir la estructura más adecuada</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody"><div class="qi" >
+  <div class="qq">1. Tienes 5 minutos en la junta directiva mensual para presentar los resultados del programa que coordinas. La directora ejecutiva tiene que salir antes. ¿Qué estructura priorizas?</div>
+  <div class="qopts" id="cg_¿Qué_0"><label class="qo" onclick="selOpt(this,'cg_¿Qué_0',0)"><input type="radio" name="cg_¿Qué_0"> Storytelling completo: comenzar con el contexto y llegar a los resultados al final</label><label class="qo" onclick="selOpt(this,'cg_¿Qué_0',1)"><input type="radio" name="cg_¿Qué_0"> Pirámide de Minto: comenzar con el resultado principal, luego los indicadores clave, luego lo que se necesita</label><label class="qo" onclick="selOpt(this,'cg_¿Qué_0',2)"><input type="radio" name="cg_¿Qué_0"> PREP: presentar tu punto, una razón, un ejemplo y repetir el punto</label><label class="qo" onclick="selOpt(this,'cg_¿Qué_0',3)"><input type="radio" name="cg_¿Qué_0"> Cualquier estructura funciona igual si el contenido es bueno</label></div>
+  <div class="qfb ok" id="fb_cg_¿Qué_0_ok">✓ Correcto. La pirámide de Minto es ideal para audiencias ejecutivas con tiempo limitado: si la directora sale a los 2 minutos, ya habrá escuchado el resultado principal y lo que se necesita. En el modelo lineal o el storytelling, esa información llegaría al final —y podría no llegar.</div>
+  <div class="qfb no" id="fb_cg_¿Qué_0_no">La pirámide de Minto (b) es la más adecuada. Cuando la audiencia es ejecutiva y el tiempo es corto, comenzar con la conclusión garantiza que lo más importante se comunique incluso si la presentación se interrumpe.</div>
+  <button class="qsend" onclick="revelar('cg_¿Qué_0',1,'fb_cg_¿Qué_0')" disabled id="btn_cg_¿Qué_0">Ver retroalimentación</button>
+</div><div class="qi" style="margin-top:1.2rem">
+  <div class="qq">2. Debes presentar a nuevos aliados estratégicos por qué el trabajo de tu organización importa. Tienes 15 minutos y el objetivo es que se sientan conectados con la causa y quieran colaborar. ¿Qué estructura priorizas?</div>
+  <div class="qopts" id="cg_¿Qué_1"><label class="qo" onclick="selOpt(this,'cg_¿Qué_1',0)"><input type="radio" name="cg_¿Qué_1"> Pirámide de Minto: empezar con el resultado más impresionante</label><label class="qo" onclick="selOpt(this,'cg_¿Qué_1',1)"><input type="radio" name="cg_¿Qué_1"> Storytelling: una historia real que muestre el problema, el camino y el impacto</label><label class="qo" onclick="selOpt(this,'cg_¿Qué_1',2)"><input type="radio" name="cg_¿Qué_1"> PREP con muchos ejemplos</label><label class="qo" onclick="selOpt(this,'cg_¿Qué_1',3)"><input type="radio" name="cg_¿Qué_1"> Un listado detallado de los logros del año</label></div>
+  <div class="qfb ok" id="fb_cg_¿Qué_1_ok">✓ Perfecto. Cuando el objetivo es generar conexión emocional y motivar a la acción, el storytelling es el instrumento más efectivo. Los datos convencen a la razón; las historias mueven a la acción. Los aliados estratégicos necesitan sentir por qué importa, no solo saber que importa.</div>
+  <div class="qfb no" id="fb_cg_¿Qué_1_no">La respuesta más efectiva es la b). Las personas se conectan con personas y con historias, no con indicadores ni con listas. Los datos pueden complementar la historia, pero no deben ser la historia.</div>
+  <button class="qsend" onclick="revelar('cg_¿Qué_1',1,'fb_cg_¿Qué_1')" disabled id="btn_cg_¿Qué_1">Ver retroalimentación</button>
+</div></div>
+</div>
+<div class="nt"><button class="nb" onclick="navClick('m2t1')">← Tema anterior</button><button class="nb pri" onclick="navClick('m2t3')">Siguiente tema →</button></div>
+</div>
+<div id="v-m2t3" style="display:none">
+<div class="bc"><span onclick="navClick('sm2')" style="cursor:pointer">Módulo 2</span><span class="sep">›</span>Tema 3 — Comunicación no verbal</div>
+<div class="mpb"><div class="mpbf" style="width:83%"></div></div>
+<div class="th"><div class="te">Tema 3 de 3 · Módulo 2</div><h2>Comunicación no verbal: cuerpo, voz y mirada</h2><p>Cuando el cuerpo y las palabras dicen cosas distintas, la audiencia cree al cuerpo. Siempre. Este tema trabaja con los canales analógicos de la comunicación profesional.</p></div>
+<div class="cb">
+  <div class="bl concept"><span class="dot"></span>Fundamento</div>
+  <div class="bt">El canal analógico domina</div>
+  <div class="bb">
+    <p>El axioma 4 de Watzlawick establece que la comunicación opera simultáneamente en dos canales: el <strong>digital</strong> —el lenguaje verbal— y el <strong>analógico</strong> —el lenguaje corporal. Cuando ambos se contradicen, el receptor cree al analógico. Esto no es una elección racional: es una respuesta del sistema nervioso.</p>
+    <p>Albert Mehrabian, en sus experimentos de los años 60, propuso que en la comunicación de actitudes y sentimientos, el 55% del impacto corresponde al lenguaje corporal, el 38% al tono de voz y solo el 7% a las palabras. Estas cifras aplican específicamente a situaciones de contenido emocional ambiguo. Lo que la investigación sí sostiene con solidez es el principio general: el cuerpo y la voz son canales de igual o mayor peso que las palabras en la comunicación cara a cara.</p>
+  </div>
+  <div class="tbox"><div class="tl2">⚠️ Nota crítica</div><p>La afirmación "el 93% de la comunicación es no verbal" es una malinterpretación de los datos de Mehrabian. Sus experimentos usaban una sola palabra pronunciada en diferentes tonos, no conversaciones completas. El principio es sólido; los porcentajes exactos no son generalizables a cualquier contexto de comunicación.</p></div>
+</div>
+<div class="cb">
+  <div class="bl tool"><span class="dot"></span>Herramientas</div>
+  <div class="bt">Los cuatro elementos del canal analógico</div>
+  <ul class="al">
+    <li class="ai"><div class="an" style="background:var(--nar)">1</div><div class="ac"><strong>La voz: instrumento subutilizado</strong><p>Cuatro dimensiones: <strong>volumen</strong> (proyectar, no gritar), <strong>ritmo</strong> (variar la velocidad para enfatizar), <strong>tono</strong> (evitar la monotonía) y <strong>las pausas</strong> — que generan atención y dan peso a las ideas. Una pausa de 3 segundos antes de una idea clave comunica más que 3 minutos de argumentación.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">2</div><div class="ac"><strong>El contacto visual: conexión y credibilidad</strong><p>En grupos pequeños: contacto visual de 2-3 segundos por persona, distribuido equitativamente. En grupos grandes: dividir el espacio en zonas y recorrerlas con la misma frecuencia. Lo que destruye la credibilidad es no mirar a nadie: el orador que habla a sus notas pierde la conexión en segundos.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">3</div><div class="ac"><strong>La postura y el movimiento: presencia física</strong><p>Postura base: pies separados al ancho de los hombros, hombros abiertos. El movimiento debe ser <em>intencional</em>: caminar hacia la audiencia al hacer una pregunta (acerca), detenerse para enfatizar (ancla). El balanceo repetitivo es el signo no verbal más común de nerviosismo y el que más atención desvía.</p></div></li>
+    <li class="ai"><div class="an" style="background:var(--nar)">4</div><div class="ac"><strong>Las manos: visibilidad y apertura</strong><p>Las manos deben estar visibles. Siempre. Las manos ocultas —detrás de la espalda, en los bolsillos— activan desconfianza en el sistema nervioso del interlocutor. Es un mecanismo evolutivo que precede al lenguaje. Los gestos abiertos comunican apertura, inclusión y seguridad.</p></div></li>
+  </ul>
+  <div class="ebox"><div class="el">🔍 La herramienta de diagnóstico más eficaz</div><p>Grabarte en video es el método más directo para diagnosticar tus patrones de comunicación no verbal. La instrucción: grábate dos minutos hablando de algo que conoces bien. Después mira el video <strong>sin audio</strong>. Lo que ves es exactamente lo que tu audiencia ve cuando hablas. La mayoría de las personas se sorprenden con lo que observan: el balanceo, la falta de contacto visual, las manos escondidas.</p></div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atr">✍️ Reflexión personal</div>
+    <div class="aht"><h4>Lo que mi cuerpo dice cuando hablo</h4><p>Identificar tus patrones no verbales habituales en situaciones de exposición</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="rp"><strong>Instrucción:</strong> Piensa en cómo te mueves y expresas físicamente cuando hablas en público o en una situación de exposición. Responde: ¿Qué haces con las manos? ¿Mantienes contacto visual o lo evitas? ¿Tiendes a moverte o a quedarte fijo? ¿Cómo es tu voz bajo presión: más rápida, más baja, más monótona? ¿Hay algún hábito no verbal que sabes que tienes pero no has podido cambiar? ¿Por qué crees que persiste?</div>
+    <textarea class="rta" id="ta-m2t3r" placeholder="Escribe tu reflexión aquí..."></textarea>
+    <button class="rsave" onclick="guardar('ta-m2t3r','sv-m2t3r')">Guardar reflexión</button>
+    <div class="rsaved" id="sv-m2t3r">✓ Guardado en este navegador</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atp">🎯 Ejercicio práctico</div>
+    <div class="aht"><h4>El experimento del video sin audio</h4><p>Grabarte y observar tu comunicación no verbal desde afuera</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody">
+    <div class="psc"><div class="psl">📋 Escenario</div><p>Grábate en video durante 2 minutos hablando de algo que conoces bien: un proyecto tuyo, lo que haces en tu trabajo. No ensayes: habla normalmente.</p></div>
+    <ul class="psteps"><li class="pst"><div class="psn">1</div><div class="pstx"><strong>Grábate</strong> con tu teléfono, a la altura del torso para ver el cuerpo completo.</div></li><li class="pst"><div class="psn">2</div><div class="pstx"><strong>Mira el video sin audio.</strong> Baja el volumen a cero. ¿Qué ves?</div></li><li class="pst"><div class="psn">3</div><div class="pstx"><strong>Ahora míralo con audio.</strong> ¿Qué cambia? ¿El cuerpo y la voz dicen lo mismo?</div></li><li class="pst"><div class="psn">4</div><div class="pstx"><strong>Identifica un solo hábito</strong> que quieras cambiar. Solo uno. Los cambios masivos simultáneos no funcionan.</div></li></ul>
+    <textarea class="pia" id="ta-m2t3p" placeholder="Escribe tu respuesta aquí..."></textarea>
+    <button class="psave" onclick="guardar('ta-m2t3p','sv-m2t3p')">Guardar ejercicio</button>
+    <div class="rsaved" id="sv-m2t3p">✓ Guardado</div>
+    <div class="ptip"><strong>💡 Nota:</strong> Es normal que el ejercicio produzca incomodidad. La mayoría de las personas nunca se han visto hablar desde afuera. Esa incomodidad es información: te dice qué hay entre tu imagen interna (cómo crees que te ves) y tu imagen externa (cómo te ven). Esa brecha es exactamente lo que este ejercicio trabaja.</div>
+  </div>
+</div>
+<div class="acard">
+  <div class="ah" onclick="toggleAct(this)">
+    <div class="atipo atc">🧠 Cuestionario de aplicación</div>
+    <div class="aht"><h4>Leer el canal analógico en situaciones profesionales</h4><p>Dos situaciones donde interpretar señales no verbales</p></div>
+    <div class="achv">▶</div>
+  </div>
+  <div class="abody"><div class="qi" >
+  <div class="qq">1. Estás presentando una propuesta. A la mitad, dos personas del comité comienzan a mirar sus teléfonos y una tercera cruza los brazos. ¿Cuál es la respuesta más eficaz?</div>
+  <div class="qopts" id="cg_Leer_0"><label class="qo" onclick="selOpt(this,'cg_Leer_0',0)"><input type="radio" name="cg_Leer_0"> Ignorar las señales y continuar la presentación como estaba planeada</label><label class="qo" onclick="selOpt(this,'cg_Leer_0',1)"><input type="radio" name="cg_Leer_0"> Hacer una pausa, hacer contacto visual y hacer una pregunta directa para recuperar la atención</label><label class="qo" onclick="selOpt(this,'cg_Leer_0',2)"><input type="radio" name="cg_Leer_0"> Hablar más fuerte para señalar que lo que viene es importante</label><label class="qo" onclick="selOpt(this,'cg_Leer_0',3)"><input type="radio" name="cg_Leer_0"> Acelerar la presentación para terminar antes</label></div>
+  <div class="qfb ok" id="fb_cg_Leer_0_ok">✓ Correcto. El canal analógico de la audiencia te está diciendo que algo no está funcionando. La respuesta más efectiva es interrumpir el patrón con una pausa, retomar el contacto visual y hacer una pregunta que reactive la participación. "¿Tiene sentido lo que estoy diciendo hasta aquí?" devuelve el control de la atención.</div>
+  <div class="qfb no" id="fb_cg_Leer_0_no">Los teléfonos y los brazos cruzados son señales del canal analógico de la audiencia: algo no funciona. Ignorarlas, gritar más fuerte o acelerar no resuelve el problema. Hacer una pausa y una pregunta directa es lo que puede recuperar la atención genuina.</div>
+  <button class="qsend" onclick="revelar('cg_Leer_0',1,'fb_cg_Leer_0')" disabled id="btn_cg_Leer_0">Ver retroalimentación</button>
+</div><div class="qi" style="margin-top:1.2rem">
+  <div class="qq">2. ¿Cuál describe mejor el uso adecuado de una pausa estratégica en un discurso?</div>
+  <div class="qopts" id="cg_Leer_1"><label class="qo" onclick="selOpt(this,'cg_Leer_1',0)"><input type="radio" name="cg_Leer_1"> Usarla solo cuando se olvida lo que sigue, para ganar tiempo</label><label class="qo" onclick="selOpt(this,'cg_Leer_1',1)"><input type="radio" name="cg_Leer_1"> Usarla antes de una idea clave, después de una pregunta retórica o para marcar el cambio entre secciones</label><label class="qo" onclick="selOpt(this,'cg_Leer_1',2)"><input type="radio" name="cg_Leer_1"> Evitarla porque el silencio genera incomodidad en la audiencia</label><label class="qo" onclick="selOpt(this,'cg_Leer_1',3)"><input type="radio" name="cg_Leer_1"> Usarla al final de cada oración para que la audiencia pueda tomar notas</label></div>
+  <div class="qfb ok" id="fb_cg_Leer_1_ok">✓ Perfecto. La pausa estratégica es una herramienta de énfasis y estructuración. Antes de una idea clave: genera anticipación. Después de una pregunta retórica: da tiempo a que la audiencia procese. Entre secciones: marca la transición. El silencio breve y deliberado no incomoda: ancla.</div>
+  <div class="qfb no" id="fb_cg_Leer_1_no">La respuesta correcta es la b). La pausa es una herramienta activa de comunicación, no un error ni una evasión. El silencio que incomoda es el accidental; el deliberado es el que ancla la atención.</div>
+  <button class="qsend" onclick="revelar('cg_Leer_1',1,'fb_cg_Leer_1')" disabled id="btn_cg_Leer_1">Ver retroalimentación</button>
+</div></div>
+</div>
+<div class="nt"><button class="nb" onclick="navClick('m2t2')">← Tema anterior</button><button class="nb pri" onclick="navClick('m2pdf')">Ver PDF del módulo →</button></div>
+</div>
+<div id="v-m2pdf" style="display:none">
+<div class="bc"><span onclick="navClick('sm2')" style="cursor:pointer">Módulo 2</span><span class="sep">›</span>Material de referencia</div>
+<div class="mpb"><div class="mpbf" style="width:100%"></div></div>
+<div class="th"><div class="te">Material de referencia · Módulo 2</div><h2>PDF: Oratoria, presencia y comunicación no verbal</h2><p>Marco teórico ampliado con neurociencia del miedo escénico, análisis de estructuras discursivas y guía práctica de comunicación no verbal.</p></div>
+<div class="pdfb">
+  <div class="pdfic">📄</div>
+  <div class="pdfi"><h4>M2 — Oratoria, presencia y comunicación no verbal</h4><p>Marco teórico ampliado · Brooks, Minto, Mehrabian, Watzlawick (axioma 4)</p><div class="pdft"><span class="pdftag">Neurociencia del miedo</span><span class="pdftag">Estructuras discursivas</span><span class="pdftag">Comunicación no verbal</span><span class="pdftag">Referencias APA 7</span></div></div>
+  <a class="pdfbtn" href="https://dsalgadolpz-aus.github.io/dsalgado/pdfs/HPI_M2_Oratoria_Presencia_No_Verbal.pdf" target="_blank">⬇ Descargar PDF</a>
+</div>
+<div class="cb">
+  <div class="bl"><span class="dot"></span>Contenido del PDF</div>
+  <div class="bt">¿Qué encontrarás en este documento?</div>
+  <div class="bb">
+    <ul>
+      <li>Neurociencia del miedo escénico: amígdala, cortisol y el sistema nervioso simpático explicados para no especialistas</li>
+      <li>Revisión crítica del estudio de Mehrabian: qué dice y qué no dice la investigación sobre comunicación no verbal</li>
+      <li>Guía completa de las tres estructuras discursivas con plantillas de aplicación</li>
+      <li>Protocolo de preparación de presentaciones en 4 pasos</li>
+      <li>Lista de cotejo de comunicación no verbal para autoevaluación</li>
+      <li>16 referencias en formato APA 7.ª edición</li>
+    </ul>
+  </div>
+</div>
+<div class="cb" style="background:var(--g7);border-color:var(--g5);">
+  <div class="bl"><span class="dot"></span>Lecturas recomendadas</div>
+  <div class="bt">Para ir más lejos</div>
+  <div class="bb">
+    <p><strong>Brooks, A. W. (2014).</strong> Get excited: Reappraising pre-performance anxiety as excitement. <em>Journal of Experimental Psychology: General, 143</em>(3).<br><em>Punto de entrada:</em> El experimento 1 es suficiente para entender el hallazgo central.</p><br>
+    <p><strong>Minto, B. (2009).</strong> <em>El principio de la pirámide.</em> Pearson Educación.<br><em>Punto de entrada:</em> Capítulos 1-3 para la lógica del principio.</p><br>
+    <p><strong>Zak, P. J. (2014).</strong> Why your brain loves good storytelling. <em>Harvard Business Review.</em> https://hbr.org/2014/10/why-your-brain-loves-good-storytelling<br><em>Nota:</em> Artículo breve y muy accesible sobre la neurociencia del storytelling.</p>
+  </div>
+</div>
+<div class="nt">
+  <button class="nb" onclick="navClick('m2t3')">← Último tema</button>
+  <div style="text-align:center;padding:1.5rem;background:var(--blanco);border-radius:var(--rl);border:1px solid var(--g5);">
+    <div style="font-size:1.8rem;margin-bottom:.6rem">🎓</div>
+    <h3 style="font-size:1.1rem;color:var(--negro);margin-bottom:.4rem">¡Módulos 1 y 2 completados!</h3>
+    <p style="font-size:.84rem;color:var(--g3);">Has terminado los dos primeros módulos de Hablar para Influir. Los módulos 3 y 4 estarán disponibles próximamente.</p>
+  </div>
+</div>
+</div>
+</div></main></div>
+
+<script>
+// ═══ VISTAS ═══
+const VISTAS = ['sm1','m1t1','m1t2','m1t3','m1pdf','sm2','m2t1','m2t2','m2t3','m2pdf'];
+const M1IDS  = ['m1t1','m1t2','m1t3','m1pdf'];
+const M2IDS  = ['m2t1','m2t2','m2t3','m2pdf'];
+
+let visitados = JSON.parse(localStorage.getItem('hpi_v2_vis')||'[]');
+let m1done    = localStorage.getItem('hpi_v2_m1')==='1';
+
+function navClick(id) {
+  const isM2 = ['sm2','m2t1','m2t2','m2t3','m2pdf'].includes(id);
+  if(isM2 && !m1done){ toast('Completa el módulo 1 primero para desbloquear el módulo 2'); return; }
+  mostrarVista(id);
+}
+
+function mostrarVista(id) {
+  VISTAS.forEach(v => { const e=document.getElementById('v-'+v); if(e) e.style.display='none'; });
+  const t=document.getElementById('v-'+id);
+  if(t) t.style.display='block';
+  actualizarSidebar(id);
+  window.scrollTo(0,0);
+}
+
+function actualizarSidebar(activo) {
+  // Headers módulo
+  document.querySelectorAll('.smh').forEach(h=>h.classList.remove('active'));
+  const esM2 = activo.startsWith('m2')||activo==='sm2';
+  document.getElementById(esM2?'hdrM2':'hdrM1').classList.add('active');
+
+  // Items activos
+  document.querySelectorAll('.si').forEach(i=>i.classList.remove('active'));
+  const ni=document.getElementById('ni-'+activo);
+  if(ni) ni.classList.add('active');
+
+  // M2 visible si desbloqueado
+  document.getElementById('itemsM2').style.display = m1done ? 'block' : 'none';
+
+  actualizarProgreso();
+}
+
+// ═══ PROGRESO ═══
+function marcarVisto(id) {
+  if(!visitados.includes(id)) visitados.push(id);
+  localStorage.setItem('hpi_v2_vis', JSON.stringify(visitados));
+  const ni=document.getElementById('ni-'+id);
+  if(ni){ ni.classList.add('done'); ni.classList.remove('locked'); }
+  actualizarProgreso();
+}
+
+function actualizarProgreso() {
+  const total = M1IDS.length + M2IDS.length;
+  const comp  = [...M1IDS,...M2IDS].filter(k=>visitados.includes(k)).length;
+  const pct   = Math.round((comp/total)*100);
+  document.getElementById('topPct').textContent = pct+'% completado';
+  document.getElementById('topBar').style.width = pct+'%';
+
+  // Badges
+  const m1comp = M1IDS.filter(k=>visitados.includes(k)).length;
+  if(m1done){
+    const b=document.getElementById('bdgM1');
+    b.textContent='✓'; b.className='sb ok';
+    document.getElementById('hdrM1').classList.add('done');
+  }
+  const m2comp = M2IDS.filter(k=>visitados.includes(k)).length;
+  if(m2comp===M2IDS.length && m1done){
+    const b=document.getElementById('bdgM2');
+    b.textContent='✓'; b.className='sb ok';
+    document.getElementById('hdrM2').classList.add('done');
+  }
+
+  // Marcar items visitados
+  visitados.forEach(id=>{
+    const el=document.getElementById('ni-'+id);
+    if(el){ el.classList.add('done'); el.classList.remove('locked'); }
+  });
+}
+
+function completarM1() {
+  M1IDS.forEach(id=>{ if(!visitados.includes(id)) visitados.push(id); });
+  localStorage.setItem('hpi_v2_vis', JSON.stringify(visitados));
+  m1done=true;
+  localStorage.setItem('hpi_v2_m1','1');
+  // Desbloquear M2
+  document.getElementById('itemsM2').style.display='block';
+  ['sm2','m2t1','m2t2','m2t3','m2pdf'].forEach(id=>{
+    const el=document.getElementById('ni-'+id);
+    if(el) el.classList.remove('locked');
+  });
+  const b=document.getElementById('bdgM2');
+  b.textContent='2'; b.className='sb p';
+  actualizarProgreso();
+  toast('¡Módulo 1 completado! El módulo 2 está desbloqueado.');
+  setTimeout(()=>navClick('sm2'),1600);
+}
+
+// ═══ ACTIVIDADES ═══
+function toggleAct(hdr) {
+  const body=hdr.nextElementSibling;
+  const chv=hdr.querySelector('.achv');
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  hdr.classList.toggle('open',!open);
+  chv.classList.toggle('open',!open);
+}
+
+function guardar(taId, svId) {
+  const val=document.getElementById(taId).value.trim();
+  if(!val){ toast('Escribe algo antes de guardar'); return; }
+  localStorage.setItem('hpi_v2_'+taId, val);
+  const sv=document.getElementById(svId);
+  sv.style.display='block';
+  setTimeout(()=>sv.style.display='none', 2800);
+}
+
+// ═══ CUESTIONARIOS ═══
+function selOpt(lbl, gid, idx) {
+  document.querySelectorAll('#'+gid+' .qo').forEach(o=>o.classList.remove('sel'));
+  lbl.classList.add('sel');
+  document.getElementById('btn_'+gid).disabled=false;
+}
+
+function revelar(gid, cidx, fbId) {
+  const opts=document.querySelectorAll('#'+gid+' .qo');
+  let sel=-1;
+  opts.forEach((o,i)=>{ if(o.classList.contains('sel')) sel=i; });
+  if(sel===-1) return;
+  opts.forEach((o,i)=>{
+    o.style.pointerEvents='none';
+    o.querySelector('input').disabled=true;
+    if(i===cidx) o.classList.add('rok');
+    else if(i===sel && sel!==cidx) o.classList.add('rno');
+  });
+  const ok=sel===cidx;
+  document.getElementById(fbId+'_ok').style.display=ok?'block':'none';
+  document.getElementById(fbId+'_no').style.display=ok?'none':'block';
+  document.getElementById('btn_'+gid).disabled=true;
+}
+
+// ═══ TOAST ═══
+function toast(msg) {
+  const t=document.createElement('div');
+  t.textContent=msg;
+  Object.assign(t.style,{
+    position:'fixed',bottom:'1.5rem',left:'50%',
+    transform:'translateX(-50%)',
+    background:'var(--negro)',color:'white',
+    padding:'.65rem 1.4rem',borderRadius:'99px',
+    fontSize:'.8rem',fontWeight:'600',
+    zIndex:'999',boxShadow:'0 4px 20px rgba(0,0,0,.3)',
+    fontFamily:"'Inter',sans-serif",whiteSpace:'nowrap'
+  });
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2800);
+}
+
+// ═══ RESTAURAR ═══
+function restaurar() {
+  // Textos
+  const ids=['ta-m1t1r','ta-m1t1p','ta-m1t2r','ta-m1t2p','ta-m1t3r','ta-m1t3p',
+             'ta-m2t1r','ta-m2t1p','ta-m2t2r','ta-m2t2p','ta-m2t3r','ta-m2t3p'];
+  ids.forEach(id=>{
+    const s=localStorage.getItem('hpi_v2_'+id);
+    const el=document.getElementById(id);
+    if(s&&el) el.value=s;
+  });
+  actualizarProgreso();
+}
+
+// ═══ INIT ═══
+mostrarVista('sm1');
+restaurar();
+</script>
+</body>
+</html>
