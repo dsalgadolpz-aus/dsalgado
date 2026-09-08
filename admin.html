@@ -122,7 +122,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
       <div class="form-card" id="formPub" hidden>
         <div class="form-row"><label>Título *</label><input type="text" id="pTitulo"></div>
         <div class="form-row"><label>Fecha (como quieras que se muestre, ej. "Agosto 2026" o "Serie en curso") *</label><input type="text" id="pFecha"></div>
-        <div class="form-row"><label>Descripción (2-3 líneas) *</label><textarea id="pDesc"></textarea></div>
+        <div class="form-row"><label>Descripción (2-3 líneas, máx. 220 caracteres para que la tarjeta se vea igual que las demás) *</label><textarea id="pDesc" maxlength="220"></textarea></div>
         <div class="form-row"><label id="pPdfLabel">Archivo PDF *</label><input type="file" id="pPdf" accept="application/pdf"></div>
         <div class="form-row"><label>Portada (imagen, opcional)</label><input type="file" id="pCover" accept="image/*"></div>
         <div class="form-actions">
