@@ -548,20 +548,20 @@ async function renderSemanal() {
   wrap.innerHTML = html;
 }
 
-// ── Backend ligero (Google Apps Script) para "Comparte una noticia" ──
+// ── Backend ligero (Google Apps Script) para "Comparte una noticia" y para
+// el login de administrador (correo + contraseña) ──
 // Cualquier visitante puede pegar un link, sin necesitar su propia clave
 // de Gemini: el análisis lo hace este pequeño backend, que guarda tu
 // clave de Gemini de forma privada (nunca viaja a este archivo ni al
 // navegador de nadie) y además guarda la noticia en la pestaña
 // "Notas_Comunidad" de tu Google Sheet para que la revises.
 //
-// PENDIENTE DE CONFIGURAR: despliega el Apps Script (ver instrucciones
-// aparte) y pega aquí la URL que te da, terminada en "/exec".
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8sG2DiEuReO24Gr7rxemi834G6Jy4bNv4C0B3_oP7i3JCof6MeO7wn02gDM64duLh/exec';
+// La URL de ese backend (APPS_SCRIPT_URL) se configura una sola vez en
+// admin.js, ya que la usan tanto esta página como el login de admin.
 
 async function llamarBackend(accion, datos) {
   if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PEGA_AQUI') === 0) {
-    throw new Error('Esta herramienta todavía no está conectada (falta configurar el backend en observatorio.html).');
+    throw new Error('Esta herramienta todavía no está conectada (falta configurar el backend en admin.js).');
   }
   // Importante: se envía SIN header Content-Type para que el navegador use
   // 'text/plain' por defecto — así se evita el preflight CORS que Apps
@@ -824,7 +824,7 @@ function refrescarUIAdmin() {
   ['navAgregar','navGestionarLabel','btnGeminiCfg'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = !admin; });
   const btnResumen = document.getElementById('btnResumenSemanal'); if (btnResumen) btnResumen.hidden = !admin;
   const cfgBtn = document.getElementById('adminCfgBtn');
-  if (cfgBtn) { cfgBtn.hidden = !admin; cfgBtn.textContent = admin ? 'Administrador activo — cambiar' : 'Acceso administrador'; }
+  if (cfgBtn) { cfgBtn.hidden = !admin; cfgBtn.textContent = admin ? 'Administrador activo — cerrar sesión' : 'Acceso administrador'; }
   if (!admin) {
     const agregarPanel = document.getElementById('tab-agregar');
     if (agregarPanel && agregarPanel.classList.contains('on')) goTabForce('historial', document.getElementById('navHistorial'));

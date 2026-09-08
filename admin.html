@@ -98,14 +98,14 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 
 <div class="wrap">
   <div class="page-title">Panel de administrador</div>
-  <div class="page-sub">Edición del sitio — solo visible y usable para quien tenga configurado su token de administrador en este navegador.</div>
+  <div class="page-sub">Edición del sitio — solo visible y usable para quien haya iniciado sesión como administrador en este navegador.</div>
 
   <div class="status-card off" id="statusCard">
     <div>
       <div class="status-label" id="statusLabel">Sin acceso de administrador</div>
-      <div class="status-sub" id="statusSub">Configura tu token de GitHub para poder editar el sitio desde aquí.</div>
+      <div class="status-sub" id="statusSub">Inicia sesión con tu correo y contraseña para poder editar el sitio desde aquí.</div>
     </div>
-    <button class="btn btn-purple" id="btnAuth" onclick="configurarAdmin()">Configurar token</button>
+    <button class="btn btn-purple" id="btnAuth" onclick="configurarAdmin()">Iniciar sesión</button>
   </div>
 
   <div id="adminTools" hidden>
@@ -136,8 +136,8 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
     <!-- OBSERVATORIO -->
     <div class="seccion">
       <div class="seccion-title">Observatorio del Trabajo</div>
-      <div class="seccion-sub">El listado principal de notas se sincroniza automáticamente desde tu Google Sheet. Las herramientas para agregar notas manuales, buscar con IA y generar análisis social viven dentro del propio Observatorio — ahora solo son visibles ahí cuando tienes tu token de administrador configurado (el mismo que usas aquí).</div>
-      <div class="aviso">Ve a <a href="observatorio.html">observatorio.html</a> y entra a la pestaña "Nueva nota" o "Búsqueda automática" — con tu token activo verás esas herramientas; sin él, un visitante normal solo ve el historial en modo lectura.</div>
+      <div class="seccion-sub">El listado principal de notas se sincroniza automáticamente desde tu Google Sheet. Las herramientas para agregar notas manuales y generar el resumen semanal viven dentro del propio Observatorio — ahora solo son visibles ahí cuando tienes sesión de administrador iniciada (la misma que usas aquí).</div>
+      <div class="aviso">Ve a <a href="observatorio.html">observatorio.html</a> y entra a la pestaña "Nueva nota" — con tu sesión activa verás esas herramientas; sin ella, un visitante normal solo ve el historial en modo lectura.</div>
     </div>
 
     <!-- PORTAFOLIO Y SERVICIOS -->
@@ -158,8 +158,8 @@ function refrescarEstado() {
   const card = document.getElementById('statusCard');
   card.className = 'status-card ' + (admin ? 'on' : 'off');
   document.getElementById('statusLabel').textContent = admin ? 'Acceso de administrador activo' : 'Sin acceso de administrador';
-  document.getElementById('statusSub').textContent = admin ? 'Este navegador puede editar el sitio.' : 'Configura tu token de GitHub para poder editar el sitio desde aquí.';
-  document.getElementById('btnAuth').textContent = admin ? 'Cambiar / quitar token' : 'Configurar token';
+  document.getElementById('statusSub').textContent = admin ? 'Este navegador puede editar el sitio.' : 'Inicia sesión con tu correo y contraseña para poder editar el sitio desde aquí.';
+  document.getElementById('btnAuth').textContent = admin ? 'Cerrar sesión' : 'Iniciar sesión';
   if (admin) cargarPublicaciones();
 }
 onAdminChange(refrescarEstado);
