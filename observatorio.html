@@ -184,6 +184,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
       <li><a href="index.html#publicaciones">Publicaciones</a></li>
       <li><a href="index.html#portafolio">Portafolio</a></li>
       <li><a href="index.html#contacto">Contacto</a></li>
+      <li><a href="cursos.html">Formación</a></li>
       <li><a href="observatorio.html" class="here">Observatorio</a></li>
       <li><a href="admin.html" style="opacity:.5;">Admin</a></li>
     </ul>
@@ -475,15 +476,51 @@ Escribe 4 párrafos con tu voz. Separa párrafos con salto de línea.`;
 // depende de que la IA responda, y da la primera lectura ordenada de las
 // últimas notas.
 function makeResumenObservatorio(top) {
-  const fuentes = [...new Set(top.map(n => n.fuente))];
-  const paises = [...new Set(top.map(n => n.pais))];
+  const fuentes    = [...new Set(top.map(n => n.fuente))];
+  const paises     = [...new Set(top.map(n => n.pais))];
   const indicadores = [...new Set(top.map(n => n.indicador))];
+
+  // Marco teórico rotativo — cada semana una lente diferente
+  const MARCOS = [
+    { autor: 'Geertz', concepto: 'descripción densa', pregunta: '¿qué significa este dato para quienes lo viven desde adentro?' },
+    { autor: 'De la Garza Toledo', concepto: 'configuraciones laborales', pregunta: '¿qué formas de trabajo emergen que los indicadores estándar no capturan?' },
+    { autor: 'Sennett', concepto: 'corrosión del carácter', pregunta: '¿qué le hace este modelo de trabajo a la identidad y al tiempo de las personas?' },
+    { autor: 'Augé', concepto: 'no-lugares', pregunta: '¿dónde trabaja quien ya no tiene lugar fijo, contrato o pertenencia?' },
+    { autor: 'Bourdieu', concepto: 'capital y campo', pregunta: '¿qué posiciones se reproducen y cuáles quedan excluidas del juego laboral?' },
+    { autor: 'Castel', concepto: 'vulnerabilidad social', pregunta: '¿quiénes quedan en la zona de desafiliación que estos datos no nombran?' },
+    { autor: 'Thompson', concepto: 'economía moral', pregunta: '¿qué normas implícitas de justicia están en juego para los trabajadores?' },
+    { autor: 'Scott', concepto: 'resistencias cotidianas', pregunta: '¿qué formas de agencia silenciosa aparecen debajo de las cifras?' },
+    { autor: 'Gorz', concepto: 'fin del trabajo asalariado', pregunta: '¿hacia qué modelo de subsistencia apuntan estas tendencias?' },
+    { autor: 'Piore y Sabel', concepto: 'segunda ruptura industrial', pregunta: '¿qué bifurcación productiva estamos viviendo sin nombrarlo todavía?' },
+    { autor: 'Arendt', concepto: 'labor, trabajo y acción', pregunta: '¿qué dimensión humana del trabajo se está reduciendo a mera supervivencia?' },
+  ];
+
+  // Seleccionar marco según semana del año
+  const semana = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,1)) / 604800000);
+  const marco = MARCOS[semana % MARCOS.length];
+
   let t = '';
-  t += `Esta síntesis reúne las ${top.length} nota(s) más recientes registradas en el Observatorio del Trabajo, con información proveniente de ${fuentes.join(', ')}, sobre ${paises.join(', ')}. Los indicadores en juego son: ${indicadores.join(', ')}.\n\n`;
+
+  // Párrafo 1 — apertura estructural
+  t += `Esta semana el Observatorio del Trabajo registra ${top.length} nota${top.length > 1 ? 's' : ''} provenientes de ${fuentes.join(', ')}, con foco en ${paises.join(', ')}. Los indicadores en tensión: ${indicadores.join(', ')}.
+
+`;
+
+  // Párrafo 2 — lente teórica de la semana
+  t += `Una lectura desde el concepto de ${marco.concepto} (${marco.autor}) abre la pregunta: ${marco.pregunta}
+
+`;
+
+  // Párrafo 3 — síntesis de las notas
   top.forEach((n, i) => {
-    t += `${i + 1}. ${fmtF(n.fecha)} — ${n.titulo} (${n.pais}, ${n.fuente}). ${n.resumen}\n\n`;
+    t += `${i + 1}. ${fmtF(n.fecha)} — ${n.titulo} (${n.pais}, ${n.fuente}). ${n.resumen}
+
+`;
   });
-  t += `Leídas en conjunto, estas notas trazan un mapa parcial —nunca completo— de cómo se está reconfigurando el trabajo en la región en este momento.`;
+
+  // Párrafo 4 — cierre abierto, marca de voz
+  t += `Leídas en conjunto, estas notas trazan un mapa parcial —nunca completo— de cómo se reconfigura el trabajo en la región. Lo que no aparece en los datos suele ser más relevante que lo que sí aparece: ¿quién quedó fuera de la muestra? ¿Qué se midió y qué se decidió no medir?`;
+
   return t;
 }
 
@@ -813,6 +850,7 @@ function goTab(t,el) {
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
   document.getElementById('tab-'+t).classList.add('on'); el.classList.add('on');
   if (t==='semanal') renderSemanal();
+  if (t==='semanal') verificarActualizacionLunes();
 }
 
 // ── Visibilidad de herramientas de edición/publicación: solo para quien
@@ -955,6 +993,24 @@ async function loadWithSeed() {
 
 refrescarUIAdmin();
 loadWithSeed();
+
+// ── Actualización automática los lunes ──────────────────────
+function verificarActualizacionLunes() {
+  const hoy = new Date();
+  const esLunes = hoy.getDay() === 1; // 0=dom, 1=lun
+  const KEY = 'obs_ultimo_resumen_lunes';
+  const ultimoLunes = localStorage.getItem(KEY);
+  const semanaActual = `${hoy.getFullYear()}-W${Math.floor((hoy - new Date(hoy.getFullYear(),0,1)) / 604800000)}`;
+
+  if (esLunes && ultimoLunes !== semanaActual && notas.length > 0) {
+    // Generar resumen automáticamente
+    generarResumenSemanal().then(() => {
+      localStorage.setItem(KEY, semanaActual);
+      console.log('Resumen semanal generado automáticamente — lunes', hoy.toLocaleDateString('es-MX'));
+    }).catch(e => console.warn('Auto-resumen falló:', e.message));
+  }
+}
+
 </script>
 </body>
 </html>
