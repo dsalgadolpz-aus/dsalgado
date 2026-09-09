@@ -46,6 +46,8 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .share-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem;}
 .share-btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.04em;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:transparent;color:rgba(237,233,254,.6);cursor:pointer;transition:all .15s;}
 .share-btn:hover{border-color:#a78bfa;color:#fff;background:rgba(124,58,237,.15);}
+.nota-share-row{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;
+  margin-top:.8rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.06);}
 .sb-stats{padding:1.1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
 .sstat-n{font-size:1.5rem;font-weight:700;color:var(--pm);line-height:1;}
 .sstat-l{font-size:.65rem;color:rgba(237,233,254,.4);margin-top:.15rem;}
@@ -880,7 +882,21 @@ function renderL() {
   const admin = isAdmin();
   nF.forEach(n => {
     const sm=semL(n.fecha); if (sm!==lastSem) { html+=`<div class="semana-hdr">${sm}</div>`; lastSem=sm; }
-    const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+    const _parrafos = n.analisis ? n.analisis.split('\n').filter(p => p.trim()) : [];
+    const _primerP = _parrafos[0] || '';
+    const _hayMas = _parrafos.length > 1;
+    const analisisHTML = n.analisis ? `<div class="analisis">
+      <div class="analisis-label">Análisis social — David Salgado</div>
+      <div class="analisis-texto">
+        <p>${_primerP}</p>
+        ${_hayMas ? `<details style="margin-top:.5rem;">
+          <summary style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:#a78bfa;cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.3rem;">
+            <span>▸</span> Leer análisis completo
+          </summary>
+          <div style="margin-top:.7rem;">${_parrafos.slice(1).map(p=>`<p>${p}</p>`).join('')}</div>
+        </details>` : ''}
+      </div>
+    </div>` : '';
     const accionesHTML = admin ? `<div class="nota-acciones">
         ${!n.analisis?`<button class="btn btn-sm btn-amber" onclick="genA('${n.id}')">Generar análisis social ↗</button>`:`<button class="btn btn-sm" onclick="genA('${n.id}')">Regenerar análisis ↗</button>`}
         <button class="btn btn-sm btn-danger" onclick="delN('${n.id}')">Eliminar</button>
@@ -891,6 +907,15 @@ function renderL() {
       ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref.length>60?n.ref.slice(0,60)+'...':n.ref}</a></div>`:''}
       <div class="nota-resumen">${n.resumen}</div>
       ${analisisHTML}
+      <div class="nota-share-row">
+        <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(237,233,254,.4);">Compartir:</span>
+        <button class="share-btn" onclick="compartirNota('${n.id}','linkedin')" title="Compartir en LinkedIn">LinkedIn</button>
+        <button class="share-btn" onclick="compartirNota('${n.id}','twitter')" title="Compartir en X / Twitter">X</button>
+        <button class="share-btn" onclick="compartirNota('${n.id}','facebook')" title="Compartir en Facebook">Facebook</button>
+        <button class="share-btn" onclick="compartirNota('${n.id}','whatsapp')" title="Compartir por WhatsApp">WhatsApp</button>
+        <button class="share-btn" onclick="compartirNota('${n.id}','copiar')" title="Copiar enlace">Copiar enlace</button>
+        <button class="share-btn" onclick="descargarNotaPDF('${n.id}')" title="Descargar PDF">⬇ PDF</button>
+      </div>
       ${accionesHTML}
     </div>`;
   });
@@ -939,7 +964,21 @@ async function buscarPublico() {
     document.getElementById('pubS').textContent=local.length+' resultado(s) en el historial.';
     let h='';
     local.forEach(n => {
-      const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+      const _parrafos = n.analisis ? n.analisis.split('\n').filter(p => p.trim()) : [];
+    const _primerP = _parrafos[0] || '';
+    const _hayMas = _parrafos.length > 1;
+    const analisisHTML = n.analisis ? `<div class="analisis">
+      <div class="analisis-label">Análisis social — David Salgado</div>
+      <div class="analisis-texto">
+        <p>${_primerP}</p>
+        ${_hayMas ? `<details style="margin-top:.5rem;">
+          <summary style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:#a78bfa;cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:.3rem;">
+            <span>▸</span> Leer análisis completo
+          </summary>
+          <div style="margin-top:.7rem;">${_parrafos.slice(1).map(p=>`<p>${p}</p>`).join('')}</div>
+        </details>` : ''}
+      </div>
+    </div>` : '';
       h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(n.fecha)}</span><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div><div class="nota-titulo">${n.titulo}</div>${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref}</a></div>`:''}<div class="nota-resumen">${n.resumen}</div>${analisisHTML}</div>`;
     });
     document.getElementById('pubR').innerHTML=h;
@@ -1148,6 +1187,69 @@ function verificarActualizacionLunes() {
       console.log('Resumen semanal generado automáticamente — lunes', hoy.toLocaleDateString('es-MX'));
     }).catch(e => console.warn('Auto-resumen falló:', e.message));
   }
+}
+
+
+// ── Compartir nota individual del historial ──────────────────
+function compartirNota(id, red) {
+  const n = notas.find(x => x.id === id);
+  if (!n) return;
+
+  const url     = location.origin + location.pathname;
+  const titulo  = encodeURIComponent(n.titulo);
+  const texto   = encodeURIComponent(
+    `${n.titulo} (${n.pais} · ${n.fuente}) — Observatorio del Trabajo · David Salgado López`
+  );
+  const urlEnc  = encodeURIComponent(url);
+
+  const redes = {
+    linkedin:  `https://www.linkedin.com/sharing/share-offsite/?url=${urlEnc}&title=${titulo}`,
+    twitter:   `https://twitter.com/intent/tweet?url=${urlEnc}&text=${texto}`,
+    facebook:  `https://www.facebook.com/sharer/sharer.php?u=${urlEnc}&quote=${texto}`,
+    whatsapp:  `https://wa.me/?text=${texto}%20${urlEnc}`,
+  };
+
+  if (red === 'copiar') {
+    const msg = `${n.titulo}\n${n.pais} · ${n.fuente} · ${n.indicador}\n\n${n.resumen}\n\nObservatorio del Trabajo — ${url}`;
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(msg).then(
+        () => mostrarToastObs('Enlace y resumen copiados al portapapeles'),
+        () => prompt('Copia este texto:', msg)
+      );
+    } else {
+      prompt('Copia este texto:', msg);
+    }
+    return;
+  }
+
+  if (redes[red]) window.open(redes[red], '_blank', 'width=600,height=500');
+}
+
+// ── Descargar nota individual como PDF ───────────────────────
+async function descargarNotaPDF(id) {
+  const n = notas.find(x => x.id === id);
+  if (!n) return;
+  const dFake = {
+    fecha:        n.fecha || new Date().toISOString(),
+    resumenTexto: `${n.titulo}\n${n.pais} · ${n.fuente} · ${n.indicador}\n\n${n.resumen}`,
+    interpretacion: n.analisis || '',
+    notasUsadas:  [n]
+  };
+  await generarPDFResumen(dFake);
+}
+
+// ── Toast del observatorio ────────────────────────────────────
+function mostrarToastObs(msg) {
+  document.querySelectorAll('.toast-obs').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast-obs';
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+    background:#13111C;color:#fff;padding:.6rem 1.4rem;
+    font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.05em;
+    z-index:999;white-space:nowrap;border:1px solid #3d2b6b;`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
 }
 
 </script>
