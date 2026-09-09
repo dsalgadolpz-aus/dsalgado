@@ -1583,7 +1583,7 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
 </div><!-- /cursoApp -->
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbx8sG2DiEuReO24Gr7rxemi834G6Jy4bNv4C0B3_oP7i3JCof6MeO7wn02gDM64duLh/exec'; // ← tu URL de Apps Script
+const GAS_URL = ''; // ← tu URL de Apps Script
 
 // ══ ESTRUCTURA DE VISTAS ══
 const TODAS = ['sm1','m1t1','m1t2','m1t3','m1ev',
@@ -2058,12 +2058,16 @@ function verificarConstancia() {
 // Sin API externa. Detección de patrones + respuesta contextual.
 // ══════════════════════════════════════════════════════════════
 
+// ══════════════════════════════════════════════════════════════
+// SISTEMA DE RETROALIMENTACIÓN v2
+// Opción A (voz David) — inmediata en pantalla + correo
+// Opción B (Gemini) — en segundo plano, correo cuando termina
+// ══════════════════════════════════════════════════════════════
+
 const RETRO = {
 
-  // ── CONFIGURACIÓN GLOBAL ──────────────────────────────────
   correo: 'd.salgado.lpz@gmail.com',
 
-  // ── FUENTES ADICIONALES POR MÓDULO ───────────────────────
   fuentesExtra: {
     m1: [
       { ref: 'Berger, P. y Luckmann, T. (1968). <em>La construcción social de la realidad</em>. Amorrortu.', por: 'profundizar en cómo el lenguaje construye realidad social' },
@@ -2072,11 +2076,11 @@ const RETRO = {
     ],
     m2: [
       { ref: 'Cialdini, R. (2021). <em>Influence: The Psychology of Persuasion</em>. Harper Business.', por: 'entender los mecanismos de persuasión que subyacen a toda presentación efectiva' },
-      { ref: 'Duarte, N. (2010). <em>Resonate: Present Visual Stories that Transform Audiences</em>. Wiley.', por: 'profundizar en la estructura narrativa de presentaciones de alto impacto' },
+      { ref: 'Duarte, N. (2010). <em>Resonate</em>. Wiley.', por: 'profundizar en la estructura narrativa de presentaciones de alto impacto' },
       { ref: 'Reynolds, G. (2008). <em>Presentation Zen</em>. New Riders.', por: 'explorar el diseño visual como complemento del discurso oral' },
     ],
     m3: [
-      { ref: 'Lederach, J. P. (2003). <em>The Little Book of Conflict Transformation</em>. Good Books.', por: 'ampliar la perspectiva sobre transformación de conflictos más allá de la negociación' },
+      { ref: 'Lederach, J. P. (2003). <em>The Little Book of Conflict Transformation</em>. Good Books.', por: 'ampliar la perspectiva sobre transformación de conflictos' },
       { ref: 'Stone, D., Patton, B. y Heen, S. (2010). <em>Difficult Conversations</em>. Penguin.', por: 'profundizar en las conversaciones difíciles desde una perspectiva práctica' },
       { ref: 'Cornelius, H. y Faire, S. (1995). <em>Tú ganas, yo gano</em>. Gaia.', por: 'explorar estrategias de resolución cooperativa de conflictos' },
     ],
@@ -2087,17 +2091,16 @@ const RETRO = {
     ],
     m5: [
       { ref: 'Trompenaars, F. y Hampden-Turner, C. (1997). <em>Riding the Waves of Culture</em>. McGraw-Hill.', por: 'complementar el modelo de Hofstede con otras dimensiones culturales' },
-      { ref: 'Hall, E. T. (1976). <em>Beyond Culture</em>. Anchor Books.', por: 'profundizar en los conceptos de culturas de alto y bajo contexto' },
-      { ref: 'Ting-Toomey, S. (1999). <em>Communicating Across Cultures</em>. Guilford Press.', por: 'explorar la teoría de la negociación de la identidad en contextos interculturales' },
+      { ref: 'Hall, E. T. (1976). <em>Beyond Culture</em>. Anchor Books.', por: 'profundizar en culturas de alto y bajo contexto' },
+      { ref: 'Ting-Toomey, S. (1999). <em>Communicating Across Cultures</em>. Guilford Press.', por: 'explorar la negociación de identidad en contextos interculturales' },
     ],
     m6: [
-      { ref: 'Covey, S. R. (1989). <em>The 7 Habits of Highly Effective People</em>. Free Press.', por: 'integrar el plan de comunicación con una visión más amplia de efectividad personal' },
+      { ref: 'Covey, S. R. (1989). <em>The 7 Habits of Highly Effective People</em>. Free Press.', por: 'integrar el plan con una visión más amplia de efectividad personal' },
       { ref: 'Goleman, D. (1995). <em>Inteligencia emocional</em>. Kairós.', por: 'vincular las competencias comunicativas con la inteligencia emocional' },
       { ref: 'Wheatley, M. J. (2002). <em>Turning to One Another</em>. Berrett-Koehler.', por: 'reflexionar sobre la comunicación como práctica de construcción comunitaria' },
     ],
   },
 
-  // ── AUTORES ESPERADOS POR MÓDULO ─────────────────────────
   autoresEsperados: {
     m1: ['habermas','watzlawick','rogers','alberti','axioma','comunicativa','estratégica','escucha'],
     m2: ['brooks','minto','prep','pirámide','storytelling','spotlight','gilovich','reencuadre'],
@@ -2107,45 +2110,30 @@ const RETRO = {
     m6: ['objetivo','smart','diagnóstico','indicador','estrategia','plan'],
   },
 
-  // ── DETECCIÓN DE PATRONES ─────────────────────────────────
   analizar(texto, modulo) {
     const t = texto.toLowerCase();
     const palabras = texto.trim().split(/\s+/).length;
-
     const autores = this.autoresEsperados[modulo] || [];
     const mencionaAutor = autores.some(a => t.includes(a));
-    const tieneEjemplo = t.includes('en mi') || t.includes('en el trabajo') ||
-                         t.includes('cuando') || t.includes('recuerdo') ||
-                         t.includes('una vez') || t.includes('mi equipo') ||
-                         t.includes('mi jefe') || t.includes('mi caso') ||
-                         t.includes('he vivido') || t.includes('he experimentado') ||
-                         t.includes('en mi organización') || t.includes('laboralmente');
-    const tieneEstructura = palabras >= 80;
-    const esBreve = palabras < 40;
-    const esMedio = palabras >= 40 && palabras < 80;
+    const tieneEjemplo = ['en mi trabajo','en el trabajo','cuando','recuerdo','una vez',
+      'mi equipo','mi jefe','mi caso','he vivido','he experimentado',
+      'en mi organización','laboralmente','en mi'].some(p => t.includes(p));
+    const esBreve       = palabras < 40;
+    const esMedio       = palabras >= 40 && palabras < 80;
     const esDesarrollado = palabras >= 80;
-
-    return { mencionaAutor, tieneEjemplo, tieneEstructura, esBreve, esMedio, esDesarrollado, palabras };
+    return { mencionaAutor, tieneEjemplo, esBreve, esMedio, esDesarrollado, palabras };
   },
 
-  // ── SELECCIONAR FUENTE EXTRA ──────────────────────────────
   fuente(modulo) {
     const lista = this.fuentesExtra[modulo] || this.fuentesExtra.m6;
     return lista[Math.floor(Math.random() * lista.length)];
   },
 
-  // ── GENERADOR PRINCIPAL ───────────────────────────────────
-  generar(texto, moduloId) {
-    const mod = moduloId.replace('ia-','').replace('-final',''); // 'm1', 'm2', etc.
-    const p = this.analizar(texto, mod);
-    const f = this.fuente(mod);
+  generar(texto, modulo) {
+    const p = this.analizar(texto, modulo);
+    const f = this.fuente(modulo);
+    let apertura, fortalezas = [], oportunidades = [];
 
-    let fortalezas = [];
-    let oportunidades = [];
-    let apertura = '';
-    let cierre = '';
-
-    // ── APERTURA según desarrollo ──
     if (p.esDesarrollado) {
       apertura = 'Excelente reflexión. Has logrado desarrollar tus ideas con claridad y extensión, lo que permite apreciar el nivel de apropiación que tienes del contenido.';
     } else if (p.esMedio) {
@@ -2154,7 +2142,6 @@ const RETRO = {
       apertura = 'Gracias por tu aportación. Es un buen punto de partida que podemos seguir desarrollando juntos.';
     }
 
-    // ── FORTALEZAS ──
     if (p.mencionaAutor) {
       fortalezas.push('La incorporación de los autores del módulo muestra que has integrado el marco teórico al análisis, lo cual le da solidez conceptual a tu reflexión.');
     } else {
@@ -2167,72 +2154,139 @@ const RETRO = {
       fortalezas.push('El desarrollo de tus ideas muestra un ordenamiento claro del pensamiento y una capacidad de síntesis que enriquece la reflexión.');
     }
 
-    // ── OPORTUNIDADES ──
     if (!p.mencionaAutor) {
-      oportunidades.push('Una área de oportunidad que te puede dar mayor perspectiva es incorporar explícitamente alguno de los autores o conceptos del módulo. Esto no solo fortalece el argumento, sino que abre un diálogo entre tu experiencia y el marco teórico.');
+      oportunidades.push('Una área de oportunidad que te puede dar mayor perspectiva es incorporar explícitamente alguno de los autores o conceptos del módulo. Esto fortalece el argumento y abre un diálogo entre tu experiencia y el marco teórico.');
     }
-
     if (!p.tieneEjemplo) {
-      oportunidades.push('Te invito a que en una próxima versión ancles tu reflexión en una situación concreta de tu entorno de trabajo. Las experiencias específicas —un momento de tensión, una reunión difícil, una conversación que salió bien o mal— son el material más rico para profundizar en estos aprendizajes.');
+      oportunidades.push('Te invito a anclar tu reflexión en una situación concreta de tu entorno de trabajo. Las experiencias específicas son el material más rico para profundizar en estos aprendizajes.');
     }
-
     if (p.esBreve) {
       oportunidades.push('La reflexión tiene potencial para desarrollarse más. ¿Qué más piensas sobre esto? A veces la primera escritura es solo el inicio del pensamiento real.');
     }
-
-    // Siempre al menos una oportunidad
     if (oportunidades.length === 0) {
-      oportunidades.push('Como área de oportunidad, te propongo profundizar en las implicaciones prácticas de lo que has reflexionado: ¿qué cambiarías en tu práctica cotidiana a partir de este aprendizaje? ¿Qué obstáculos anticipas?');
+      oportunidades.push('Como área de oportunidad, te propongo profundizar en las implicaciones prácticas: ¿qué cambiarías en tu práctica cotidiana? ¿Qué obstáculos anticipas?');
     }
 
-    // ── FUENTE ADICIONAL (siempre) ──
-    const bloqueRef = `\n\nPara ampliar tu perspectiva, te recomiendo el siguiente texto que puede ${f.por}:\n${f.ref}`;
-
-    // ── CIERRE con correo ──
-    cierre = `\n\nSi tienes dudas, quieres profundizar en algún aspecto de tu reflexión o deseas comentar algo del contenido, con gusto seguimos la conversación: d.salgado.lpz@gmail.com\n\n¡Continúa así, tu participación enriquece el curso!`;
-
-    // ── ARMAR RESPUESTA ──
-    const fortalezasTexto = fortalezas.map((f,i) => `${i===0?'Destaco':'Asimismo,'} ${f}`).join('\n\n');
+    const fortalezasTexto = fortalezas.map((f,i) =>
+      `${i===0 ? 'Destaco' : 'Asimismo,'} ${f}`).join('\n\n');
     const oportunidadesTexto = oportunidades.map(o => `• ${o}`).join('\n\n');
+    const refTexto = `\n\nPara ampliar tu perspectiva, te recomiendo:\n${f.ref}\nEste texto puede ayudarte a ${f.por}.`;
+    const cierreTexto = `\n\nSi tienes dudas o quieres profundizar en tu reflexión, escríbeme: ${this.correo}\n\n¡Continúa así, tu participación enriquece el curso!`;
 
-    return `${apertura}\n\n${fortalezasTexto}\n\nComo área de oportunidad que puede darte mayor perspectiva:\n\n${oportunidadesTexto}${bloqueRef}${cierre}`;
+    return `${apertura}\n\n${fortalezasTexto}\n\nComo área de oportunidad que puede darte mayor perspectiva:\n\n${oportunidadesTexto}${refTexto}${cierreTexto}`;
   }
 };
 
-// ── FUNCIÓN PÚBLICA (reemplaza pedirFeedback) ──────────────
-function pedirFeedback(taId, resultId, loadId, btnId, contexto) {
+// ══════════════════════════════════════════════════════════════
+// FUNCIÓN PRINCIPAL — orquesta Opción A + Opción B
+// ══════════════════════════════════════════════════════════════
+async function pedirFeedback(taId, resultId, loadId, btnId, contexto) {
   const texto = document.getElementById(taId)?.value.trim();
   if (!texto || texto.length < 30) {
     toast('Escribe al menos unas líneas antes de solicitar retroalimentación');
     return;
   }
 
-  const btn = document.getElementById(btnId);
-  const load = document.getElementById(loadId);
-  const resultDiv = document.getElementById(resultId);
+  const btn     = document.getElementById(btnId);
+  const load    = document.getElementById(loadId);
+  const resDiv  = document.getElementById(resultId);
+  const resTxt  = resDiv?.querySelector('.ia-result-txt');
+  const emailParticipante = USER?.email || null;
+
+  // Detectar módulo
+  const modulo = taId.includes('m1') ? 'm1' :
+                 taId.includes('m2') ? 'm2' :
+                 taId.includes('m3') ? 'm3' :
+                 taId.includes('m4') ? 'm4' :
+                 taId.includes('m5') ? 'm5' : 'm6';
 
   if (btn) btn.disabled = true;
-  if (load) load.style.display = 'block';
 
-  // Simular pequeña latencia para que se sienta como procesamiento real
-  setTimeout(() => {
-    const modulo = taId.includes('m1') ? 'm1' :
-                   taId.includes('m2') ? 'm2' :
-                   taId.includes('m3') ? 'm3' :
-                   taId.includes('m4') ? 'm4' :
-                   taId.includes('m5') ? 'm5' : 'm6';
+  // ── ESTADO 1: mensaje de espera ──────────────────────────
+  if (load) {
+    load.innerHTML = `
+      <div style="background:var(--green-bg);border-left:3px solid var(--green);
+                  padding:1rem 1.2rem;margin-top:.8rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;
+                    letter-spacing:.08em;text-transform:uppercase;
+                    color:var(--green);margin-bottom:.5rem;">
+          ✓ Reflexión recibida
+        </div>
+        <p style="font-size:.82rem;color:var(--ink);line-height:1.65;margin:0;">
+          Tu retroalimentación está siendo procesada.
+          ${emailParticipante
+            ? `La recibirás en <strong>${emailParticipante}</strong> en los próximos minutos.`
+            : 'La respuesta aparecerá aquí en un momento.'}
+          Puedes continuar navegando el curso con tranquilidad —
+          el proceso seguirá aunque cambies de sección.
+        </p>
+        ${emailParticipante ? `
+        <p style="font-size:.75rem;color:var(--soft);margin-top:.5rem;">
+          Recibirás primero la retroalimentación del facilitador y después
+          un segundo correo con el análisis completo.
+        </p>` : ''}
+      </div>`;
+    load.style.display = 'block';
+  }
 
-    const respuesta = RETRO.generar(texto, modulo);
+  // ── OPCIÓN A: retroalimentación inmediata (voz David) ────
+  // Pequeña pausa para que el mensaje de espera sea visible
+  await new Promise(r => setTimeout(r, 1200));
 
-    if (load) load.style.display = 'none';
-    if (resultDiv) resultDiv.style.display = 'block';
-    const tx = resultDiv.querySelector('.ia-result-txt');
-    if (tx) tx.textContent = respuesta;
-    if (btn) btn.disabled = false;
+  const retroA = RETRO.generar(texto, modulo);
 
-    // Guardar en localStorage
-    localStorage.setItem('hpi_retro_' + taId, respuesta);
-  }, 1800);
+  // Mostrar en pantalla
+  if (resDiv) resDiv.style.display = 'block';
+  if (resTxt) resTxt.textContent = retroA;
+  if (load)   load.style.display = 'none';
+  if (btn)    btn.disabled = false;
+
+  // Guardar localmente
+  localStorage.setItem('hpi_retro_' + taId, retroA);
+
+  // Enviar correo con Opción A (si hay GAS y email)
+  if (GAS_URL && emailParticipante) {
+    enviarRetroCorreo({
+      email:      emailParticipante,
+      nombre:     USER?.nombre || 'Participante',
+      modulo:     modulo.toUpperCase(),
+      contexto:   contexto,
+      retroA:     retroA,
+      tipo:       'opcionA'
+    });
+  }
+
+  // ── OPCIÓN B: Gemini en segundo plano ───────────────────
+  if (GAS_URL && emailParticipante) {
+    solicitarGeminiAsincrono({
+      email:    emailParticipante,
+      nombre:   USER?.nombre || 'Participante',
+      modulo:   modulo.toUpperCase(),
+      contexto: contexto,
+      texto:    texto,
+      retroA:   retroA
+    });
+  }
+}
+
+// ── Enviar correo Opción A vía Apps Script ──────────────────
+function enviarRetroCorreo(datos) {
+  if (!GAS_URL) return;
+  fetch(GAS_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ action: 'enviarRetroA', ...datos })
+  }).catch(() => {}); // silencioso — no bloquea al usuario
+}
+
+// ── Solicitar Gemini en segundo plano vía Apps Script ───────
+function solicitarGeminiAsincrono(datos) {
+  if (!GAS_URL) return;
+  fetch(GAS_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ action: 'geminiAsincrono', ...datos })
+  }).catch(() => {});
 }
 
 
