@@ -5,79 +5,100 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Panel interno — David Salgado López</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
   --p:#6D28D9;--pm:#7C3AED;--plt:#EDE9FE;--pbg:#F5F3FF;
   --o:#C45F00;--obg:#FEF3E2;
   --ink:#18181B;--soft:#52525B;--rule:#E4E4E7;
-  --paper:#FAFAF8;--white:#fff;--dk:#13111C;
+  --paper:#FAFAF8;--white:#fff;--dk:#13111C;--dkt:#EDE9FE;
   --green:#1A5C2A;--green-bg:#EAF2EC;
   --red:#8B2020;--red-bg:#FEF0F0;
+  --teal:#0F5F5F;--teal-bg:#E6F4F4;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;}
-h1,h2,h3{font-family:'Playfair Display',serif;}
+html{scroll-behavior:smooth;}
+body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);
+     font-size:15px;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;line-height:1.15;}
+p{color:var(--soft);}
+a{color:inherit;text-decoration:none;}
 
-/* NAV */
-nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);
-    backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
-.nav-inner{max-width:1040px;margin:0 auto;padding:.85rem 1.5rem;
-           display:flex;justify-content:space-between;align-items:center;}
-.nav-brand{font-family:'DM Mono',monospace;font-size:.65rem;
-           letter-spacing:.1em;text-transform:uppercase;color:var(--soft);}
-.nav-back{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;
-          text-transform:uppercase;color:var(--p);text-decoration:none;}
-
-/* LOGIN */
-.login-wrap{min-height:100vh;display:flex;align-items:center;
-            justify-content:center;padding:2rem;}
+/* ── LOGIN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;
+              justify-content:center;padding:2rem;background:var(--dk);}
 .login-box{background:var(--white);border:1px solid var(--rule);
-           padding:2.5rem 2rem;max-width:380px;width:100%;text-align:center;}
-.login-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;
-           text-transform:uppercase;color:var(--p);margin-bottom:.6rem;}
-.login-box h2{font-size:1.3rem;font-weight:900;color:var(--ink);margin-bottom:1.5rem;}
-.login-input{width:100%;border:1px solid var(--rule);padding:.65rem .85rem;
-             font-family:'Lato',sans-serif;font-size:.9rem;color:var(--ink);
-             background:var(--paper);margin-bottom:.7rem;transition:border-color .2s;}
-.login-input:focus{outline:none;border-color:var(--p);background:#fff;}
+           padding:2.5rem 2rem;max-width:380px;width:100%;}
+.login-logo{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
+            text-transform:uppercase;color:var(--p);margin-bottom:.6rem;}
+.login-box h2{font-family:'Playfair Display',serif;font-size:1.4rem;
+              font-weight:900;color:var(--ink);margin-bottom:1.5rem;}
+.field-wrap{margin-bottom:.8rem;}
+.field-wrap label{font-family:'DM Mono',monospace;font-size:.58rem;
+                  letter-spacing:.08em;text-transform:uppercase;color:var(--soft);
+                  display:block;margin-bottom:.3rem;}
+.input-eye{position:relative;}
+.input-eye input{width:100%;border:1px solid var(--rule);padding:.65rem .85rem;
+                 font-family:'Lato',sans-serif;font-size:.9rem;color:var(--ink);
+                 background:var(--paper);transition:border-color .2s;
+                 padding-right:2.5rem;}
+.input-eye input:focus{outline:none;border-color:var(--p);background:#fff;}
+.eye-btn{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);
+         background:none;border:none;cursor:pointer;color:var(--soft);
+         font-size:.85rem;padding:.2rem;line-height:1;}
 .login-btn{width:100%;background:var(--ink);color:#fff;border:none;
-           padding:.7rem;font-family:'DM Mono',monospace;font-size:.68rem;
+           padding:.75rem;font-family:'DM Mono',monospace;font-size:.68rem;
            letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
-           transition:background .2s;}
+           transition:background .2s;margin-top:.4rem;}
 .login-btn:hover{background:var(--p);}
 .login-err{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--red);
-           margin-top:.6rem;display:none;}
+           margin-top:.6rem;display:none;padding:.5rem .7rem;
+           background:var(--red-bg);}
 
-/* PANEL */
-.panel{display:none;max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem;}
-.panel-header{margin-bottom:2rem;}
-.panel-header h1{font-size:1.6rem;font-weight:900;color:var(--ink);margin-bottom:.3rem;}
-.panel-header p{font-size:.85rem;color:var(--soft);}
+/* ── NAV DEL PANEL ── */
+.panel-nav{position:sticky;top:0;z-index:300;background:var(--dk);
+           border-bottom:1px solid #2d2541;}
+.panel-nav-inner{max-width:1100px;margin:0 auto;padding:.7rem 1.5rem;
+                 display:flex;justify-content:space-between;align-items:center;gap:1rem;}
+.panel-brand{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;
+             text-transform:uppercase;color:#a78bfa;}
+.panel-nav-links{display:flex;gap:.2rem;list-style:none;}
+.pnl{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;
+     text-transform:uppercase;color:#888;padding:.4rem .75rem;cursor:pointer;
+     border-bottom:2px solid transparent;transition:all .15s;}
+.pnl:hover{color:#fff;}
+.pnl.active{color:#fff;border-bottom-color:var(--p);}
+.panel-nav-right{display:flex;gap:.8rem;align-items:center;}
+.nav-site-link{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
+               text-transform:uppercase;color:#888;text-decoration:none;
+               transition:color .15s;}
+.nav-site-link:hover{color:#fff;}
+.nav-logout{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
+            text-transform:uppercase;color:var(--red);cursor:pointer;
+            background:none;border:none;padding:0;}
+.nav-logout:hover{color:#f87171;}
 
-/* TABS */
-.tabs{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:1.8rem;}
-.tab{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;
-     text-transform:uppercase;padding:.65rem 1.2rem;cursor:pointer;
-     color:var(--soft);border-bottom:2px solid transparent;
-     margin-bottom:-1px;transition:all .15s;}
-.tab:hover{color:var(--ink);}
-.tab.active{color:var(--p);border-bottom-color:var(--p);}
-.tab-content{display:none;}
-.tab-content.active{display:block;}
+/* ── LAYOUT PANEL ── */
+.panel-wrap{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 6rem;}
+.section{display:none;}
+.section.active{display:block;}
+.section-header{margin-bottom:1.8rem;padding-bottom:1.2rem;
+                border-bottom:1px solid var(--rule);}
+.section-header h2{font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:.3rem;}
+.section-header p{font-size:.84rem;color:var(--soft);}
 
-/* CARDS */
-.card{background:var(--white);border:1px solid var(--rule);
-      padding:1.5rem;margin-bottom:1rem;}
-.card-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;
+/* ── CARDS ── */
+.card{background:var(--white);border:1px solid var(--rule);padding:1.4rem;margin-bottom:.9rem;}
+.card-lbl{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.12em;
           text-transform:uppercase;color:var(--p);margin-bottom:.5rem;}
 .card h3{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:1rem;}
 
-/* FORM */
+/* ── FORM ── */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.9rem;}
-.form-grid.single{grid-template-columns:1fr;}
-@media(max-width:560px){.form-grid{grid-template-columns:1fr;}}
-.field label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
+.form-grid.g1{grid-template-columns:1fr;}
+.form-grid.g3{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:600px){.form-grid,.form-grid.g3{grid-template-columns:1fr;}}
+.field label{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.08em;
              text-transform:uppercase;color:var(--soft);display:block;margin-bottom:.3rem;}
 .field input,.field select,.field textarea{
   width:100%;border:1px solid var(--rule);padding:.6rem .8rem;
@@ -85,479 +106,1068 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);
   background:var(--paper);transition:border-color .2s;}
 .field input:focus,.field select:focus,.field textarea:focus{
   outline:none;border-color:var(--p);background:#fff;}
-.field textarea{min-height:160px;resize:vertical;line-height:1.6;
-                font-family:'DM Mono',monospace;font-size:.75rem;}
+.field textarea{min-height:100px;resize:vertical;line-height:1.6;}
 
-/* BOTONES */
-.btn{display:inline-flex;align-items:center;gap:.4rem;
-     padding:.6rem 1.3rem;font-family:'DM Mono',monospace;font-size:.65rem;
-     letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
-     border:1px solid;transition:all .15s;}
+/* ── BOTONES ── */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;
+     font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.08em;
+     text-transform:uppercase;cursor:pointer;border:1px solid;transition:all .15s;}
 .btn-pri{background:var(--ink);color:#fff;border-color:var(--ink);}
 .btn-pri:hover{background:var(--p);border-color:var(--p);}
 .btn-sec{background:var(--white);color:var(--ink);border-color:var(--rule);}
 .btn-sec:hover{border-color:var(--ink);}
-.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-danger{background:var(--white);color:var(--red);border-color:var(--red);}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green);}
+.btn-green:hover{background:#144a22;}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.8rem;}
 
-/* AVISO DE LÍMITE */
-.limit-bar{background:var(--obg);border-left:3px solid var(--o);
-           padding:.7rem 1rem;margin-bottom:1rem;font-size:.8rem;color:var(--ink);}
-.limit-count{font-family:'DM Mono',monospace;font-weight:700;color:var(--o);}
-
-/* LOG */
-.log-wrap{background:var(--dk);padding:1rem 1.2rem;margin-top:1rem;
-          max-height:280px;overflow-y:auto;}
-.log-wrap::-webkit-scrollbar{width:3px;}
-.log-wrap::-webkit-scrollbar-thumb{background:#333;}
-.log-line{font-family:'DM Mono',monospace;font-size:.7rem;
-          line-height:1.7;white-space:pre-wrap;}
-.log-ok{color:#4ade80;}
-.log-err{color:#f87171;}
-.log-info{color:#a78bfa;}
-
-/* TABLA PARTICIPANTES */
-.ptbl{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.8rem;}
-.ptbl th{background:var(--dk);color:#fff;padding:.6rem .8rem;text-align:left;
-         font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;}
-.ptbl td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);
-         color:var(--soft);vertical-align:top;}
-.ptbl tr:hover td{background:var(--pbg);}
-.ptbl td:first-child{color:var(--ink);font-weight:700;}
-.badge{font-family:'DM Mono',monospace;font-size:.58rem;padding:.15rem .45rem;
-       letter-spacing:.06em;text-transform:uppercase;}
-.badge-ok{background:var(--green-bg);color:var(--green);}
-.badge-pend{background:var(--obg);color:var(--o);}
-
-/* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.5rem;}
-@media(max-width:560px){.stats-grid{grid-template-columns:1fr 1fr;}}
-.stat-box{background:var(--white);border:1px solid var(--rule);padding:1rem;text-align:center;}
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin-bottom:1.8rem;}
+@media(max-width:700px){.stats-row{grid-template-columns:1fr 1fr;}}
+.stat{background:var(--white);border:1px solid var(--rule);padding:1.1rem;text-align:center;}
 .stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--p);}
-.stat-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
+.stat-lbl{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.08em;
           text-transform:uppercase;color:var(--soft);margin-top:.2rem;}
 
-/* FOOTER */
+/* ── TABLA ── */
+.tbl-wrap{overflow-x:auto;}
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem;}
+.tbl th{background:var(--dk);color:#fff;padding:.6rem .85rem;text-align:left;
+        font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.06em;
+        white-space:nowrap;}
+.tbl td{padding:.55rem .85rem;border-bottom:1px solid var(--rule);
+        color:var(--soft);vertical-align:middle;}
+.tbl tr:hover td{background:var(--pbg);}
+.tbl td:first-child{color:var(--ink);font-weight:700;}
+
+/* ── BADGES ── */
+.badge{font-family:'DM Mono',monospace;font-size:.57rem;padding:.15rem .5rem;
+       letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.b-ok{background:var(--green-bg);color:var(--green);}
+.b-pend{background:var(--obg);color:var(--o);}
+.b-exp{background:var(--red-bg);color:var(--red);}
+.b-cat{background:var(--pbg);color:var(--p);}
+
+/* ── LOG ── */
+.log{background:var(--dk);padding:1rem 1.2rem;max-height:240px;overflow-y:auto;
+     margin-top:.8rem;display:none;}
+.log::-webkit-scrollbar{width:3px;}
+.log::-webkit-scrollbar-thumb{background:#333;}
+.log-line{font-family:'DM Mono',monospace;font-size:.68rem;line-height:1.7;}
+.lok{color:#4ade80;}.lerr{color:#f87171;}.linf{color:#a78bfa;}
+
+/* ── ALERT ── */
+.alert{padding:.8rem 1rem;font-size:.82rem;line-height:1.55;margin-bottom:.8rem;
+       border-left:3px solid;}
+.alert-warn{background:var(--obg);border-color:var(--o);color:var(--ink);}
+.alert-ok{background:var(--green-bg);border-color:var(--green);color:var(--ink);}
+.alert-info{background:var(--pbg);border-color:var(--p);color:var(--ink);}
+
+/* ── PUBLICACIONES / PORTAFOLIO ITEMS ── */
+.pub-item{background:var(--white);border:1px solid var(--rule);padding:1rem 1.2rem;
+          margin-bottom:.6rem;display:flex;justify-content:space-between;
+          align-items:flex-start;gap:1rem;}
+.pub-item-info{flex:1;}
+.pub-item-info strong{font-size:.88rem;color:var(--ink);display:block;margin-bottom:.2rem;}
+.pub-item-info span{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--soft);}
+.pub-item-acts{display:flex;gap:.4rem;flex-shrink:0;}
+
+/* ── PARTICIPANTE ITEM ── */
+.part-item{background:var(--white);border:1px solid var(--rule);padding:.9rem 1.1rem;
+           margin-bottom:.5rem;display:grid;
+           grid-template-columns:1fr auto auto auto;gap:.8rem;align-items:center;}
+@media(max-width:700px){.part-item{grid-template-columns:1fr;}}
+.part-name{font-size:.85rem;font-weight:700;color:var(--ink);}
+.part-email{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--soft);}
+.part-token{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--p);}
+
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:1px solid var(--rule);margin-bottom:1.5rem;gap:0;}
+.tab{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;
+     text-transform:uppercase;padding:.6rem 1.1rem;cursor:pointer;
+     color:var(--soft);border-bottom:2px solid transparent;
+     margin-bottom:-1px;transition:all .15s;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--p);border-bottom-color:var(--p);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ── PROGRESO BAR ── */
+.prog-bar-wrap{background:var(--rule);height:6px;border-radius:99px;overflow:hidden;}
+.prog-bar{height:6px;background:linear-gradient(90deg,var(--p),var(--pm));
+          border-radius:99px;transition:width .4s;}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;
+          display:none;align-items:center;justify-content:center;padding:1rem;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--white);border:1px solid var(--rule);
+       max-width:520px;width:100%;max-height:90vh;overflow-y:auto;}
+.modal-head{padding:1.2rem 1.4rem;border-bottom:1px solid var(--rule);
+            display:flex;justify-content:space-between;align-items:center;}
+.modal-head h3{font-size:1rem;font-weight:700;color:var(--ink);}
+.modal-close{background:none;border:none;cursor:pointer;font-size:1.1rem;
+             color:var(--soft);padding:.2rem;}
+.modal-body{padding:1.4rem;}
+.modal-foot{padding:1rem 1.4rem;border-top:1px solid var(--rule);
+            display:flex;justify-content:flex-end;gap:.6rem;}
+
+/* ── FOOTER ── */
 footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
        display:flex;justify-content:space-between;align-items:center;
        flex-wrap:wrap;gap:.5rem;}
-.f-txt{font-family:'DM Mono',monospace;font-size:.6rem;
+.f-txt{font-family:'DM Mono',monospace;font-size:.58rem;
        letter-spacing:.08em;text-transform:uppercase;color:#ccc;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:660px){
+  .panel-nav-links{display:none;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+}
 </style>
 </head>
 <body>
-
-<nav>
-  <div class="nav-inner">
-    <span class="nav-brand">Panel interno · David Salgado López</span>
-    <a class="nav-back" href="index.html">← Sitio principal</a>
-  </div>
-</nav>
-
-<!-- LOGIN -->
-<div class="login-wrap" id="loginWrap">
+<!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
+<div id="loginScreen" class="login-screen">
   <div class="login-box">
-    <div class="login-lbl">Acceso restringido</div>
-    <h2>Panel interno</h2>
-    <input class="login-input" type="email" id="loginEmail"
-           placeholder="tu correo" autocomplete="email"/>
-    <input class="login-input" type="password" id="loginPass"
-           placeholder="contraseña" autocomplete="current-password"
-           onkeydown="if(event.key==='Enter')login()"/>
-    <button class="login-btn" onclick="login()">Entrar</button>
-    <div class="login-err" id="loginErr">Credenciales incorrectas</div>
+    <div class="login-logo">Panel interno · David Salgado López</div>
+    <h2>Acceso restringido</h2>
+    <div class="field-wrap">
+      <label>Contraseña</label>
+      <div class="input-eye">
+        <input type="password" id="loginPass" placeholder="••••••••"
+               autocomplete="current-password"
+               onkeydown="if(event.key==='Enter')doLogin()"/>
+        <button class="eye-btn" onclick="toggleEye('loginPass',this)"
+                title="Mostrar/ocultar">👁</button>
+      </div>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Entrar al panel</button>
+    <div class="login-err" id="loginErr">Contraseña incorrecta. Intenta de nuevo.</div>
   </div>
 </div>
 
-<!-- PANEL PRINCIPAL -->
-<div id="panelWrap" style="display:none;">
-<div class="panel">
+<!-- ══ PANEL PRINCIPAL ════════════════════════════════════════ -->
+<div id="panelMain" style="display:none;">
 
-  <div class="panel-header">
-    <h1>Panel interno</h1>
-    <p>Gestión de participantes · Hablar para Influir</p>
-  </div>
-
-  <!-- ESTADÍSTICAS -->
-  <div class="stats-grid">
-    <div class="stat-box">
-      <div class="stat-num" id="statTotal">—</div>
-      <div class="stat-lbl">Participantes</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="statActivos">—</div>
-      <div class="stat-lbl">Activos</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="statConstancias">—</div>
-      <div class="stat-lbl">Constancias</div>
+<!-- NAV -->
+<nav class="panel-nav">
+  <div class="panel-nav-inner">
+    <span class="panel-brand">Panel interno</span>
+    <ul class="panel-nav-links">
+      <li><span class="pnl active" onclick="showSection('publicaciones')">Publicaciones</span></li>
+      <li><span class="pnl" onclick="showSection('portafolio')">Portafolio</span></li>
+      <li><span class="pnl" onclick="showSection('formacion')">Formación</span></li>
+      <li><span class="pnl" onclick="showSection('observatorio')">Observatorio</span></li>
+      <li><span class="pnl" onclick="showSection('configuracion')">Configuración</span></li>
+    </ul>
+    <div class="panel-nav-right">
+      <a class="nav-site-link" href="index.html" target="_blank">Ver sitio →</a>
+      <button class="nav-logout" onclick="doLogout()">Cerrar sesión</button>
     </div>
   </div>
+</nav>
+<div class="panel-wrap">
 
-  <!-- TABS -->
+<!-- ══ PUBLICACIONES ══════════════════════════════════════════ -->
+<div class="section active" id="s-publicaciones">
+  <div class="section-header">
+    <h2>Publicaciones</h2>
+    <p>Minilibros que aparecen en la sección "Publicaciones" del sitio. Los cambios se guardan en GitHub y tardan 1-2 minutos en reflejarse.</p>
+  </div>
+  <div class="btn-row" style="margin-bottom:1.2rem;">
+    <button class="btn btn-pri" onclick="abrirModalPub()">+ Nueva publicación</button>
+    <button class="btn btn-sec" onclick="cargarPublicaciones()">↺ Actualizar</button>
+  </div>
+  <div id="pub-lista">
+    <p style="font-size:.82rem;color:var(--soft);">Cargando publicaciones...</p>
+  </div>
+</div>
+
+<!-- ══ PORTAFOLIO ═════════════════════════════════════════════ -->
+<div class="section" id="s-portafolio">
+  <div class="section-header">
+    <h2>Portafolio</h2>
+    <p>Proyectos de investigación, consultoría y ponencias que aparecen en la sección "Portafolio" del sitio.</p>
+  </div>
+  <div class="btn-row" style="margin-bottom:1.2rem;">
+    <button class="btn btn-pri" onclick="abrirModalPort()">+ Nuevo proyecto</button>
+    <button class="btn btn-sec" onclick="cargarPortafolio()">↺ Actualizar</button>
+  </div>
+  <div id="port-lista">
+    <p style="font-size:.82rem;color:var(--soft);">Cargando proyectos...</p>
+  </div>
+</div>
+
+<!-- ══ FORMACIÓN ══════════════════════════════════════════════ -->
+<div class="section" id="s-formacion">
+  <div class="section-header">
+    <h2>Formación</h2>
+    <p>Gestión de participantes, envío de códigos de acceso y seguimiento de cursos.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="form-stats">
+    <div class="stat"><div class="stat-num" id="st-total">—</div><div class="stat-lbl">Inscritos</div></div>
+    <div class="stat"><div class="stat-num" id="st-activos">—</div><div class="stat-lbl">Activos</div></div>
+    <div class="stat"><div class="stat-num" id="st-completos">—</div><div class="stat-lbl">Completaron</div></div>
+    <div class="stat"><div class="stat-num" id="st-vencidos">—</div><div class="stat-lbl">Vencidos</div></div>
+  </div>
+
+  <!-- Tabs -->
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('alta1')">Alta individual</div>
-    <div class="tab" onclick="switchTab('lote')">Alta en lote</div>
-    <div class="tab" onclick="switchTab('lista')">Participantes</div>
+    <div class="tab active" onclick="switchFormTab('individual')">Alta individual</div>
+    <div class="tab" onclick="switchFormTab('lote')">Alta en lote (CSV)</div>
+    <div class="tab" onclick="switchFormTab('participantes')">Participantes</div>
   </div>
 
   <!-- TAB: ALTA INDIVIDUAL -->
-  <div class="tab-content active" id="tab-alta1">
+  <div class="tab-pane active" id="ft-individual">
     <div class="card">
       <div class="card-lbl">Registro individual</div>
       <h3>Dar de alta un participante</h3>
+      <div class="alert alert-info">
+        Al registrar, el sistema enviará automáticamente un correo de bienvenida con el código de acceso personalizado y la duración del acceso.
+      </div>
       <div class="form-grid">
+        <div class="field"><label>Nombre *</label><input type="text" id="i-nombre" placeholder="Ana"/></div>
+        <div class="field"><label>Apellidos *</label><input type="text" id="i-apellidos" placeholder="García López"/></div>
+        <div class="field"><label>Correo electrónico *</label><input type="email" id="i-email" placeholder="ana@correo.com"/></div>
+        <div class="field"><label>Institución (opcional)</label><input type="text" id="i-inst" placeholder="Universidad / Empresa"/></div>
         <div class="field">
-          <label>Nombre *</label>
-          <input type="text" id="a1nombre" placeholder="Ana"/>
+          <label>Curso</label>
+          <select id="i-curso">
+            <option value="Hablar para Influir">Hablar para Influir</option>
+          </select>
         </div>
         <div class="field">
-          <label>Apellidos *</label>
-          <input type="text" id="a1apellidos" placeholder="García López"/>
-        </div>
-        <div class="field">
-          <label>Correo electrónico *</label>
-          <input type="email" id="a1email" placeholder="ana@correo.com"/>
-        </div>
-        <div class="field">
-          <label>CURP (opcional)</label>
-          <input type="text" id="a1curp" placeholder="GALA800101MDFRCN01"
-                 style="text-transform:uppercase;"
-                 oninput="this.value=this.value.toUpperCase()"/>
+          <label>Duración del acceso</label>
+          <select id="i-duracion">
+            <option value="90">3 meses (90 días)</option>
+            <option value="180">6 meses (180 días)</option>
+            <option value="365">1 año (365 días)</option>
+          </select>
         </div>
       </div>
-      <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;">
-        <button class="btn btn-pri" id="btn-alta1" onclick="altaIndividual()">
-          Registrar y enviar token
+      <div class="btn-row">
+        <button class="btn btn-pri" id="btn-alta-ind" onclick="altaIndividual()">
+          Registrar y enviar acceso
         </button>
-        <span id="alta1-status" style="font-family:'DM Mono',monospace;
-              font-size:.68rem;color:var(--soft);"></span>
+        <span id="ind-status" style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--soft);"></span>
       </div>
-      <div class="log-wrap" id="log-alta1" style="display:none;margin-top:.8rem;">
-      </div>
+      <div class="log" id="log-ind"></div>
     </div>
   </div>
 
   <!-- TAB: ALTA EN LOTE -->
-  <div class="tab-content" id="tab-lote">
+  <div class="tab-pane" id="ft-lote">
     <div class="card">
-      <div class="card-lbl">Registro en lote</div>
-      <h3>Hasta 50 participantes a la vez</h3>
-      <div class="limit-bar">
-        Límite Gmail: <span class="limit-count">100 correos/día</span> con cuenta gratuita.
-        Usa lotes de máximo <span class="limit-count">50</span> y espera al día siguiente
-        si necesitas más. El sistema agrega una pausa automática entre envíos.
+      <div class="card-lbl">Registro en lote · máximo 50</div>
+      <h3>Subir CSV o pegar lista</h3>
+      <div class="alert alert-warn">
+        <strong>Límite Gmail:</strong> 100 correos/día con cuenta gratuita.
+        Usa lotes de máximo 50. El sistema pausa 700ms entre envíos para no activar filtros de spam.
       </div>
-      <div class="field" style="margin-bottom:.9rem;">
-        <label>Lista de participantes — un registro por línea:</label>
-        <div style="font-family:'DM Mono',monospace;font-size:.62rem;
-                    color:var(--soft);margin-bottom:.4rem;">
-          Formato: Nombre, Apellidos, correo@ejemplo.com, CURP (opcional)
+
+      <!-- Upload CSV -->
+      <div class="card" style="background:var(--paper);border-style:dashed;
+           text-align:center;padding:1.5rem;margin-bottom:1rem;cursor:pointer;"
+           onclick="document.getElementById('csv-input').click()">
+        <div style="font-size:1.5rem;margin-bottom:.4rem;">📄</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;
+                    letter-spacing:.08em;text-transform:uppercase;color:var(--p);">
+          Haz clic para subir CSV
         </div>
-        <textarea id="loteTexto" placeholder="Ana, García López, ana@correo.com
-Luis, Martínez Reyes, luis@correo.com, MALR900215HDFRTL08
-Sofía, Ramos Cruz, sofia@correo.com"></textarea>
+        <div style="font-size:.75rem;color:var(--soft);margin-top:.3rem;">
+          Columnas: Nombre, Apellidos, Email, Institución (opcional)
+        </div>
+        <input type="file" id="csv-input" accept=".csv,.xlsx" style="display:none;"
+               onchange="leerCSV(this)"/>
       </div>
-      <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem;">
+
+      <div style="text-align:center;font-family:'DM Mono',monospace;font-size:.62rem;
+                  color:var(--soft);margin:.6rem 0;">— o pega la lista manualmente —</div>
+
+      <div class="field">
+        <label>Lista manual — una persona por línea</label>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--soft);margin-bottom:.3rem;">
+          Formato: Nombre, Apellidos, correo@ejemplo.com, Institución (opcional)
+        </div>
+        <textarea id="lote-texto" style="min-height:140px;font-family:'DM Mono',monospace;font-size:.75rem;"
+                  placeholder="Ana, García López, ana@correo.com, UNAM
+Luis, Martínez Reyes, luis@correo.com
+Sofía, Ramos Cruz, sofia@correo.com, Tec de Monterrey"></textarea>
+      </div>
+
+      <div class="field" style="margin-top:.5rem;">
+        <label>Curso</label>
+        <select id="lote-curso">
+          <option value="Hablar para Influir">Hablar para Influir</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Duración del acceso</label>
+        <select id="lote-duracion">
+          <option value="90">3 meses (90 días)</option>
+          <option value="180">6 meses (180 días)</option>
+          <option value="365">1 año (365 días)</option>
+        </select>
+      </div>
+
+      <div class="btn-row">
         <button class="btn btn-sec" onclick="parsearLote()">Previsualizar lista</button>
         <button class="btn btn-pri" id="btn-lote" onclick="enviarLote()" style="display:none;">
           Registrar y enviar tokens
         </button>
-        <span id="lote-count" style="font-family:'DM Mono',monospace;
-              font-size:.68rem;color:var(--soft);"></span>
+        <span id="lote-count" style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--soft);"></span>
       </div>
-      <!-- Vista previa -->
-      <div id="lote-preview" style="display:none;">
-        <table class="ptbl" id="lote-tbl">
-          <thead>
-            <tr><th>#</th><th>Nombre</th><th>Apellidos</th><th>Correo</th><th>CURP</th><th>Estado</th></tr>
-          </thead>
-          <tbody id="lote-tbody"></tbody>
-        </table>
+
+      <!-- Preview tabla -->
+      <div id="lote-preview" style="display:none;margin-top:1rem;">
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>#</th><th>Nombre</th><th>Apellidos</th><th>Correo</th><th>Institución</th><th>Estado</th></tr></thead>
+            <tbody id="lote-tbody"></tbody>
+          </table>
+        </div>
       </div>
-      <div class="log-wrap" id="log-lote" style="display:none;margin-top:.8rem;"></div>
+      <div class="log" id="log-lote"></div>
     </div>
   </div>
 
-  <!-- TAB: LISTA DE PARTICIPANTES -->
-  <div class="tab-content" id="tab-lista">
+  <!-- TAB: PARTICIPANTES -->
+  <div class="tab-pane" id="ft-participantes">
     <div class="card">
       <div class="card-lbl">Participantes registrados</div>
       <h3>Lista completa</h3>
-      <div style="display:flex;gap:.7rem;margin-bottom:1rem;">
-        <button class="btn btn-sec" onclick="cargarParticipantes()">Actualizar lista</button>
+      <div class="btn-row" style="margin-bottom:1rem;">
+        <button class="btn btn-sec" onclick="cargarParticipantes()">↺ Actualizar lista</button>
+        <input type="text" id="buscar-part" placeholder="Buscar por nombre o correo..."
+               style="border:1px solid var(--rule);padding:.5rem .8rem;
+                      font-size:.82rem;min-width:220px;"
+               oninput="filtrarParticipantes(this.value)"/>
       </div>
-      <div id="lista-wrap">
-        <p style="font-size:.82rem;color:var(--soft);">
-          Haz clic en "Actualizar lista" para cargar los participantes.
-        </p>
+      <div id="part-lista">
+        <p style="font-size:.82rem;color:var(--soft);">Haz clic en "Actualizar lista" para cargar los participantes.</p>
       </div>
     </div>
   </div>
+</div>
 
-</div><!-- /panel -->
+<!-- ══ OBSERVATORIO ═══════════════════════════════════════════ -->
+<div class="section" id="s-observatorio">
+  <div class="section-header">
+    <h2>Observatorio del Trabajo</h2>
+    <p>Gestión del resumen semanal, historial de notas y configuración de la voz de interpretación.</p>
+  </div>
+  <div class="alert alert-info" style="margin-bottom:1.2rem;">
+    El resumen semanal ahora es visible para todos los visitantes. Los lunes se actualiza automáticamente vía Apps Script.
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-pri" onclick="generarResumenManual()">Generar resumen ahora</button>
+    <button class="btn btn-sec" onclick="window.open('observatorio.html','_blank')">Ver Observatorio →</button>
+  </div>
+</div>
 
+<!-- ══ CONFIGURACIÓN ══════════════════════════════════════════ -->
+<div class="section" id="s-configuracion">
+  <div class="section-header">
+    <h2>Configuración</h2>
+    <p>Ajustes del panel y seguridad.</p>
+  </div>
+
+  <!-- Cambiar contraseña -->
+  <div class="card">
+    <div class="card-lbl">Seguridad</div>
+    <h3>Cambiar contraseña del panel</h3>
+    <div class="form-grid g1" style="max-width:360px;">
+      <div class="field">
+        <label>Contraseña actual</label>
+        <div class="input-eye">
+          <input type="password" id="pass-actual" placeholder="••••••••"/>
+          <button class="eye-btn" onclick="toggleEye('pass-actual',this)">👁</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Nueva contraseña</label>
+        <div class="input-eye">
+          <input type="password" id="pass-nueva" placeholder="••••••••"/>
+          <button class="eye-btn" onclick="toggleEye('pass-nueva',this)">👁</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Confirmar nueva contraseña</label>
+        <div class="input-eye">
+          <input type="password" id="pass-confirma" placeholder="••••••••"/>
+          <button class="eye-btn" onclick="toggleEye('pass-confirma',this)">👁</button>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-pri" onclick="cambiarPassword()">Guardar nueva contraseña</button>
+      <span id="pass-status" style="font-family:'DM Mono',monospace;font-size:.68rem;"></span>
+    </div>
+  </div>
+
+  <!-- GAS URL -->
+  <div class="card">
+    <div class="card-lbl">Backend</div>
+    <h3>URL de Apps Script</h3>
+    <div class="field" style="max-width:560px;">
+      <label>GAS URL actual</label>
+      <input type="text" id="cfg-gas" placeholder="https://script.google.com/macros/s/.../exec"/>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sec" onclick="guardarGAS()">Guardar URL</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /panel-wrap -->
+
+<!-- ══ MODALES ════════════════════════════════════════════════ -->
+
+<!-- Modal: nueva publicación -->
+<div class="modal-bg" id="modal-pub">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-pub-title">Nueva publicación</h3>
+      <button class="modal-close" onclick="cerrarModal('modal-pub')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid g1">
+        <div class="field"><label>Título *</label><input type="text" id="pub-titulo" placeholder="Título de la publicación"/></div>
+        <div class="field"><label>Subtítulo / Serie</label><input type="text" id="pub-sub" placeholder="Serie en curso · Vol. 1"/></div>
+        <div class="field"><label>Descripción corta</label><textarea id="pub-desc" style="min-height:70px;" placeholder="Resumen en 2-3 líneas..."></textarea></div>
+        <div class="field"><label>Enlace al PDF (URL externa)</label><input type="url" id="pub-url" placeholder="https://..."/></div>
+        <div class="field"><label>Año</label><input type="text" id="pub-anio" placeholder="2025"/></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="cerrarModal('modal-pub')">Cancelar</button>
+      <button class="btn btn-pri" onclick="guardarPublicacion()">Guardar publicación</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: nuevo proyecto portafolio -->
+<div class="modal-bg" id="modal-port">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-port-title">Nuevo proyecto</h3>
+      <button class="modal-close" onclick="cerrarModal('modal-port')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid g1">
+        <div class="field">
+          <label>Categoría *</label>
+          <select id="port-cat">
+            <option value="INVESTIGACIÓN">Investigación</option>
+            <option value="CONSULTORÍA">Consultoría</option>
+            <option value="PONENCIAS">Ponencias</option>
+            <option value="FORMACIÓN">Formación</option>
+          </select>
+        </div>
+        <div class="field"><label>Título *</label><input type="text" id="port-titulo" placeholder="Título del proyecto"/></div>
+        <div class="field"><label>Institución / Cliente</label><input type="text" id="port-inst" placeholder="Universidad · Organización"/></div>
+        <div class="field"><label>Año</label><input type="text" id="port-anio" placeholder="2024"/></div>
+        <div class="field"><label>Descripción *</label><textarea id="port-desc" style="min-height:90px;" placeholder="Descripción del proyecto..."></textarea></div>
+        <div class="field"><label>Texto del enlace</label><input type="text" id="port-link-txt" placeholder="Ver publicación →"/></div>
+        <div class="field"><label>URL del enlace</label><input type="url" id="port-link-url" placeholder="https://..."/></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="cerrarModal('modal-port')">Cancelar</button>
+      <button class="btn btn-pri" onclick="guardarProyecto()">Guardar proyecto</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: ver participante -->
+<div class="modal-bg" id="modal-part">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Detalle del participante</h3>
+      <button class="modal-close" onclick="cerrarModal('modal-part')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-part-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="cerrarModal('modal-part')">Cerrar</button>
+      <button class="btn btn-green" id="btn-reactivar" onclick="reactivarParticipante()">Reactivar acceso</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /panelMain -->
+
+<!-- Footer -->
 <footer>
   <span class="f-txt">Panel interno · David Salgado López</span>
-  <a href="index.html" style="font-family:'DM Mono',monospace;font-size:.6rem;
+  <a href="index.html" style="font-family:'DM Mono',monospace;font-size:.58rem;
      letter-spacing:.08em;text-transform:uppercase;color:#ccc;text-decoration:none;">
     ← Sitio principal
   </a>
 </footer>
-
-</div><!-- /panelWrap -->
-
 <script>
-const GAS_URL = ''; // ← pega aquí tu URL de Apps Script
-// Contraseña de acceso al panel (cámbiala por una tuya)
-const ADMIN_PASS = 'david2024';
+// ══════════════════════════════════════════════════════════════
+// CONFIGURACIÓN
+// ══════════════════════════════════════════════════════════════
+const GAS_URL = localStorage.getItem('admin_gas_url') || '';
+const PASS_KEY = 'admin_pass_v2';
 
-// ── LOGIN ────────────────────────────────────────────────────
-function login() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass  = document.getElementById('loginPass').value;
-  const err   = document.getElementById('loginErr');
+// Contraseña por defecto — cámbiala desde Configuración
+function getPass() {
+  return localStorage.getItem(PASS_KEY) || 'Temporal123/';
+}
 
-  if (pass === ADMIN_PASS) {
-    document.getElementById('loginWrap').style.display = 'none';
-    document.getElementById('panelWrap').style.display = 'block';
-    cargarStats();
+// ── LOGIN ─────────────────────────────────────────────────────
+function doLogin() {
+  const val = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  if (val === getPass()) {
+    sessionStorage.setItem('admin_ok','1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display = 'block';
+    onPanelReady();
     err.style.display = 'none';
   } else {
     err.style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
   }
 }
 
-// ── TABS ─────────────────────────────────────────────────────
-function switchTab(id) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    const ids = ['alta1','lote','lista'];
-    t.classList.toggle('active', ids[i] === id);
-  });
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
+function doLogout() {
+  sessionStorage.removeItem('admin_ok');
+  location.reload();
 }
 
-// ── ESTADÍSTICAS ─────────────────────────────────────────────
-function cargarStats() {
-  if (!GAS_URL) return;
-  fetch(GAS_URL + '?action=estadisticas')
-    .then(r => r.json())
-    .then(d => {
-      document.getElementById('statTotal').textContent       = d.total       ?? '—';
-      document.getElementById('statActivos').textContent     = d.activos     ?? '—';
-      document.getElementById('statConstancias').textContent = d.constancias ?? '—';
-    }).catch(() => {});
+// Auto-login si la sesión sigue activa
+window.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('admin_ok') === '1') {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display = 'block';
+    onPanelReady();
+  }
+  document.getElementById('loginPass')
+    .addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  // Cargar GAS_URL guardada
+  const savedGAS = localStorage.getItem('admin_gas_url');
+  if (savedGAS) document.getElementById('cfg-gas').value = savedGAS;
+});
+
+function onPanelReady() {
+  cargarPublicaciones();
+  cargarStats();
+}
+
+// ── OJO CONTRASEÑA ───────────────────────────────────────────
+function toggleEye(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    inp.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+
+// ── CAMBIAR CONTRASEÑA ────────────────────────────────────────
+function cambiarPassword() {
+  const actual   = document.getElementById('pass-actual').value;
+  const nueva    = document.getElementById('pass-nueva').value;
+  const confirma = document.getElementById('pass-confirma').value;
+  const status   = document.getElementById('pass-status');
+
+  if (actual !== getPass()) {
+    status.textContent = '✗ La contraseña actual no es correcta.';
+    status.style.color = 'var(--red)'; return;
+  }
+  if (nueva.length < 6) {
+    status.textContent = '✗ La nueva contraseña debe tener al menos 6 caracteres.';
+    status.style.color = 'var(--red)'; return;
+  }
+  if (nueva !== confirma) {
+    status.textContent = '✗ Las contraseñas nuevas no coinciden.';
+    status.style.color = 'var(--red)'; return;
+  }
+  localStorage.setItem(PASS_KEY, nueva);
+  status.textContent = '✓ Contraseña actualizada correctamente.';
+  status.style.color = 'var(--green)';
+  ['pass-actual','pass-nueva','pass-confirma'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+// ── NAV ──────────────────────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.pnl').forEach(p => p.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'formacion') cargarStats();
+  if (id === 'publicaciones') cargarPublicaciones();
+  if (id === 'portafolio') cargarPortafolio();
+}
+
+// ── TABS FORMACIÓN ────────────────────────────────────────────
+function switchFormTab(id) {
+  document.querySelectorAll('#s-formacion .tab').forEach((t,i) => {
+    const ids = ['individual','lote','participantes'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('ft-'+id).classList.add('active');
+}
+
+// ── MODALES ───────────────────────────────────────────────────
+function abrirModal(id) { document.getElementById(id).classList.add('open'); }
+function cerrarModal(id) { document.getElementById(id).classList.remove('open'); }
+function abrirModalPub() {
+  ['pub-titulo','pub-sub','pub-desc','pub-url','pub-anio'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('modal-pub-title').textContent = 'Nueva publicación';
+  abrirModal('modal-pub');
+}
+function abrirModalPort() {
+  ['port-titulo','port-inst','port-anio','port-desc','port-link-txt','port-link-url'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  abrirModal('modal-port');
+}
+
+// ── GAS HELPER ────────────────────────────────────────────────
+function gasURL() { return localStorage.getItem('admin_gas_url') || ''; }
+function guardarGAS() {
+  const url = document.getElementById('cfg-gas').value.trim();
+  localStorage.setItem('admin_gas_url', url);
+  toast('URL de Apps Script guardada.');
+}
+
+async function gasPost(body) {
+  const url = gasURL();
+  if (!url) { toast('Configura la GAS URL en Configuración primero.'); throw new Error('Sin GAS URL'); }
+  const resp = await fetch(url, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return resp.json();
+}
+
+async function gasGet(params) {
+  const url = gasURL();
+  if (!url) return null;
+  const qs = new URLSearchParams(params).toString();
+  const resp = await fetch(url + '?' + qs);
+  return resp.json();
+}
+
+// ── PUBLICACIONES ─────────────────────────────────────────────
+async function cargarPublicaciones() {
+  const el = document.getElementById('pub-lista');
+  el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
+  try {
+    const data = await gasGet({ action: 'listarPublicaciones' });
+    if (!data?.items?.length) {
+      el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">No hay publicaciones aún.</p>';
+      return;
+    }
+    el.innerHTML = data.items.map((p,i) => `
+      <div class="pub-item">
+        <div class="pub-item-info">
+          <strong>${p.titulo}</strong>
+          <span>${p.sub || ''} ${p.anio ? '· '+p.anio : ''}</span>
+        </div>
+        <div class="pub-item-acts">
+          <button class="btn btn-sec" style="padding:.4rem .7rem;font-size:.58rem;"
+                  onclick="editarPublicacion(${i})">Editar</button>
+          <button class="btn btn-danger" style="padding:.4rem .7rem;font-size:.58rem;"
+                  onclick="eliminarPublicacion(${i})">Eliminar</button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<p style="font-size:.82rem;color:var(--red);">Error al cargar. Verifica tu GAS URL.</p>';
+  }
+}
+
+async function guardarPublicacion() {
+  const body = {
+    action: 'guardarPublicacion',
+    titulo: document.getElementById('pub-titulo').value.trim(),
+    sub:    document.getElementById('pub-sub').value.trim(),
+    desc:   document.getElementById('pub-desc').value.trim(),
+    url:    document.getElementById('pub-url').value.trim(),
+    anio:   document.getElementById('pub-anio').value.trim(),
+  };
+  if (!body.titulo) { toast('El título es obligatorio.'); return; }
+  try {
+    await gasPost(body);
+    cerrarModal('modal-pub');
+    toast('Publicación guardada.');
+    cargarPublicaciones();
+  } catch(e) { toast('Error al guardar.'); }
+}
+
+async function eliminarPublicacion(idx) {
+  if (!confirm('¿Eliminar esta publicación?')) return;
+  try {
+    await gasPost({ action: 'eliminarPublicacion', idx });
+    toast('Publicación eliminada.');
+    cargarPublicaciones();
+  } catch(e) { toast('Error al eliminar.'); }
+}
+
+// ── PORTAFOLIO ────────────────────────────────────────────────
+async function cargarPortafolio() {
+  const el = document.getElementById('port-lista');
+  el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
+  try {
+    const data = await gasGet({ action: 'listarPortafolio' });
+    if (!data?.items?.length) {
+      el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">No hay proyectos aún.</p>';
+      return;
+    }
+    el.innerHTML = data.items.map((p,i) => `
+      <div class="pub-item">
+        <div class="pub-item-info">
+          <strong>${p.titulo}</strong>
+          <span><span class="badge b-cat">${p.cat}</span> ${p.inst || ''} ${p.anio ? '· '+p.anio : ''}</span>
+        </div>
+        <div class="pub-item-acts">
+          <button class="btn btn-danger" style="padding:.4rem .7rem;font-size:.58rem;"
+                  onclick="eliminarProyecto(${i})">Eliminar</button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = '<p style="font-size:.82rem;color:var(--red);">Error al cargar.</p>';
+  }
+}
+
+async function guardarProyecto() {
+  const body = {
+    action:   'guardarPortafolio',
+    cat:      document.getElementById('port-cat').value,
+    titulo:   document.getElementById('port-titulo').value.trim(),
+    inst:     document.getElementById('port-inst').value.trim(),
+    anio:     document.getElementById('port-anio').value.trim(),
+    desc:     document.getElementById('port-desc').value.trim(),
+    linkTxt:  document.getElementById('port-link-txt').value.trim(),
+    linkUrl:  document.getElementById('port-link-url').value.trim(),
+  };
+  if (!body.titulo || !body.desc) { toast('Título y descripción son obligatorios.'); return; }
+  try {
+    await gasPost(body);
+    cerrarModal('modal-port');
+    toast('Proyecto guardado.');
+    cargarPortafolio();
+  } catch(e) { toast('Error al guardar.'); }
+}
+
+async function eliminarProyecto(idx) {
+  if (!confirm('¿Eliminar este proyecto?')) return;
+  try {
+    await gasPost({ action: 'eliminarPortafolio', idx });
+    toast('Proyecto eliminado.');
+    cargarPortafolio();
+  } catch(e) { toast('Error al eliminar.'); }
+}
+
+// ── FORMACIÓN — STATS ─────────────────────────────────────────
+async function cargarStats() {
+  try {
+    const data = await gasGet({ action: 'estadisticas' });
+    if (!data) return;
+    document.getElementById('st-total').textContent     = data.total      ?? '—';
+    document.getElementById('st-activos').textContent   = data.activos    ?? '—';
+    document.getElementById('st-completos').textContent = data.completos  ?? '—';
+    document.getElementById('st-vencidos').textContent  = data.vencidos   ?? '—';
+  } catch(e) {}
 }
 
 // ── ALTA INDIVIDUAL ───────────────────────────────────────────
 async function altaIndividual() {
-  const nombre    = document.getElementById('a1nombre').value.trim();
-  const apellidos = document.getElementById('a1apellidos').value.trim();
-  const email     = document.getElementById('a1email').value.trim();
-  const curp      = document.getElementById('a1curp').value.trim();
-  const btn       = document.getElementById('btn-alta1');
-  const status    = document.getElementById('alta1-status');
-  const logEl     = document.getElementById('log-alta1');
+  const nombre    = document.getElementById('i-nombre').value.trim();
+  const apellidos = document.getElementById('i-apellidos').value.trim();
+  const email     = document.getElementById('i-email').value.trim();
+  const inst      = document.getElementById('i-inst').value.trim();
+  const curso     = document.getElementById('i-curso').value;
+  const duracion  = document.getElementById('i-duracion').value;
+  const btn       = document.getElementById('btn-alta-ind');
+  const status    = document.getElementById('ind-status');
+  const log       = document.getElementById('log-ind');
 
-  if (!nombre || !email) {
-    status.textContent = 'Nombre y correo son obligatorios.';
-    status.style.color = 'var(--red)';
-    return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    status.textContent = 'Correo inválido.';
-    status.style.color = 'var(--red)';
-    return;
-  }
+  if (!nombre || !email) { toast('Nombre y correo son obligatorios.'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('Correo inválido.'); return; }
 
   btn.disabled = true;
   status.textContent = 'Registrando...';
   status.style.color = 'var(--soft)';
-  logEl.style.display = 'none';
-
-  if (!GAS_URL) {
-    // Modo demo sin GAS
-    setTimeout(() => {
-      const token = 'DS-' + Math.random().toString(36).substr(2,8).toUpperCase();
-      logEl.style.display = 'block';
-      logEl.innerHTML = `<div class="log-line log-ok">✅ ${nombre} ${apellidos} — Token: ${token}</div>
-<div class="log-line log-info">ℹ Modo demo — configura GAS_URL para enviar correos reales</div>`;
-      status.textContent = 'Listo (modo demo)';
-      btn.disabled = false;
-      limpiarAlta1();
-    }, 800);
-    return;
-  }
+  log.style.display = 'block';
+  log.innerHTML = '<div class="log-line linf">Enviando registro...</div>';
 
   try {
-    const resp = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action:'registrarParticipante', nombre, apellidos, email, curp, curso:'Hablar para Influir' })
+    const data = await gasPost({
+      action: 'registrarParticipante',
+      nombre, apellidos, email, inst,
+      curso, duracion: parseInt(duracion)
     });
-    const data = await resp.json();
-    logEl.style.display = 'block';
     if (data.ok) {
-      logEl.innerHTML = `<div class="log-line log-ok">✅ ${nombre} ${apellidos} — Token: ${data.token}</div>
-<div class="log-line log-info">📧 Correo enviado a: ${email}</div>`;
-      status.textContent = '✓ Registrado y correo enviado';
+      log.innerHTML = `<div class="log-line lok">✅ ${nombre} ${apellidos} — Token: ${data.token}</div>
+<div class="log-line linf">📧 Correo enviado a: ${email}</div>
+<div class="log-line linf">⏳ Acceso válido por ${duracion} días</div>`;
+      status.textContent = '✓ Registrado';
       status.style.color = 'var(--green)';
-      limpiarAlta1();
+      ['i-nombre','i-apellidos','i-email','i-inst'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
       cargarStats();
     } else {
-      logEl.innerHTML = `<div class="log-line log-err">❌ Error: ${data.error || 'desconocido'}</div>`;
-      status.textContent = 'Error al registrar';
+      log.innerHTML = `<div class="log-line lerr">❌ ${data.error || 'Error desconocido'}</div>`;
+      status.textContent = 'Error';
       status.style.color = 'var(--red)';
     }
   } catch(e) {
-    logEl.style.display = 'block';
-    logEl.innerHTML = `<div class="log-line log-err">❌ Error de conexión: ${e.message}</div>`;
-    status.textContent = 'Sin conexión al servidor';
+    log.innerHTML = `<div class="log-line lerr">❌ Sin conexión: ${e.message}</div>`;
+    status.textContent = 'Error de conexión';
     status.style.color = 'var(--red)';
   }
   btn.disabled = false;
 }
 
-function limpiarAlta1() {
-  ['a1nombre','a1apellidos','a1email','a1curp'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-}
-
-// ── LOTE ─────────────────────────────────────────────────────
+// ── LOTE ──────────────────────────────────────────────────────
 let loteData = [];
 
+function leerCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('lote-texto').value = e.target.result;
+    parsearLote();
+  };
+  reader.readAsText(file);
+}
+
 function parsearLote() {
-  const texto = document.getElementById('loteTexto').value.trim();
+  const texto = document.getElementById('lote-texto').value.trim();
   if (!texto) return;
 
-  const lineas = texto.split('\n').filter(l => l.trim());
+  const lineas = texto.split('\n').filter(l => l.trim() && !l.startsWith('#'));
   loteData = lineas.map((linea, i) => {
-    const partes = linea.split(',').map(p => p.trim());
+    // Soporte para CSV con coma o punto y coma
+    const sep = linea.includes(';') ? ';' : ',';
+    const partes = linea.split(sep).map(p => p.trim().replace(/^"|"$/g,''));
     return {
       idx:       i + 1,
       nombre:    partes[0] || '',
       apellidos: partes[1] || '',
       email:     partes[2] || '',
-      curp:      partes[3] || '',
-      valido:    partes[0] && partes[2] && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(partes[2])
+      inst:      partes[3] || '',
+      valido:    !!(partes[0] && partes[2] && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(partes[2]))
     };
-  }).slice(0, 50); // máximo 50
-
-  const count   = document.getElementById('lote-count');
-  const preview = document.getElementById('lote-preview');
-  const tbody   = document.getElementById('lote-tbody');
-  const btnLote = document.getElementById('btn-lote');
+  }).slice(0, 50);
 
   const validos   = loteData.filter(p => p.valido).length;
   const invalidos = loteData.filter(p => !p.valido).length;
+  const count     = document.getElementById('lote-count');
 
-  count.textContent = `${loteData.length} registros · ${validos} válidos${invalidos ? ` · ${invalidos} con error` : ''}`;
+  count.textContent = `${loteData.length} registros · ${validos} válidos${invalidos ? ` · ⚠ ${invalidos} con error` : ''}`;
   count.style.color = invalidos ? 'var(--red)' : 'var(--green)';
 
-  tbody.innerHTML = loteData.map(p => `
+  document.getElementById('lote-tbody').innerHTML = loteData.map(p => `
     <tr>
-      <td>${p.idx}</td>
-      <td>${p.nombre}</td>
-      <td>${p.apellidos}</td>
-      <td>${p.email}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:.7rem;">${p.curp||'—'}</td>
-      <td><span class="badge ${p.valido?'badge-ok':'badge-pend'}">${p.valido?'OK':'Revisar'}</span></td>
+      <td>${p.idx}</td><td>${p.nombre}</td><td>${p.apellidos}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:.7rem;">${p.email}</td>
+      <td>${p.inst||'—'}</td>
+      <td><span class="badge ${p.valido?'b-ok':'b-pend'}">${p.valido?'OK':'Revisar'}</span></td>
     </tr>`).join('');
 
-  preview.style.display  = 'block';
-  btnLote.style.display  = validos > 0 ? 'inline-flex' : 'none';
+  document.getElementById('lote-preview').style.display = validos > 0 ? 'block' : 'none';
+  document.getElementById('btn-lote').style.display     = validos > 0 ? 'inline-flex' : 'none';
 }
 
 async function enviarLote() {
-  const validos = loteData.filter(p => p.valido);
+  const validos  = loteData.filter(p => p.valido);
+  const curso    = document.getElementById('lote-curso').value;
+  const duracion = parseInt(document.getElementById('lote-duracion').value);
+  const btn      = document.getElementById('btn-lote');
+  const log      = document.getElementById('log-lote');
   if (!validos.length) return;
 
-  const btn   = document.getElementById('btn-lote');
-  const logEl = document.getElementById('log-lote');
   btn.disabled = true;
-  logEl.style.display = 'block';
-  logEl.innerHTML = `<div class="log-line log-info">Iniciando envío de ${validos.length} registros...</div>`;
+  log.style.display = 'block';
+  log.innerHTML = `<div class="log-line linf">Iniciando envío de ${validos.length} registros...</div>`;
 
   let ok = 0, err = 0;
-
   for (const p of validos) {
     try {
-      let token = '—';
-      if (GAS_URL) {
-        const resp = await fetch(GAS_URL, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ action:'registrarParticipante',
-                                    nombre: p.nombre, apellidos: p.apellidos,
-                                    email: p.email, curp: p.curp,
-                                    curso: 'Hablar para Influir' })
-        });
-        const data = await resp.json();
-        token = data.token || '—';
-        if (!data.ok) throw new Error(data.error || 'Error del servidor');
-      } else {
-        token = 'DS-' + Math.random().toString(36).substr(2,8).toUpperCase();
-      }
-      logEl.innerHTML += `<div class="log-line log-ok">✅ ${p.nombre} ${p.apellidos} &lt;${p.email}&gt; — ${token}</div>`;
-      ok++;
-      // Scroll al fondo del log
-      logEl.scrollTop = logEl.scrollHeight;
-      // Pausa entre envíos
-      await new Promise(r => setTimeout(r, 700));
+      const data = await gasPost({
+        action: 'registrarParticipante',
+        nombre: p.nombre, apellidos: p.apellidos,
+        email:  p.email,  inst: p.inst,
+        curso,  duracion
+      });
+      if (data.ok) {
+        log.innerHTML += `<div class="log-line lok">✅ ${p.nombre} ${p.apellidos} &lt;${p.email}&gt; — ${data.token}</div>`;
+        ok++;
+      } else throw new Error(data.error);
     } catch(e) {
-      logEl.innerHTML += `<div class="log-line log-err">❌ ${p.email} — ${e.message}</div>`;
+      log.innerHTML += `<div class="log-line lerr">❌ ${p.email} — ${e.message}</div>`;
       err++;
     }
+    log.scrollTop = log.scrollHeight;
+    await new Promise(r => setTimeout(r, 700));
   }
 
-  logEl.innerHTML += `<div class="log-line log-info">─── Completado: ${ok} enviados · ${err} errores ───</div>`;
+  log.innerHTML += `<div class="log-line linf">─── Completado: ${ok} enviados · ${err} errores ───</div>`;
   btn.disabled = false;
   cargarStats();
 }
 
-// ── LISTA DE PARTICIPANTES ────────────────────────────────────
-function cargarParticipantes() {
-  if (!GAS_URL) {
-    document.getElementById('lista-wrap').innerHTML =
-      '<p style="font-family:\'DM Mono\',monospace;font-size:.72rem;color:var(--soft);">Configura GAS_URL para cargar la lista.</p>';
-    return;
+// ── PARTICIPANTES ─────────────────────────────────────────────
+let todosParticipantes = [];
+
+async function cargarParticipantes() {
+  const el = document.getElementById('part-lista');
+  el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
+  try {
+    const data = await gasGet({ action: 'listarParticipantes' });
+    todosParticipantes = data?.participantes || [];
+    renderParticipantes(todosParticipantes);
+  } catch(e) {
+    el.innerHTML = '<p style="font-size:.82rem;color:var(--red);">Error al cargar.</p>';
   }
-  document.getElementById('lista-wrap').innerHTML =
-    '<p style="font-family:\'DM Mono\',monospace;font-size:.72rem;color:var(--soft);">Cargando...</p>';
-
-  fetch(GAS_URL + '?action=listarParticipantes')
-    .then(r => r.json())
-    .then(data => {
-      if (!data.participantes?.length) {
-        document.getElementById('lista-wrap').innerHTML =
-          '<p style="font-size:.82rem;color:var(--soft);">No hay participantes registrados aún.</p>';
-        return;
-      }
-      const rows = data.participantes.map(p => `
-        <tr>
-          <td>${p.nombre} ${p.apellidos}</td>
-          <td>${p.email}</td>
-          <td style="font-family:'DM Mono',monospace;font-size:.72rem;">${p.token}</td>
-          <td><span class="badge badge-ok">${p.estado}</span></td>
-          <td style="font-family:'DM Mono',monospace;font-size:.7rem;">${p.fecha}</td>
-        </tr>`).join('');
-
-      document.getElementById('lista-wrap').innerHTML = `
-        <table class="ptbl">
-          <thead><tr><th>Nombre</th><th>Correo</th><th>Token</th><th>Estado</th><th>Fecha</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>`;
-    })
-    .catch(() => {
-      document.getElementById('lista-wrap').innerHTML =
-        '<p style="font-size:.82rem;color:var(--red);">Error al cargar. Verifica tu GAS_URL.</p>';
-    });
 }
 
-// ── ENTER en login ────────────────────────────────────────────
-document.getElementById('loginEmail')
-  .addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+function filtrarParticipantes(q) {
+  const filtrados = q
+    ? todosParticipantes.filter(p =>
+        (p.nombre+' '+p.apellidos+' '+p.email).toLowerCase().includes(q.toLowerCase()))
+    : todosParticipantes;
+  renderParticipantes(filtrados);
+}
+
+function renderParticipantes(lista) {
+  const el = document.getElementById('part-lista');
+  if (!lista.length) {
+    el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">No hay participantes.</p>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr>
+        <th>Nombre</th><th>Correo</th><th>Token</th>
+        <th>Curso</th><th>Progreso</th><th>Vence</th><th>Estado</th><th></th>
+      </tr></thead>
+      <tbody>${lista.map((p,i) => `
+        <tr>
+          <td>${p.nombre} ${p.apellidos}</td>
+          <td style="font-family:'DM Mono',monospace;font-size:.7rem;">${p.email}</td>
+          <td style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--p);">${p.token}</td>
+          <td>${p.curso||'—'}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <div class="prog-bar-wrap" style="width:70px;">
+                <div class="prog-bar" style="width:${p.progreso||0}%"></div>
+              </div>
+              <span style="font-family:'DM Mono',monospace;font-size:.65rem;">${p.progreso||0}%</span>
+            </div>
+          </td>
+          <td style="font-family:'DM Mono',monospace;font-size:.68rem;">${p.vence||'—'}</td>
+          <td><span class="badge ${p.estado==='activo'?'b-ok':p.estado==='vencido'?'b-exp':'b-pend'}">${p.estado||'—'}</span></td>
+          <td><button class="btn btn-sec" style="padding:.35rem .6rem;font-size:.58rem;"
+                      onclick="verParticipante(${i})">Ver</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>`;
+}
+
+let partActual = null;
+function verParticipante(idx) {
+  partActual = todosParticipantes[idx];
+  const p = partActual;
+  document.getElementById('modal-part-body').innerHTML = `
+    <div style="display:grid;gap:.8rem;">
+      <div><div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:.2rem;">Nombre</div>
+           <div style="font-weight:700;color:var(--ink);">${p.nombre} ${p.apellidos}</div></div>
+      <div><div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:.2rem;">Correo</div>
+           <div style="font-family:'DM Mono',monospace;font-size:.8rem;">${p.email}</div></div>
+      <div><div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:.2rem;">Token</div>
+           <div style="font-family:'DM Mono',monospace;font-size:.85rem;color:var(--p);font-weight:700;">${p.token}</div></div>
+      <div><div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:.4rem;">Progreso</div>
+           <div class="prog-bar-wrap"><div class="prog-bar" style="width:${p.progreso||0}%"></div></div>
+           <div style="font-family:'DM Mono',monospace;font-size:.7rem;margin-top:.3rem;">${p.progreso||0}% completado</div></div>
+      <div><div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:.2rem;">Vencimiento</div>
+           <div style="font-family:'DM Mono',monospace;font-size:.8rem;">${p.vence||'—'}</div></div>
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:.4rem;">Reactivar acceso</div>
+        <select id="reactivar-dias" style="border:1px solid var(--rule);padding:.5rem .7rem;font-size:.82rem;">
+          <option value="90">+ 3 meses</option>
+          <option value="180">+ 6 meses</option>
+          <option value="365">+ 1 año</option>
+        </select>
+      </div>
+    </div>`;
+  abrirModal('modal-part');
+}
+
+async function reactivarParticipante() {
+  if (!partActual) return;
+  const dias = parseInt(document.getElementById('reactivar-dias').value);
+  try {
+    const data = await gasPost({
+      action: 'reactivarToken',
+      token:  partActual.token,
+      dias
+    });
+    if (data.ok) {
+      toast('Acceso reactivado. Nueva fecha: ' + data.nuevaFecha);
+      cerrarModal('modal-part');
+      cargarParticipantes();
+    }
+  } catch(e) { toast('Error al reactivar.'); }
+}
+
+// ── OBSERVATORIO ──────────────────────────────────────────────
+async function generarResumenManual() {
+  try {
+    const data = await gasPost({ action: 'generarResumenSemanal' });
+    if (data.ok) toast('Resumen semanal generado y publicado.');
+    else toast('Error: ' + (data.error || 'desconocido'));
+  } catch(e) { toast('Error al generar resumen.'); }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:.6rem 1.4rem;
+    font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.05em;
+    z-index:999;white-space:nowrap;`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+// ── CERRAR MODAL CON ESC ──────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-bg.open').forEach(m => m.classList.remove('open'));
+  }
+});
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => {
+    if (e.target === bg) bg.classList.remove('open');
+  });
+});
 </script>
 </body>
 </html>
