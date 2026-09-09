@@ -1583,7 +1583,7 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
 </div><!-- /cursoApp -->
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwR28H6ZGFPBrMDaTn40v4p29VoAlM1fetIvPaft3hEKVr4FhJjmGIrWEBngD8VClVhhw/exec'; // ← tu URL de Apps Script
+const GAS_URL = ''; // ← tu URL de Apps Script
 
 // ══ ESTRUCTURA DE VISTAS ══
 const TODAS = ['sm1','m1t1','m1t2','m1t3','m1ev',
@@ -2322,5 +2322,22 @@ const obsServer = new MutationObserver(() => {
 });
 obsServer.observe(document.body, {childList:true, subtree:true});
 </script>
+<!-- FOOTER DISCRETO CON ACCESO AL PANEL -->
+<footer style="border-top:1px solid var(--rule,#E4E4E7);padding:1.2rem 1.5rem;
+               display:flex;justify-content:space-between;align-items:center;
+               flex-wrap:wrap;gap:.5rem;background:var(--paper,#FAFAF8);">
+  <span style="font-family:'DM Mono',monospace;font-size:.6rem;
+               letter-spacing:.08em;text-transform:uppercase;color:#ccc;">
+    Hecho en México 🇲🇽
+  </span>
+  <a href="administrador.html"
+     style="font-family:'DM Mono',monospace;font-size:.6rem;
+            letter-spacing:.08em;text-transform:uppercase;
+            color:#ddd;text-decoration:none;transition:color .2s;"
+     onmouseover="this.style.color='var(--p,#6D28D9)'"
+     onmouseout="this.style.color='#ddd'">
+    Panel interno
+  </a>
+</footer>
 </body>
 </html>

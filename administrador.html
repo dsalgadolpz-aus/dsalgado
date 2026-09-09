@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Panel interno — David Salgado López</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --p:#6D28D9;--pm:#7C3AED;--plt:#EDE9FE;--pbg:#F5F3FF;
+  --o:#C45F00;--obg:#FEF3E2;
+  --ink:#18181B;--soft:#52525B;--rule:#E4E4E7;
+  --paper:#FAFAF8;--white:#fff;--dk:#13111C;
+  --green:#1A5C2A;--green-bg:#EAF2EC;
+  --red:#8B2020;--red-bg:#FEF0F0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;}
+h1,h2,h3{font-family:'Playfair Display',serif;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
+.nav-inner{max-width:1040px;margin:0 auto;padding:.85rem 1.5rem;
+           display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{font-family:'DM Mono',monospace;font-size:.65rem;
+           letter-spacing:.1em;text-transform:uppercase;color:var(--soft);}
+.nav-back{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;
+          text-transform:uppercase;color:var(--p);text-decoration:none;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;
+            justify-content:center;padding:2rem;}
+.login-box{background:var(--white);border:1px solid var(--rule);
+           padding:2.5rem 2rem;max-width:380px;width:100%;text-align:center;}
+.login-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;
+           text-transform:uppercase;color:var(--p);margin-bottom:.6rem;}
+.login-box h2{font-size:1.3rem;font-weight:900;color:var(--ink);margin-bottom:1.5rem;}
+.login-input{width:100%;border:1px solid var(--rule);padding:.65rem .85rem;
+             font-family:'Lato',sans-serif;font-size:.9rem;color:var(--ink);
+             background:var(--paper);margin-bottom:.7rem;transition:border-color .2s;}
+.login-input:focus{outline:none;border-color:var(--p);background:#fff;}
+.login-btn{width:100%;background:var(--ink);color:#fff;border:none;
+           padding:.7rem;font-family:'DM Mono',monospace;font-size:.68rem;
+           letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+           transition:background .2s;}
+.login-btn:hover{background:var(--p);}
+.login-err{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--red);
+           margin-top:.6rem;display:none;}
+
+/* PANEL */
+.panel{display:none;max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem;}
+.panel-header{margin-bottom:2rem;}
+.panel-header h1{font-size:1.6rem;font-weight:900;color:var(--ink);margin-bottom:.3rem;}
+.panel-header p{font-size:.85rem;color:var(--soft);}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:1.8rem;}
+.tab{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;
+     text-transform:uppercase;padding:.65rem 1.2rem;cursor:pointer;
+     color:var(--soft);border-bottom:2px solid transparent;
+     margin-bottom:-1px;transition:all .15s;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--p);border-bottom-color:var(--p);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--rule);
+      padding:1.5rem;margin-bottom:1rem;}
+.card-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;
+          text-transform:uppercase;color:var(--p);margin-bottom:.5rem;}
+.card h3{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:1rem;}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.9rem;}
+.form-grid.single{grid-template-columns:1fr;}
+@media(max-width:560px){.form-grid{grid-template-columns:1fr;}}
+.field label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
+             text-transform:uppercase;color:var(--soft);display:block;margin-bottom:.3rem;}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid var(--rule);padding:.6rem .8rem;
+  font-family:'Lato',sans-serif;font-size:.85rem;color:var(--ink);
+  background:var(--paper);transition:border-color .2s;}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--p);background:#fff;}
+.field textarea{min-height:160px;resize:vertical;line-height:1.6;
+                font-family:'DM Mono',monospace;font-size:.75rem;}
+
+/* BOTONES */
+.btn{display:inline-flex;align-items:center;gap:.4rem;
+     padding:.6rem 1.3rem;font-family:'DM Mono',monospace;font-size:.65rem;
+     letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+     border:1px solid;transition:all .15s;}
+.btn-pri{background:var(--ink);color:#fff;border-color:var(--ink);}
+.btn-pri:hover{background:var(--p);border-color:var(--p);}
+.btn-sec{background:var(--white);color:var(--ink);border-color:var(--rule);}
+.btn-sec:hover{border-color:var(--ink);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* AVISO DE LÍMITE */
+.limit-bar{background:var(--obg);border-left:3px solid var(--o);
+           padding:.7rem 1rem;margin-bottom:1rem;font-size:.8rem;color:var(--ink);}
+.limit-count{font-family:'DM Mono',monospace;font-weight:700;color:var(--o);}
+
+/* LOG */
+.log-wrap{background:var(--dk);padding:1rem 1.2rem;margin-top:1rem;
+          max-height:280px;overflow-y:auto;}
+.log-wrap::-webkit-scrollbar{width:3px;}
+.log-wrap::-webkit-scrollbar-thumb{background:#333;}
+.log-line{font-family:'DM Mono',monospace;font-size:.7rem;
+          line-height:1.7;white-space:pre-wrap;}
+.log-ok{color:#4ade80;}
+.log-err{color:#f87171;}
+.log-info{color:#a78bfa;}
+
+/* TABLA PARTICIPANTES */
+.ptbl{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.8rem;}
+.ptbl th{background:var(--dk);color:#fff;padding:.6rem .8rem;text-align:left;
+         font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;}
+.ptbl td{padding:.55rem .8rem;border-bottom:1px solid var(--rule);
+         color:var(--soft);vertical-align:top;}
+.ptbl tr:hover td{background:var(--pbg);}
+.ptbl td:first-child{color:var(--ink);font-weight:700;}
+.badge{font-family:'DM Mono',monospace;font-size:.58rem;padding:.15rem .45rem;
+       letter-spacing:.06em;text-transform:uppercase;}
+.badge-ok{background:var(--green-bg);color:var(--green);}
+.badge-pend{background:var(--obg);color:var(--o);}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.5rem;}
+@media(max-width:560px){.stats-grid{grid-template-columns:1fr 1fr;}}
+.stat-box{background:var(--white);border:1px solid var(--rule);padding:1rem;text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--p);}
+.stat-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
+          text-transform:uppercase;color:var(--soft);margin-top:.2rem;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
+       display:flex;justify-content:space-between;align-items:center;
+       flex-wrap:wrap;gap:.5rem;}
+.f-txt{font-family:'DM Mono',monospace;font-size:.6rem;
+       letter-spacing:.08em;text-transform:uppercase;color:#ccc;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-brand">Panel interno · David Salgado López</span>
+    <a class="nav-back" href="index.html">← Sitio principal</a>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-lbl">Acceso restringido</div>
+    <h2>Panel interno</h2>
+    <input class="login-input" type="email" id="loginEmail"
+           placeholder="tu correo" autocomplete="email"/>
+    <input class="login-input" type="password" id="loginPass"
+           placeholder="contraseña" autocomplete="current-password"
+           onkeydown="if(event.key==='Enter')login()"/>
+    <button class="login-btn" onclick="login()">Entrar</button>
+    <div class="login-err" id="loginErr">Credenciales incorrectas</div>
+  </div>
+</div>
+
+<!-- PANEL PRINCIPAL -->
+<div id="panelWrap" style="display:none;">
+<div class="panel">
+
+  <div class="panel-header">
+    <h1>Panel interno</h1>
+    <p>Gestión de participantes · Hablar para Influir</p>
+  </div>
+
+  <!-- ESTADÍSTICAS -->
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-lbl">Participantes</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statActivos">—</div>
+      <div class="stat-lbl">Activos</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statConstancias">—</div>
+      <div class="stat-lbl">Constancias</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('alta1')">Alta individual</div>
+    <div class="tab" onclick="switchTab('lote')">Alta en lote</div>
+    <div class="tab" onclick="switchTab('lista')">Participantes</div>
+  </div>
+
+  <!-- TAB: ALTA INDIVIDUAL -->
+  <div class="tab-content active" id="tab-alta1">
+    <div class="card">
+      <div class="card-lbl">Registro individual</div>
+      <h3>Dar de alta un participante</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nombre *</label>
+          <input type="text" id="a1nombre" placeholder="Ana"/>
+        </div>
+        <div class="field">
+          <label>Apellidos *</label>
+          <input type="text" id="a1apellidos" placeholder="García López"/>
+        </div>
+        <div class="field">
+          <label>Correo electrónico *</label>
+          <input type="email" id="a1email" placeholder="ana@correo.com"/>
+        </div>
+        <div class="field">
+          <label>CURP (opcional)</label>
+          <input type="text" id="a1curp" placeholder="GALA800101MDFRCN01"
+                 style="text-transform:uppercase;"
+                 oninput="this.value=this.value.toUpperCase()"/>
+        </div>
+      </div>
+      <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-pri" id="btn-alta1" onclick="altaIndividual()">
+          Registrar y enviar token
+        </button>
+        <span id="alta1-status" style="font-family:'DM Mono',monospace;
+              font-size:.68rem;color:var(--soft);"></span>
+      </div>
+      <div class="log-wrap" id="log-alta1" style="display:none;margin-top:.8rem;">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ALTA EN LOTE -->
+  <div class="tab-content" id="tab-lote">
+    <div class="card">
+      <div class="card-lbl">Registro en lote</div>
+      <h3>Hasta 50 participantes a la vez</h3>
+      <div class="limit-bar">
+        Límite Gmail: <span class="limit-count">100 correos/día</span> con cuenta gratuita.
+        Usa lotes de máximo <span class="limit-count">50</span> y espera al día siguiente
+        si necesitas más. El sistema agrega una pausa automática entre envíos.
+      </div>
+      <div class="field" style="margin-bottom:.9rem;">
+        <label>Lista de participantes — un registro por línea:</label>
+        <div style="font-family:'DM Mono',monospace;font-size:.62rem;
+                    color:var(--soft);margin-bottom:.4rem;">
+          Formato: Nombre, Apellidos, correo@ejemplo.com, CURP (opcional)
+        </div>
+        <textarea id="loteTexto" placeholder="Ana, García López, ana@correo.com
+Luis, Martínez Reyes, luis@correo.com, MALR900215HDFRTL08
+Sofía, Ramos Cruz, sofia@correo.com"></textarea>
+      </div>
+      <div style="display:flex;gap:.7rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem;">
+        <button class="btn btn-sec" onclick="parsearLote()">Previsualizar lista</button>
+        <button class="btn btn-pri" id="btn-lote" onclick="enviarLote()" style="display:none;">
+          Registrar y enviar tokens
+        </button>
+        <span id="lote-count" style="font-family:'DM Mono',monospace;
+              font-size:.68rem;color:var(--soft);"></span>
+      </div>
+      <!-- Vista previa -->
+      <div id="lote-preview" style="display:none;">
+        <table class="ptbl" id="lote-tbl">
+          <thead>
+            <tr><th>#</th><th>Nombre</th><th>Apellidos</th><th>Correo</th><th>CURP</th><th>Estado</th></tr>
+          </thead>
+          <tbody id="lote-tbody"></tbody>
+        </table>
+      </div>
+      <div class="log-wrap" id="log-lote" style="display:none;margin-top:.8rem;"></div>
+    </div>
+  </div>
+
+  <!-- TAB: LISTA DE PARTICIPANTES -->
+  <div class="tab-content" id="tab-lista">
+    <div class="card">
+      <div class="card-lbl">Participantes registrados</div>
+      <h3>Lista completa</h3>
+      <div style="display:flex;gap:.7rem;margin-bottom:1rem;">
+        <button class="btn btn-sec" onclick="cargarParticipantes()">Actualizar lista</button>
+      </div>
+      <div id="lista-wrap">
+        <p style="font-size:.82rem;color:var(--soft);">
+          Haz clic en "Actualizar lista" para cargar los participantes.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /panel -->
+
+<footer>
+  <span class="f-txt">Panel interno · David Salgado López</span>
+  <a href="index.html" style="font-family:'DM Mono',monospace;font-size:.6rem;
+     letter-spacing:.08em;text-transform:uppercase;color:#ccc;text-decoration:none;">
+    ← Sitio principal
+  </a>
+</footer>
+
+</div><!-- /panelWrap -->
+
+<script>
+const GAS_URL = ''; // ← pega aquí tu URL de Apps Script
+// Contraseña de acceso al panel (cámbiala por una tuya)
+const ADMIN_PASS = 'david2024';
+
+// ── LOGIN ────────────────────────────────────────────────────
+function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginErr');
+
+  if (pass === ADMIN_PASS) {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('panelWrap').style.display = 'block';
+    cargarStats();
+    err.style.display = 'none';
+  } else {
+    err.style.display = 'block';
+  }
+}
+
+// ── TABS ─────────────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const ids = ['alta1','lote','lista'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+// ── ESTADÍSTICAS ─────────────────────────────────────────────
+function cargarStats() {
+  if (!GAS_URL) return;
+  fetch(GAS_URL + '?action=estadisticas')
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('statTotal').textContent       = d.total       ?? '—';
+      document.getElementById('statActivos').textContent     = d.activos     ?? '—';
+      document.getElementById('statConstancias').textContent = d.constancias ?? '—';
+    }).catch(() => {});
+}
+
+// ── ALTA INDIVIDUAL ───────────────────────────────────────────
+async function altaIndividual() {
+  const nombre    = document.getElementById('a1nombre').value.trim();
+  const apellidos = document.getElementById('a1apellidos').value.trim();
+  const email     = document.getElementById('a1email').value.trim();
+  const curp      = document.getElementById('a1curp').value.trim();
+  const btn       = document.getElementById('btn-alta1');
+  const status    = document.getElementById('alta1-status');
+  const logEl     = document.getElementById('log-alta1');
+
+  if (!nombre || !email) {
+    status.textContent = 'Nombre y correo son obligatorios.';
+    status.style.color = 'var(--red)';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    status.textContent = 'Correo inválido.';
+    status.style.color = 'var(--red)';
+    return;
+  }
+
+  btn.disabled = true;
+  status.textContent = 'Registrando...';
+  status.style.color = 'var(--soft)';
+  logEl.style.display = 'none';
+
+  if (!GAS_URL) {
+    // Modo demo sin GAS
+    setTimeout(() => {
+      const token = 'DS-' + Math.random().toString(36).substr(2,8).toUpperCase();
+      logEl.style.display = 'block';
+      logEl.innerHTML = `<div class="log-line log-ok">✅ ${nombre} ${apellidos} — Token: ${token}</div>
+<div class="log-line log-info">ℹ Modo demo — configura GAS_URL para enviar correos reales</div>`;
+      status.textContent = 'Listo (modo demo)';
+      btn.disabled = false;
+      limpiarAlta1();
+    }, 800);
+    return;
+  }
+
+  try {
+    const resp = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action:'registrarParticipante', nombre, apellidos, email, curp, curso:'Hablar para Influir' })
+    });
+    const data = await resp.json();
+    logEl.style.display = 'block';
+    if (data.ok) {
+      logEl.innerHTML = `<div class="log-line log-ok">✅ ${nombre} ${apellidos} — Token: ${data.token}</div>
+<div class="log-line log-info">📧 Correo enviado a: ${email}</div>`;
+      status.textContent = '✓ Registrado y correo enviado';
+      status.style.color = 'var(--green)';
+      limpiarAlta1();
+      cargarStats();
+    } else {
+      logEl.innerHTML = `<div class="log-line log-err">❌ Error: ${data.error || 'desconocido'}</div>`;
+      status.textContent = 'Error al registrar';
+      status.style.color = 'var(--red)';
+    }
+  } catch(e) {
+    logEl.style.display = 'block';
+    logEl.innerHTML = `<div class="log-line log-err">❌ Error de conexión: ${e.message}</div>`;
+    status.textContent = 'Sin conexión al servidor';
+    status.style.color = 'var(--red)';
+  }
+  btn.disabled = false;
+}
+
+function limpiarAlta1() {
+  ['a1nombre','a1apellidos','a1email','a1curp'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+// ── LOTE ─────────────────────────────────────────────────────
+let loteData = [];
+
+function parsearLote() {
+  const texto = document.getElementById('loteTexto').value.trim();
+  if (!texto) return;
+
+  const lineas = texto.split('\n').filter(l => l.trim());
+  loteData = lineas.map((linea, i) => {
+    const partes = linea.split(',').map(p => p.trim());
+    return {
+      idx:       i + 1,
+      nombre:    partes[0] || '',
+      apellidos: partes[1] || '',
+      email:     partes[2] || '',
+      curp:      partes[3] || '',
+      valido:    partes[0] && partes[2] && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(partes[2])
+    };
+  }).slice(0, 50); // máximo 50
+
+  const count   = document.getElementById('lote-count');
+  const preview = document.getElementById('lote-preview');
+  const tbody   = document.getElementById('lote-tbody');
+  const btnLote = document.getElementById('btn-lote');
+
+  const validos   = loteData.filter(p => p.valido).length;
+  const invalidos = loteData.filter(p => !p.valido).length;
+
+  count.textContent = `${loteData.length} registros · ${validos} válidos${invalidos ? ` · ${invalidos} con error` : ''}`;
+  count.style.color = invalidos ? 'var(--red)' : 'var(--green)';
+
+  tbody.innerHTML = loteData.map(p => `
+    <tr>
+      <td>${p.idx}</td>
+      <td>${p.nombre}</td>
+      <td>${p.apellidos}</td>
+      <td>${p.email}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:.7rem;">${p.curp||'—'}</td>
+      <td><span class="badge ${p.valido?'badge-ok':'badge-pend'}">${p.valido?'OK':'Revisar'}</span></td>
+    </tr>`).join('');
+
+  preview.style.display  = 'block';
+  btnLote.style.display  = validos > 0 ? 'inline-flex' : 'none';
+}
+
+async function enviarLote() {
+  const validos = loteData.filter(p => p.valido);
+  if (!validos.length) return;
+
+  const btn   = document.getElementById('btn-lote');
+  const logEl = document.getElementById('log-lote');
+  btn.disabled = true;
+  logEl.style.display = 'block';
+  logEl.innerHTML = `<div class="log-line log-info">Iniciando envío de ${validos.length} registros...</div>`;
+
+  let ok = 0, err = 0;
+
+  for (const p of validos) {
+    try {
+      let token = '—';
+      if (GAS_URL) {
+        const resp = await fetch(GAS_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ action:'registrarParticipante',
+                                    nombre: p.nombre, apellidos: p.apellidos,
+                                    email: p.email, curp: p.curp,
+                                    curso: 'Hablar para Influir' })
+        });
+        const data = await resp.json();
+        token = data.token || '—';
+        if (!data.ok) throw new Error(data.error || 'Error del servidor');
+      } else {
+        token = 'DS-' + Math.random().toString(36).substr(2,8).toUpperCase();
+      }
+      logEl.innerHTML += `<div class="log-line log-ok">✅ ${p.nombre} ${p.apellidos} &lt;${p.email}&gt; — ${token}</div>`;
+      ok++;
+      // Scroll al fondo del log
+      logEl.scrollTop = logEl.scrollHeight;
+      // Pausa entre envíos
+      await new Promise(r => setTimeout(r, 700));
+    } catch(e) {
+      logEl.innerHTML += `<div class="log-line log-err">❌ ${p.email} — ${e.message}</div>`;
+      err++;
+    }
+  }
+
+  logEl.innerHTML += `<div class="log-line log-info">─── Completado: ${ok} enviados · ${err} errores ───</div>`;
+  btn.disabled = false;
+  cargarStats();
+}
+
+// ── LISTA DE PARTICIPANTES ────────────────────────────────────
+function cargarParticipantes() {
+  if (!GAS_URL) {
+    document.getElementById('lista-wrap').innerHTML =
+      '<p style="font-family:\'DM Mono\',monospace;font-size:.72rem;color:var(--soft);">Configura GAS_URL para cargar la lista.</p>';
+    return;
+  }
+  document.getElementById('lista-wrap').innerHTML =
+    '<p style="font-family:\'DM Mono\',monospace;font-size:.72rem;color:var(--soft);">Cargando...</p>';
+
+  fetch(GAS_URL + '?action=listarParticipantes')
+    .then(r => r.json())
+    .then(data => {
+      if (!data.participantes?.length) {
+        document.getElementById('lista-wrap').innerHTML =
+          '<p style="font-size:.82rem;color:var(--soft);">No hay participantes registrados aún.</p>';
+        return;
+      }
+      const rows = data.participantes.map(p => `
+        <tr>
+          <td>${p.nombre} ${p.apellidos}</td>
+          <td>${p.email}</td>
+          <td style="font-family:'DM Mono',monospace;font-size:.72rem;">${p.token}</td>
+          <td><span class="badge badge-ok">${p.estado}</span></td>
+          <td style="font-family:'DM Mono',monospace;font-size:.7rem;">${p.fecha}</td>
+        </tr>`).join('');
+
+      document.getElementById('lista-wrap').innerHTML = `
+        <table class="ptbl">
+          <thead><tr><th>Nombre</th><th>Correo</th><th>Token</th><th>Estado</th><th>Fecha</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    })
+    .catch(() => {
+      document.getElementById('lista-wrap').innerHTML =
+        '<p style="font-size:.82rem;color:var(--red);">Error al cargar. Verifica tu GAS_URL.</p>';
+    });
+}
+
+// ── ENTER en login ────────────────────────────────────────────
+document.getElementById('loginEmail')
+  .addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+</script>
+</body>
+</html>
