@@ -156,7 +156,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,250,248,.96);backdrop-
   <div class="gems-inner">
     <div class="gem"><div class="gem-lbl">Sin videos</div><div class="gem-txt">Lecturas académicas y actividades interactivas. La innovación está en la metodología.</div></div>
     <div class="gem"><div class="gem-lbl">Entregable final</div><div class="gem-txt">Cada curso cierra con un producto que avala competencias: un plan, un análisis, un instrumento.</div></div>
-    <div class="gem"><div class="gem-lbl">IA integrada</div><div class="gem-txt">Retroalimentación automática con Gemini AI en actividades abiertas y en el entregable.</div></div>
+    <div class="gem"><div class="gem-lbl">IA integrada</div><div class="gem-txt">Retroalimentación en tiempo real sobre tus reflexiones y entregable final en cada módulo.</div></div>
     <div class="gem"><div class="gem-lbl">Constancia automática</div><div class="gem-txt">Al alcanzar 80% y entregar el producto final se genera tu constancia de participación.</div></div>
     <div class="gem"><div class="gem-lbl">Rigor APA 7ª ed.</div><div class="gem-txt">Todas las referencias son verificadas, vigentes y en formato APA séptima edición.</div></div>
   </div>
@@ -301,9 +301,9 @@ const CURSOS = {
     comp:['Identificar y modificar el propio estilo comunicativo bajo presión','Aplicar escucha activa y comunicación asertiva en entornos laborales','Estructurar discursos efectivos para diferentes audiencias y formatos','Manejar el miedo escénico con estrategias respaldadas por neurociencia','Negociar y comunicar en contextos de conflicto con el modelo Harvard','Diseñar una estrategia de comunicación profesional digital'],
     mods:['La comunicación como práctica social (Habermas, Watzlawick)','Hablar en público con presencia y autoridad (Brooks, Minto)','Negociación y comunicación en conflictos (Fisher, Ury, Rosenberg)','Comunicación estratégica en entornos digitales (Hall, Hofstede)','Comunicación intercultural y liderazgo de reuniones','Integración: Plan de comunicación profesional'],
     entregable:'Plan de comunicación profesional personalizado: diagnóstico del estilo comunicativo, estrategia para tres contextos clave, protocolo de presentaciones y lineamientos de comunicación digital. Revisado con retroalimentación de IA.',
-    ia:'Retroalimentación automática en ensayos por módulo, simulación de conversación de negociación y revisión del plan final con criterios de rúbrica.',
+    ia:'Retroalimentación en tiempo real sobre tus reflexiones por módulo y revisión del plan final con criterios de rúbrica académica.',
     refs:['Habermas, J. (1984). The Theory of Communicative Action (Vol. 1). Beacon Press.','Watzlawick, P., Bavelas, J. B. y Jackson, D. D. (1985). Teoría de la comunicación humana. Herder.','Fisher, R. y Ury, W. (2011). Getting to Yes (3ª ed.). Penguin Books.','Brooks, A. W. (2014). Get excited: Reappraising pre-performance anxiety as excitement. Journal of Experimental Psychology: General, 143(3), 1144–1158. https://doi.org/10.1037/a0035325'],
-    archivo:'cursos/hablar-para-influir.html'},
+    archivo:'hablar-para-influir.html'},
   c02:{num:'Curso 02',pk:'Transversal',tit:'Estrategia Digital con Propósito',h:30,mods:6,acts:24,est:'prx',
     desc:'La presencia digital de una organización o profesional no es un accidente: es el resultado de decisiones estratégicas sobre qué comunicar, a quién y con qué objetivo.',
     comp:['Definir la identidad digital coherente con valores y misión','Diseñar una estrategia de contenidos con propósito y métricas de impacto','Crear contenido de valor para audiencias específicas en distintas plataformas','Analizar métricas relevantes y ajustar la estrategia con base en datos','Gestionar la reputación digital en contextos de crítica o crisis','Integrar herramientas de IA en la producción de contenido'],
@@ -398,7 +398,7 @@ function abrirCurso(id){
     <div class="m-sec"><div class="m-sec-lbl">Entregable final</div>
       <div class="m-box"><strong>Tu producto de aprendizaje:</strong> ${c.entregable}</div></div>
     <div class="m-sec"><div class="m-sec-lbl">IA integrada en este curso</div>
-      <div class="m-box m-box-o"><strong>Uso de Gemini AI:</strong> ${c.ia}</div></div>
+      <div class="m-box m-box-o"><strong>Retroalimentación integrada:</strong> ${c.ia}</div></div>
     <div class="m-sec"><div class="m-sec-lbl">Referencias principales (APA 7ª ed.)</div>
       ${c.refs.map(r=>`<span class="m-ref">${r}</span>`).join('')}</div>
     <div class="m-actions">
