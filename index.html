@@ -636,7 +636,13 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
       <h2 class="sec-h2" style="margin-top:.4rem;">Minilibros y ensayos</h2>
       <p style="font-size:.9rem;color:var(--soft);line-height:1.7;max-width:520px;font-weight:300;margin-top:.65rem;">Serie de reflexiones sobre trabajo, empleabilidad y vida laboral. Un nuevo minilibro cada mes. Descarga gratuita.</p>
     </div>
-    <div class="pub-grid">
+    <div id="pub-loading" style="text-align:center;padding:2rem 0;display:block;">
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;
+                    text-transform:uppercase;color:var(--soft,#52525B);">
+          Cargando publicaciones<span id="pub-dots">...</span>
+        </div>
+      </div>
+      <div class="pub-grid" id="pub-grid-wrap" style="display:none;">
 
       <div class="pub-card reveal" onclick="openViewer('01_Febrero_Vida_laboral.pdf','Vida Laboral Antes y Después de la Jornada')">
         <div class="pub-cover-img">
@@ -984,10 +990,26 @@ const REPO_NAME  = 'dsalgado';
 const BRANCH     = 'main';
 
 async function loadMinilibros() {
+  // Animar los puntos del loading
+  let dots = 0;
+  const dotsEl = document.getElementById('pub-dots');
+  const dotsTimer = setInterval(() => {
+    dots = (dots + 1) % 4;
+    if (dotsEl) dotsEl.textContent = '.'.repeat(dots + 1);
+  }, 400);
+
   try {
     const apiUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/_minilibros?ref=${BRANCH}`;
     const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
-    if (!res.ok) return; // fallback to static cards already in HTML
+    if (!res.ok) {
+      // Fallback: mostrar las tarjetas estáticas directamente
+      clearInterval(dotsTimer);
+      const loading = document.getElementById('pub-loading');
+      const grid = document.getElementById('pub-grid-wrap');
+      if (loading) loading.style.display = 'none';
+      if (grid) grid.style.display = '';
+      return;
+    }
     const files = await res.json();
     const mdFiles = files.filter(f => f.name.endsWith('.md'));
     if (!mdFiles.length) { console.log('No dynamic minilibros found, keeping static cards.'); return; }
@@ -1040,8 +1062,21 @@ async function loadMinilibros() {
       // Trigger reveal observer
       setTimeout(() => { if (!card.classList.contains('in')) card.classList.add('in'); }, 100 * i);
     });
+
+    // Ocultar spinner, mostrar grid dinámico
+    clearInterval(dotsTimer);
+    const loading = document.getElementById('pub-loading');
+    const gridWrap = document.getElementById('pub-grid-wrap');
+    if (loading) loading.style.display = 'none';
+    if (gridWrap) gridWrap.style.display = '';
+
   } catch(err) {
     console.warn('Minilibros dinámicos no disponibles, usando estáticos.', err);
+    clearInterval(dotsTimer);
+    const loading = document.getElementById('pub-loading');
+    const gridWrap = document.getElementById('pub-grid-wrap');
+    if (loading) loading.style.display = 'none';
+    if (gridWrap) gridWrap.style.display = '';
   }
 }
 

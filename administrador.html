@@ -227,6 +227,7 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
   .stats-row{grid-template-columns:1fr 1fr;}
 }
 </style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
@@ -234,6 +235,35 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
   <div class="login-box">
     <div class="login-logo">Panel interno · David Salgado López</div>
     <h2>Acceso restringido</h2>
+
+    <!-- Google Sign-In -->
+    <div id="g_signin_wrap" style="margin-bottom:1rem;">
+      <div id="g_id_onload"
+           data-client_id="421817004617-c999lnv8bjgre830ucqiop4cc7dgq55l.apps.googleusercontent.com"
+           data-context="signin"
+           data-ux_mode="popup"
+           data-callback="onGoogleLogin"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="outline"
+           data-text="signin_with"
+           data-size="large"
+           data-locale="es"
+           style="display:flex;justify-content:center;">
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:.7rem;margin:.8rem 0;
+                font-family:'DM Mono',monospace;font-size:.6rem;
+                letter-spacing:.08em;text-transform:uppercase;color:#ccc;">
+      <div style="flex:1;height:1px;background:var(--rule);"></div>
+      o con contraseña
+      <div style="flex:1;height:1px;background:var(--rule);"></div>
+    </div>
+
     <div class="field-wrap">
       <label>Contraseña</label>
       <div class="input-eye">
@@ -243,6 +273,11 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
         <button class="eye-btn" onclick="toggleEye('loginPass',this)"
                 title="Mostrar/ocultar">👁</button>
       </div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#ccc;
+                margin-bottom:.7rem;">
+      Contraseña por defecto: <span style="color:var(--p);">Temporal123/</span>
+      (cámbiala en Configuración)
     </div>
     <button class="login-btn" onclick="doLogin()">Entrar al panel</button>
     <div class="login-err" id="loginErr">Contraseña incorrecta. Intenta de nuevo.</div>
@@ -603,13 +638,7 @@ Sofía, Ramos Cruz, sofia@correo.com, Tec de Monterrey"></textarea>
 </div><!-- /panelMain -->
 
 <!-- Footer -->
-<footer>
-  <span class="f-txt">Panel interno · David Salgado López</span>
-  <a href="index.html" style="font-family:'DM Mono',monospace;font-size:.58rem;
-     letter-spacing:.08em;text-transform:uppercase;color:#ccc;text-decoration:none;">
-    ← Sitio principal
-  </a>
-</footer>
+
 <script>
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACIÓN
@@ -620,6 +649,38 @@ const PASS_KEY = 'admin_pass_v2';
 // Contraseña por defecto — cámbiala desde Configuración
 function getPass() {
   return localStorage.getItem(PASS_KEY) || 'Temporal123/';
+}
+
+
+// ── GOOGLE SIGN-IN ────────────────────────────────────────────
+const ALLOWED_EMAIL = 'd.salgado.lpz@gmail.com'; // ← solo este correo puede entrar
+
+function onGoogleLogin(response) {
+  try {
+    // Decodificar el JWT de Google (sin verificar firma — solo para UI)
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const email   = payload.email || '';
+    const nombre  = payload.name  || '';
+
+    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+      document.getElementById('loginErr').textContent =
+        `Acceso no autorizado para ${email}`;
+      document.getElementById('loginErr').style.display = 'block';
+      return;
+    }
+
+    // Email autorizado — iniciar sesión
+    sessionStorage.setItem('admin_ok', '1');
+    sessionStorage.setItem('admin_email', email);
+    sessionStorage.setItem('admin_nombre', nombre);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display   = 'block';
+    onPanelReady();
+  } catch(e) {
+    console.error('Error en Google Sign-In:', e);
+    document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
+    document.getElementById('loginErr').style.display = 'block';
+  }
 }
 
 // ── LOGIN ─────────────────────────────────────────────────────
