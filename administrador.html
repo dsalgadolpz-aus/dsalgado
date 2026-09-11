@@ -643,7 +643,7 @@ Sofía, Ramos Cruz, sofia@correo.com, Tec de Monterrey"></textarea>
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACIÓN
 // ══════════════════════════════════════════════════════════════
-const GAS_URL = localStorage.getItem('admin_gas_url') || '';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwjsJOGInX0gnLxQVtl6bOt4P3tS1NsGI4YObTehhDzka-UqoiWQL37YBjIKgR33QAxwQ/exec';
 const PASS_KEY = 'admin_pass_v2';
 
 // Contraseña por defecto — cámbiala desde Configuración
@@ -715,9 +715,8 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('loginPass')
     .addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
-  // Cargar GAS_URL guardada
-  const savedGAS = localStorage.getItem('admin_gas_url');
-  if (savedGAS) document.getElementById('cfg-gas').value = savedGAS;
+  // GAS URL fija en código
+  if (document.getElementById('cfg-gas')) document.getElementById('cfg-gas').value = GAS_URL;
 });
 
 function onPanelReady() {
@@ -803,11 +802,9 @@ function abrirModalPort() {
 }
 
 // ── GAS HELPER ────────────────────────────────────────────────
-function gasURL() { return localStorage.getItem('admin_gas_url') || ''; }
+function gasURL() { return GAS_URL; }
 function guardarGAS() {
-  const url = document.getElementById('cfg-gas').value.trim();
-  localStorage.setItem('admin_gas_url', url);
-  toast('URL de Apps Script guardada.');
+  toast('La URL está fija en el código. Para cambiarla actualiza el archivo administrador.html.');
 }
 
 async function gasPost(body) {
