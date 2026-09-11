@@ -23,7 +23,7 @@ const GH_BRANCH = 'main';
 
 // URL del backend de Apps Script (ver backend-observatorio.gs) — la misma
 // que usa "Comparte una noticia" en el Observatorio y el login de admin.
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8sG2DiEuReO24Gr7rxemi834G6Jy4bNv4C0B3_oP7i3JCof6MeO7wn02gDM64duLh/exec';
+const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
 
 function getGhToken() {
   try { return localStorage.getItem('gh_admin_token') || ''; }

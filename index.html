@@ -147,6 +147,39 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,250,248,.96);backdrop-
 .li-link:hover{color:#a78bfa;}
 .li-cta{margin-top:1.5rem;}
 
+/* ── Mapa de publicaciones (estilo Obsidian) ── */
+.li-badge-nueva{display:inline-block;margin-left:.6rem;background:#3B0764;color:#e9d5ff;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .6rem;border-radius:20px;vertical-align:middle;animation:liPulse 1.8s ease-in-out infinite;}
+@keyframes liPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.li-filtros{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.6rem 0 1.1rem;}
+.li-filtros input,.li-filtros select{background:#1a1728;border:1px solid #2d2541;color:#eee;font-family:'Lato',sans-serif;font-size:.8rem;padding:.5rem .75rem;border-radius:4px;}
+.li-filtros input{flex:1;min-width:180px;}
+.li-filtros input::placeholder{color:#666;}
+.li-filtros select{cursor:pointer;}
+.li-graph-wrap{position:relative;background:#0d0b16;border:1px solid #2d2541;border-radius:8px;height:480px;overflow:hidden;margin-bottom:1rem;}
+.li-graph-estado{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#666;font-size:.8rem;font-family:'DM Mono',monospace;text-align:center;padding:1rem;pointer-events:none;}
+#liGrafo{width:100%;height:100%;cursor:grab;display:block;}
+#liGrafo:active{cursor:grabbing;}
+.li-nodo-cat text,.li-nodo-pub text{pointer-events:none;font-family:'DM Mono',monospace;fill:#ccc;}
+.li-nodo-cat circle{stroke:#0d0b16;stroke-width:2px;cursor:pointer;}
+.li-nodo-pub circle{fill:var(--pm);stroke:#0d0b16;stroke-width:1.5px;cursor:pointer;transition:opacity .25s,stroke .15s;}
+.li-nodo-pub circle:hover{stroke:#fff;}
+.li-edge{stroke:#3d3555;stroke-width:1px;transition:opacity .25s;}
+.li-tooltip{position:absolute;pointer-events:none;background:#18131f;border:1px solid #3d3555;color:#eee;font-size:.72rem;padding:.4rem .6rem;border-radius:4px;max-width:220px;line-height:1.4;opacity:0;transition:opacity .12s;z-index:5;}
+.li-leyenda{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.li-leyenda-item{display:flex;align-items:center;gap:.4rem;font-size:.66rem;color:#999;font-family:'DM Mono',monospace;cursor:pointer;user-select:none;transition:opacity .2s;}
+.li-leyenda-item.off{opacity:.3;}
+.li-leyenda-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.li-detalle{background:#1a1728;border:1px solid #2d2541;border-left:3px solid var(--pm);border-radius:0 6px 6px 0;padding:1.4rem 1.6rem;margin-bottom:1.5rem;position:relative;animation:liFadeUp .25s ease both;}
+@keyframes liFadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.li-detalle-cerrar{position:absolute;top:.9rem;right:1rem;background:none;border:none;color:#777;font-size:1rem;cursor:pointer;line-height:1;}
+.li-detalle-fecha{font-family:'DM Mono',monospace;font-size:.64rem;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase;}
+.li-detalle-titulo{font-family:'Playfair Display',serif;font-size:1.12rem;font-weight:700;color:#fff;margin:.4rem 2rem .7rem 0;line-height:1.3;}
+.li-detalle-resumen{font-size:.85rem;color:#ccc;line-height:1.65;margin-bottom:.9rem;}
+.li-detalle-biblio{font-size:.73rem;color:#888;line-height:1.6;white-space:pre-line;margin-bottom:1rem;padding-top:.8rem;border-top:1px solid #2d2541;}
+.li-detalle-link{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--o);text-decoration:none;}
+.li-detalle-link:hover{color:#a78bfa;}
+@media(max-width:600px){.li-graph-wrap{height:360px;}}
+
 /* ── PORTAFOLIO + PERFIL ── */
 #page-portafolio{background:var(--paper);}
 .port-section{padding:4rem 1.5rem;}
@@ -264,7 +297,6 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
       <li><a href="#" onclick="showPage('publicaciones');return false;" id="nav-publicaciones">Publicaciones</a></li>
       <li><a href="#" onclick="showPage('portafolio');return false;" id="nav-portafolio">Portafolio</a></li>
       <li><a href="#" onclick="showPage('contacto');return false;" id="nav-contacto">Contacto</a></li>
-      <li><a href="cursos.html" id="nav-cursos">Formación</a></li>
       <li><a href="observatorio.html" id="nav-observatorio" style="color:var(--pm);font-weight:700;">Observatorio ↗</a></li>
     </ul>
     <a class="nav-cta" href="#" onclick="showPage('contacto');return false;">Contactar</a>
@@ -673,29 +705,37 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
     </div>
   </div>
 
-  <!-- LinkedIn strip -->
-  <div class="li-strip">
+  <!-- LinkedIn strip — mapa de publicaciones -->
+  <div class="li-strip" id="liStrip">
     <div class="li-inner reveal">
       <span class="eyebrow" style="color:#a78bfa;margin-bottom:.5rem;">Contenido semanal</span>
-      <h2 class="li-h2">Reflexiones en LinkedIn</h2>
-      <p class="li-sub">Cada semana publico análisis, tendencias y reflexiones sobre trabajo, educación e inteligencia artificial en América Latina.</p>
-      <div class="li-cards">
-        <div class="li-card">
-          <span class="li-tag">Vida laboral</span>
-          <p class="li-text">El trabajo no es solo lo que haces en 8 horas. Es lo que piensas al despertar, lo que sientes al salir, lo que cargas al llegar a casa. La frontera entre tiempo laboral y tiempo personal es más frágil de lo que creemos...</p>
-          <a class="li-link" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Leer en LinkedIn →</a>
-        </div>
-        <div class="li-card">
-          <span class="li-tag">Empleabilidad</span>
-          <p class="li-text">¿La empleabilidad es una oportunidad o una ilusión? Cuando la miramos solo desde el esfuerzo individual, dejamos fuera el contexto y las estructuras que determinan el acceso real al trabajo...</p>
-          <a class="li-link" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Leer en LinkedIn →</a>
-        </div>
-        <div class="li-card">
-          <span class="li-tag">Mercados laborales</span>
-          <p class="li-text">60 mil registros después, la pregunta sigue siendo la misma: ¿cómo se traduce toda esa información en comprensión real del mercado laboral? Los datos hacen el camino, las interpretaciones alumbran el rumbo...</p>
-          <a class="li-link" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Leer en LinkedIn →</a>
-        </div>
+      <h2 class="li-h2">Reflexiones en LinkedIn<span class="li-badge-nueva" id="liBadgeNueva" hidden>● Nueva publicación</span></h2>
+      <p class="li-sub">Cada semana publico un análisis sobre trabajo, empleabilidad y vida laboral. Este mapa conecta cada publicación con su tema — explóralo, o búscalo por palabra, categoría, mes o año.</p>
+
+      <div class="li-filtros">
+        <input type="text" id="liBusca" placeholder="Buscar por tema o título…">
+        <select id="liFiltroCategoria"><option value="">Todas las categorías</option></select>
+        <select id="liFiltroMes"><option value="">Todos los meses</option></select>
+        <select id="liFiltroAnio"><option value="">Todos los años</option></select>
       </div>
+
+      <div class="li-graph-wrap">
+        <div class="li-graph-estado" id="liEstado">Cargando publicaciones…</div>
+        <svg id="liGrafo"></svg>
+        <div class="li-tooltip" id="liTooltip"></div>
+      </div>
+
+      <div class="li-leyenda" id="liLeyenda"></div>
+
+      <div class="li-detalle" id="liDetalle" hidden>
+        <button class="li-detalle-cerrar" id="liDetalleCerrar" aria-label="Cerrar">✕</button>
+        <span class="li-detalle-fecha" id="liDetFecha"></span>
+        <h3 class="li-detalle-titulo" id="liDetTitulo"></h3>
+        <p class="li-detalle-resumen" id="liDetResumen"></p>
+        <div class="li-detalle-biblio" id="liDetBiblio" hidden></div>
+        <a class="li-detalle-link" id="liDetLink" href="#" target="_blank" rel="noopener">Ver publicación en LinkedIn ↗</a>
+      </div>
+
       <div class="li-cta">
         <a class="btn btn-dk" style="background:var(--p);border-color:var(--p);" href="https://www.linkedin.com/in/david-salgado-67563450/" target="_blank">Ver todas las publicaciones →</a>
       </div>
@@ -1020,31 +1060,277 @@ function parseFrontmatter(text) {
 const _origShowPage = showPage;
 window.showPage = function(id) {
   _origShowPage(id);
-  if (id === 'publicaciones') loadMinilibros();
+  if (id === 'publicaciones') { loadMinilibros(); cargarMapaPublicacionesUnaVez(); }
 };
 
 // Also load if starting on publications
 if (document.getElementById('page-publicaciones')?.classList.contains('active')) {
   loadMinilibros();
+  cargarMapaPublicacionesUnaVez();
 }
 </script>
 
-<!-- FOOTER DISCRETO CON ACCESO AL PANEL -->
-<footer style="border-top:1px solid var(--rule,#E4E4E7);padding:1.2rem 1.5rem;
-               display:flex;justify-content:space-between;align-items:center;
-               flex-wrap:wrap;gap:.5rem;background:var(--paper,#FAFAF8);">
-  <span style="font-family:'DM Mono',monospace;font-size:.6rem;
-               letter-spacing:.08em;text-transform:uppercase;color:#ccc;">
-    Hecho en México 🇲🇽
-  </span>
-  <a href="administrador.html"
-     style="font-family:'DM Mono',monospace;font-size:.6rem;
-            letter-spacing:.08em;text-transform:uppercase;
-            color:#ddd;text-decoration:none;transition:color .2s;"
-     onmouseover="this.style.color='var(--p,#6D28D9)'"
-     onmouseout="this.style.color='#ddd'">
-    Panel interno
-  </a>
-</footer>
+<script src="assets/d3.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════════
+// Mapa de publicaciones de LinkedIn — estilo grafo (tipo Obsidian).
+// Los datos vienen de un Google Sheet publicado como CSV (mismo patrón
+// que el historial del Observatorio del Trabajo): cada categoría es un
+// nodo "hub" de color, y cada publicación es un nodo más pequeño
+// conectado a su(s) categoría(s).
+//
+// PENDIENTE DE CONFIGURAR: publica tu Sheet de publicaciones como CSV
+// (Archivo → Compartir → Publicar en la web → CSV) y pega esa URL aquí.
+// ══════════════════════════════════════════════════════════════════
+const LI_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuipVgMAuQuk-7dSyJVEJ9clmVIgJKfb2IqMqPqALgGiAJowOHZsUZaUspN9wvChQh_SEmsGEgPnVb/pubhtml?gid=0&single=true';
+const LI_COLORES = ['#8B5CF6','#F472B6','#38BDF8','#FBBF24','#34D399','#FB7185','#A78BFA','#60A5FA','#F97316','#2DD4BF','#C084FC','#4ADE80'];
+const LI_MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+// Parser CSV completo estilo RFC4180 (idéntico al de observatorio.html):
+// soporta campos entre comillas con comas y saltos de línea internos.
+function parseCSVLi(text) {
+  const t = text.replace(/\r\n/g, '\n');
+  const rows = []; let row = []; let field = ''; let inQuotes = false;
+  for (let i = 0; i < t.length; i++) {
+    const ch = t[i];
+    if (inQuotes) {
+      if (ch === '"') { if (t[i + 1] === '"') { field += '"'; i++; } else { inQuotes = false; } }
+      else { field += ch; }
+    } else if (ch === '"') { inQuotes = true; }
+    else if (ch === ',') { row.push(field); field = ''; }
+    else if (ch === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+    else { field += ch; }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  if (rows.length < 2) return [];
+  const headers = rows[0].map(h => h.trim());
+  const out = [];
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (r.length === 1 && r[0].trim() === '') continue;
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = (r[idx] || '').trim(); });
+    out.push(obj);
+  }
+  return out;
+}
+
+let liPublicaciones = [];
+let liCargado = false;
+let liSimulacion = null;
+let liCategoriaColor = {};
+let liFiltrosActivos = { texto: '', categoria: '', mes: '', anio: '' };
+let liCategoriasOcultas = new Set();
+
+async function cargarMapaPublicacionesUnaVez() {
+  if (liCargado) return;
+  liCargado = true;
+  await cargarMapaPublicaciones();
+}
+
+async function cargarMapaPublicaciones() {
+  const estado = document.getElementById('liEstado');
+  if (!LI_SHEET_CSV_URL || LI_SHEET_CSV_URL.indexOf('PEGA_AQUI') === 0) {
+    estado.textContent = 'Este mapa todavía no está conectado a tu hoja de publicaciones.';
+    return;
+  }
+  try {
+    const r = await fetch(LI_SHEET_CSV_URL + (LI_SHEET_CSV_URL.includes('?') ? '&' : '?') + '_=' + Date.now());
+    if (!r.ok) throw new Error('No se pudo leer la hoja (' + r.status + ')');
+    const filas = parseCSVLi(await r.text());
+    liPublicaciones = filas
+      .filter(f => f.Titulo)
+      .map(f => ({
+        id: 'pub-' + (f.No || f.Titulo),
+        fecha: f.Fecha || '',
+        anio: f.Anio || (f.Fecha ? f.Fecha.slice(0, 4) : ''),
+        mes: f.Mes || '',
+        categorias: (f.Categoria || 'Sin categoría').split(',').map(c => c.trim()).filter(Boolean),
+        tema: f.Tema || '',
+        titulo: f.Titulo,
+        resumen: f.Resumen || '',
+        link: f.Link || '',
+        bibliografia: f.Bibliografia || '',
+        impresiones: Number(f.Impresiones) || 0
+      }));
+    if (!liPublicaciones.length) { estado.textContent = 'Aún no hay publicaciones en la hoja.'; return; }
+    estado.textContent = '';
+    poblarFiltrosLi();
+    dibujarGrafoLi();
+    revisarPublicacionNueva();
+  } catch (e) {
+    estado.textContent = 'No se pudo cargar el mapa: ' + e.message;
+  }
+}
+
+function poblarFiltrosLi() {
+  const categorias = [...new Set(liPublicaciones.flatMap(p => p.categorias))].sort((a, b) => a.localeCompare(b, 'es'));
+  categorias.forEach((c, i) => { liCategoriaColor[c] = LI_COLORES[i % LI_COLORES.length]; });
+
+  const selCat = document.getElementById('liFiltroCategoria');
+  categorias.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; selCat.appendChild(o); });
+
+  const anios = [...new Set(liPublicaciones.map(p => p.anio).filter(Boolean))].sort();
+  const selAnio = document.getElementById('liFiltroAnio');
+  anios.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; selAnio.appendChild(o); });
+
+  const mesesPresentes = new Set(liPublicaciones.map(p => p.mes).filter(Boolean));
+  const selMes = document.getElementById('liFiltroMes');
+  LI_MESES.filter(m => mesesPresentes.has(m)).forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; selMes.appendChild(o); });
+
+  document.getElementById('liLeyenda').innerHTML = categorias.map(c =>
+    `<span class="li-leyenda-item" data-cat="${c}"><span class="li-leyenda-dot" style="background:${liCategoriaColor[c]}"></span>${c}</span>`
+  ).join('');
+  document.querySelectorAll('.li-leyenda-item').forEach(el => {
+    el.onclick = () => {
+      const cat = el.dataset.cat;
+      if (liCategoriasOcultas.has(cat)) liCategoriasOcultas.delete(cat); else liCategoriasOcultas.add(cat);
+      el.classList.toggle('off');
+      aplicarFiltrosLi();
+    };
+  });
+
+  document.getElementById('liBusca').oninput = (e) => { liFiltrosActivos.texto = e.target.value.trim().toLowerCase(); aplicarFiltrosLi(); };
+  selCat.onchange = (e) => { liFiltrosActivos.categoria = e.target.value; aplicarFiltrosLi(); };
+  selMes.onchange = (e) => { liFiltrosActivos.mes = e.target.value; aplicarFiltrosLi(); };
+  selAnio.onchange = (e) => { liFiltrosActivos.anio = e.target.value; aplicarFiltrosLi(); };
+}
+
+function dibujarGrafoLi() {
+  const wrap = document.getElementById('liGrafo').parentElement;
+  const w = wrap.clientWidth || 800, h = wrap.clientHeight || 480;
+
+  const categorias = Object.keys(liCategoriaColor);
+  const nodosCategoria = categorias.map(c => ({
+    id: 'cat-' + c, tipo: 'categoria', nombre: c,
+    r: 12 + Math.min(16, liPublicaciones.filter(p => p.categorias.includes(c)).length * 1.8)
+  }));
+  const nodosPub = liPublicaciones.map(p => ({
+    id: p.id, tipo: 'publicacion', pub: p,
+    r: 6 + Math.min(8, p.impresiones / 25)
+  }));
+  const nodos = [...nodosCategoria, ...nodosPub];
+
+  const enlaces = [];
+  liPublicaciones.forEach(p => { p.categorias.forEach(c => enlaces.push({ source: p.id, target: 'cat-' + c })); });
+
+  const svg = d3.select('#liGrafo').attr('viewBox', `0 0 ${w} ${h}`);
+  svg.selectAll('*').remove();
+  const viewport = svg.append('g');
+  svg.call(d3.zoom().scaleExtent([.4, 3]).on('zoom', (ev) => viewport.attr('transform', ev.transform)));
+
+  const link = viewport.append('g').selectAll('line').data(enlaces).join('line').attr('class', 'li-edge');
+
+  const arrastreLi = () => d3.drag()
+    .on('start', (ev, d) => { if (!ev.active) liSimulacion.alphaTarget(.25).restart(); d.fx = d.x; d.fy = d.y; })
+    .on('drag', (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
+    .on('end', (ev, d) => { if (!ev.active) liSimulacion.alphaTarget(0); d.fx = null; d.fy = null; });
+
+  const nodoCat = viewport.append('g').selectAll('g').data(nodosCategoria).join('g').attr('class', 'li-nodo-cat').call(arrastreLi());
+  nodoCat.append('circle').attr('r', d => d.r).attr('fill', d => liCategoriaColor[d.nombre]).attr('fill-opacity', .85);
+  nodoCat.append('text').attr('dy', d => -d.r - 6).attr('text-anchor', 'middle').attr('font-size', 10).text(d => d.nombre);
+  nodoCat.on('click', (ev, d) => {
+    document.getElementById('liFiltroCategoria').value = d.nombre;
+    liFiltrosActivos.categoria = d.nombre;
+    aplicarFiltrosLi();
+  });
+
+  const nodoPub = viewport.append('g').selectAll('g').data(nodosPub).join('g').attr('class', 'li-nodo-pub').call(arrastreLi());
+  nodoPub.append('circle').attr('r', d => d.r);
+  nodoPub.on('click', (ev, d) => mostrarDetalleLi(d.pub));
+
+  const tooltip = document.getElementById('liTooltip');
+  nodoPub.on('mouseenter', (ev, d) => {
+    tooltip.style.opacity = 1;
+    tooltip.innerHTML = `<strong>${d.pub.titulo}</strong>${d.pub.fecha ? '<br>' + formatearFechaLi(d.pub.fecha) : ''}`;
+  }).on('mousemove', (ev) => {
+    const rect = wrap.getBoundingClientRect();
+    tooltip.style.left = (ev.clientX - rect.left + 14) + 'px';
+    tooltip.style.top = (ev.clientY - rect.top + 10) + 'px';
+  }).on('mouseleave', () => { tooltip.style.opacity = 0; });
+
+  liSimulacion = d3.forceSimulation(nodos)
+    .force('link', d3.forceLink(enlaces).id(d => d.id).distance(60).strength(.7))
+    .force('charge', d3.forceManyBody().strength(-70))
+    .force('center', d3.forceCenter(w / 2, h / 2))
+    .force('x', d3.forceX(w / 2).strength(.05))
+    .force('y', d3.forceY(h / 2).strength(.05))
+    .force('collide', d3.forceCollide(d => d.r + 6))
+    .on('tick', () => {
+      link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+      nodoCat.attr('transform', d => `translate(${d.x},${d.y})`);
+      nodoPub.attr('transform', d => `translate(${d.x},${d.y})`);
+    });
+
+  aplicarFiltrosLi();
+}
+
+function aplicarFiltrosLi() {
+  const f = liFiltrosActivos;
+  const coincide = (p) => {
+    if (!p) return true;
+    if (liCategoriasOcultas.size && p.categorias.every(c => liCategoriasOcultas.has(c))) return false;
+    if (f.categoria && !p.categorias.includes(f.categoria)) return false;
+    if (f.mes && p.mes !== f.mes) return false;
+    if (f.anio && p.anio !== f.anio) return false;
+    if (f.texto) {
+      const hay = (p.titulo + ' ' + p.tema + ' ' + p.resumen).toLowerCase().includes(f.texto);
+      if (!hay) return false;
+    }
+    return true;
+  };
+  d3.selectAll('.li-nodo-pub').attr('opacity', d => coincide(d.pub) ? 1 : .12);
+  d3.selectAll('.li-edge').attr('opacity', d => coincide(d.source.pub) ? .6 : .06);
+  d3.selectAll('.li-nodo-cat').attr('opacity', d => liCategoriasOcultas.has(d.nombre) ? .3 : 1);
+}
+
+function formatearFechaLi(iso) {
+  const [y, m, d] = (iso || '').split('-');
+  if (!y || !m || !d) return iso || '';
+  return `${d}/${(LI_MESES[Number(m) - 1] || m).slice(0, 3)}/${y}`;
+}
+
+function mostrarDetalleLi(p) {
+  document.getElementById('liDetFecha').textContent = (p.fecha ? formatearFechaLi(p.fecha) : '') + (p.categorias.length ? ' · ' + p.categorias.join(', ') : '');
+  document.getElementById('liDetTitulo').textContent = p.titulo;
+  document.getElementById('liDetResumen').textContent = p.resumen || 'Sin resumen registrado.';
+  const biblio = document.getElementById('liDetBiblio');
+  if (p.bibliografia) { biblio.hidden = false; biblio.textContent = p.bibliografia; } else { biblio.hidden = true; }
+  const link = document.getElementById('liDetLink');
+  link.style.display = p.link ? 'inline-block' : 'none';
+  if (p.link) link.href = p.link;
+  const detalle = document.getElementById('liDetalle');
+  detalle.hidden = false;
+  detalle.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+document.getElementById('liDetalleCerrar').onclick = () => { document.getElementById('liDetalle').hidden = true; };
+
+// Avisa a cualquier visitante si hay una publicación más nueva que la
+// última vez que la vio en ESTE navegador (se guarda en localStorage).
+function revisarPublicacionNueva() {
+  if (!liPublicaciones.length) return;
+  const badge = document.getElementById('liBadgeNueva');
+  const maxFecha = liPublicaciones.reduce((max, p) => (p.fecha > max ? p.fecha : max), '');
+  if (!maxFecha) return;
+  let visto = '';
+  try { visto = localStorage.getItem('li_pub_visto') || ''; } catch (e) {}
+  if (maxFecha <= visto) return;
+  badge.hidden = false;
+  if (!('IntersectionObserver' in window)) return;
+  const strip = document.getElementById('liStrip');
+  const obs = new IntersectionObserver((entradas) => {
+    entradas.forEach(en => {
+      if (!en.isIntersecting) return;
+      setTimeout(() => {
+        try { localStorage.setItem('li_pub_visto', maxFecha); } catch (e) {}
+        badge.hidden = true;
+      }, 1800);
+      obs.disconnect();
+    });
+  }, { threshold: .4 });
+  obs.observe(strip);
+}
+</script>
+
 </body>
 </html>

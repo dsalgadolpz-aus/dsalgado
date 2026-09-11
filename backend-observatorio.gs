@@ -8,10 +8,16 @@
  *  2) accion "guardarNota": agrega esa nota (ya analizada) como una fila
  *     nueva en la pestaña "Notas_Comunidad" de este mismo Google Sheet
  *     (la crea automáticamente si no existe).
+ *  3) accion "adminLogin": verifica el correo y contraseña de David y, si
+ *     son correctos, le devuelve su token de GitHub — así el panel de
+ *     administrador funciona con un login normal (correo + contraseña) en
+ *     vez de tener que pegar el token a mano cada vez. El token real vive
+ *     SOLO aquí, oculto, y solo se entrega tras un login correcto.
  *
- * La clave de Gemini NUNCA viaja al navegador del visitante ni queda en el
- * código público del sitio: vive únicamente aquí, en las Propiedades del
- * script (PropertiesService), del lado de Google.
+ * La clave de Gemini y el token de GitHub NUNCA viajan al navegador de un
+ * visitante ni quedan en el código público del sitio: viven únicamente
+ * aquí, en las Propiedades del script (PropertiesService), del lado de
+ * Google.
  *
  * ═══════════════════════════════════════════════════════════════
  * INSTALACIÓN (una sola vez, ~5 minutos) — hazlo TÚ, David:
@@ -28,21 +34,35 @@
  *     - Te va a aparecer un cuadro para pegar tu clave de Gemini (la misma
  *       que ya usas en el sitio — gratis en aistudio.google.com/apikey).
  *       Pégala y da clic en Aceptar.
- *  5. Menú Implementar (arriba a la derecha) → Nueva implementación.
+ *  5. En ese mismo menú desplegable de funciones, ahora elige
+ *     "configurarAdminAcceso" y da clic en ▶ Ejecutar. Te va a pedir, en
+ *     tres pasos:
+ *       - El correo con el que vas a entrar al panel de administrador.
+ *       - Una contraseña a tu elección (la que vas a usar de aquí en
+ *         adelante para entrar al sitio — no tiene que ser el token, puede
+ *         ser algo fácil de recordar).
+ *       - Tu Personal Access Token de GitHub ("fine-grained", limitado al
+ *         repositorio "dsalgado", permiso "Contents: Read and write" —
+ *         se genera en github.com/settings/personal-access-tokens/new).
+ *     Puedes volver a ejecutar esta función cuando quieras para cambiar tu
+ *     correo, contraseña o token más adelante.
+ *  6. Menú Implementar (arriba a la derecha) → Nueva implementación.
  *     - Tipo: selecciona "Aplicación web" (ícono de engrane si no aparece).
  *     - Ejecutar como: "Yo" (tu cuenta).
  *     - Quién tiene acceso: "Cualquier usuario".
  *     - Da clic en Implementar. Autoriza de nuevo si te lo pide.
- *  6. Te va a dar una URL terminada en "/exec" — cópiala completa.
- *  7. Pásame esa URL (o pégala tú mismo): en observatorio.html busca la
- *     línea que dice:
+ *  7. Te va a dar una URL terminada en "/exec" — cópiala completa.
+ *  8. Pásame esa URL (o pégala tú mismo): en admin.js busca la línea que
+ *     dice:
  *         const APPS_SCRIPT_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
- *     y reemplaza el texto entre comillas por tu URL real.
+ *     y reemplaza el texto entre comillas por tu URL real. Con eso quedan
+ *     conectados, en todo el sitio, tanto "Comparte una noticia" como el
+ *     login de administrador (correo + contraseña).
  *
  * Si en el futuro necesitas cambiar el código de este backend, edítalo
- * directo en Apps Script y vuelve a hacer "Implementar → Nueva
- * implementación" (o "Gestionar implementaciones" → editar) — la URL
- * puede mantenerse igual si eliges "editar" en vez de crear una nueva.
+ * directo en Apps Script y vuelve a hacer "Implementar → Gestionar
+ * implementaciones" → editar (lápiz) → Implementar — así la URL se
+ * mantiene igual.
  */
 
 var HOJA_COMUNIDAD = 'Notas_Comunidad';
@@ -60,6 +80,39 @@ function configurar() {
   }
 }
 
+// Configura el login del panel de administrador: un correo y una contraseña
+// a elección de David, más su token real de GitHub. El token queda guardado
+// aquí, oculto, y solo se entrega al navegador cuando el login es correcto
+// (ver adminLogin más abajo). Puede volver a ejecutarse cuando quieras para
+// cambiar cualquiera de los tres datos.
+function configurarAdminAcceso() {
+  var ui = SpreadsheetApp.getUi();
+  var props = PropertiesService.getScriptProperties();
+
+  var respEmail = ui.prompt('Acceso de administrador (1/3)', 'Correo con el que vas a iniciar sesión en el panel de administrador:', ui.ButtonSet.OK_CANCEL);
+  if (respEmail.getSelectedButton() != ui.Button.OK) return;
+  var email = respEmail.getResponseText().trim();
+  if (!email) { ui.alert('Necesitas escribir un correo.'); return; }
+
+  var respPass = ui.prompt('Acceso de administrador (2/3)', 'Elige una contraseña para entrar al panel (al menos 6 caracteres — puede ser algo fácil de recordar, no tiene que ser el token):', ui.ButtonSet.OK_CANCEL);
+  if (respPass.getSelectedButton() != ui.Button.OK) return;
+  var pass = respPass.getResponseText();
+  if (!pass || pass.length < 6) { ui.alert('Usa una contraseña de al menos 6 caracteres.'); return; }
+
+  var respToken = ui.prompt('Acceso de administrador (3/3)', 'Pega tu Personal Access Token de GitHub ("fine-grained", limitado al repositorio "dsalgado", permiso "Contents: Read and write"):', ui.ButtonSet.OK_CANCEL);
+  if (respToken.getSelectedButton() != ui.Button.OK) return;
+  var token = respToken.getResponseText().trim();
+  if (!token) { ui.alert('Necesitas pegar tu token de GitHub.'); return; }
+
+  props.setProperty('ADMIN_EMAIL', email.toLowerCase());
+  props.setProperty('ADMIN_PASSWORD_HASH', sha256Hex_(pass));
+  props.setProperty('GITHUB_TOKEN', token);
+  props.setProperty('LOGIN_INTENTOS_FALLIDOS', '0');
+  props.setProperty('LOGIN_BLOQUEADO_HASTA', '0');
+
+  ui.alert('Listo. Ya puedes iniciar sesión en el sitio con ese correo y esa contraseña. El token de GitHub queda guardado aquí, oculto, y el sitio nunca lo muestra públicamente.');
+}
+
 function doPost(e) {
   var salida;
   try {
@@ -69,6 +122,8 @@ function doPost(e) {
       salida = analizarUrl(body.url);
     } else if (accion === 'guardarNota') {
       salida = guardarNota(body);
+    } else if (accion === 'adminLogin') {
+      salida = adminLogin(body);
     } else {
       salida = { ok: false, error: 'Acción desconocida.' };
     }
@@ -76,6 +131,57 @@ function doPost(e) {
     salida = { ok: false, error: err.message || 'Error interno.' };
   }
   return ContentService.createTextOutput(JSON.stringify(salida)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// Convierte texto a su hash SHA-256 en hexadecimal (para no guardar la
+// contraseña de David en texto plano en las Propiedades del script).
+function sha256Hex_(texto) {
+  var bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, texto, Utilities.Charset.UTF_8);
+  return bytes.map(function (b) {
+    var v = (b < 0 ? b + 256 : b).toString(16);
+    return v.length === 1 ? '0' + v : v;
+  }).join('');
+}
+
+// Verifica correo + contraseña contra lo configurado en configurarAdminAcceso().
+// Si son correctos, devuelve el token real de GitHub para que ese navegador
+// quede como administrador — igual que si David hubiera pegado el token a
+// mano, pero sin tener que manejarlo directamente. Incluye un bloqueo
+// temporal tras varios intentos fallidos, para dificultar ataques automatizados.
+function adminLogin(body) {
+  var props = PropertiesService.getScriptProperties();
+  var ahora = Date.now();
+  var bloqueadoHasta = Number(props.getProperty('LOGIN_BLOQUEADO_HASTA') || 0);
+  if (ahora < bloqueadoHasta) {
+    var minutos = Math.ceil((bloqueadoHasta - ahora) / 60000);
+    throw new Error('Demasiados intentos fallidos. Intenta de nuevo en ' + minutos + ' minuto(s).');
+  }
+
+  var emailGuardado = (props.getProperty('ADMIN_EMAIL') || '').trim().toLowerCase();
+  var hashGuardado = props.getProperty('ADMIN_PASSWORD_HASH') || '';
+  var tokenGuardado = props.getProperty('GITHUB_TOKEN') || '';
+
+  if (!emailGuardado || !hashGuardado || !tokenGuardado) {
+    throw new Error('El acceso de administrador todavía no está configurado en el backend. Ejecuta la función "configurarAdminAcceso" desde el editor de Apps Script.');
+  }
+
+  var emailRecibido = String(body.email || '').trim().toLowerCase();
+  var hashRecibido = sha256Hex_(String(body.password || ''));
+  var correcto = (emailRecibido === emailGuardado) && (hashRecibido === hashGuardado);
+
+  if (!correcto) {
+    var intentos = Number(props.getProperty('LOGIN_INTENTOS_FALLIDOS') || 0) + 1;
+    props.setProperty('LOGIN_INTENTOS_FALLIDOS', String(intentos));
+    if (intentos >= 5) {
+      props.setProperty('LOGIN_BLOQUEADO_HASTA', String(ahora + 15 * 60000));
+      props.setProperty('LOGIN_INTENTOS_FALLIDOS', '0');
+    }
+    Utilities.sleep(1200); // dificulta intentos automatizados en ráfaga
+    throw new Error('Correo o contraseña incorrectos.');
+  }
+
+  props.setProperty('LOGIN_INTENTOS_FALLIDOS', '0');
+  return { ok: true, token: tokenGuardado };
 }
 
 function doGet(e) {
