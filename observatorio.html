@@ -46,6 +46,14 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .share-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem;}
 .share-btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.04em;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:transparent;color:rgba(237,233,254,.6);cursor:pointer;transition:all .15s;}
 .share-btn:hover{border-color:#a78bfa;color:#fff;background:rgba(124,58,237,.15);}
+.share-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
+  text-transform:uppercase;color:rgba(237,233,254,.4);}
+.share-nota-btn{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:700;
+  letter-spacing:.06em;padding:.3rem .65rem;background:transparent;
+  border:1px solid rgba(109,40,217,.4);color:rgba(167,139,250,.8);cursor:pointer;
+  transition:all .15s;text-transform:uppercase;}
+.share-nota-btn:hover{background:rgba(109,40,217,.2);border-color:#a78bfa;color:#fff;}
+.share-copy-btn{letter-spacing:.04em;font-size:.6rem;}
 .sb-stats{padding:1.1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
 .sstat-n{font-size:1.5rem;font-weight:700;color:var(--pm);line-height:1;}
 .sstat-l{font-size:.65rem;color:rgba(237,233,254,.4);margin-top:.15rem;}
@@ -541,7 +549,7 @@ async function renderSemanal() {
       <div class="semanal-fecha">${d.notas} nota(s) más recientes del historial</div>
       <div class="semanal-label">Síntesis de lectura</div>
       <div class="semanal-analisis">${resumenHTML}</div>
-      ${interpHTML ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${interpHTML}</div>` : ''}
+      ${interpHTML ? `<div class="semanal-label">Interpretación académica — Práctica Social</div><div class="semanal-analisis">${interpHTML}</div>` : ''}
       <div class="nota-acciones" style="margin-top:1rem;">${botonIA}<button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
     </div>`;
   });
@@ -592,7 +600,7 @@ async function analizarNoticiaCompartida() {
         <div class="nota-titulo" style="margin-top:.5rem;">${n.titulo}</div>
         <div class="semanal-label">Resumen</div>
         <div class="nota-resumen">${n.resumenFactual || 'No se pudo generar un resumen de esta página.'}</div>
-        ${n.interpretacion ? `<div class="semanal-label">Interpretación académica — David Salgado</div><div class="semanal-analisis">${n.interpretacion.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>` : ''}
+        ${n.interpretacion ? `<div class="semanal-label">Interpretación académica — Práctica Social</div><div class="semanal-analisis">${n.interpretacion.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div>` : ''}
         <div class="nota-acciones" style="margin-top:1rem;">
           <button class="btn btn-sm btn-purple" onclick="guardarNoticiaCompartida()">Guardar en el Observatorio</button>
           <button class="btn btn-sm" onclick="descargarNoticiaCompartida()">⬇ Descargar esta noticia</button>
@@ -704,7 +712,7 @@ function renderL() {
   const admin = isAdmin();
   nF.forEach(n => {
     const sm=semL(n.fecha); if (sm!==lastSem) { html+=`<div class="semana-hdr">${sm}</div>`; lastSem=sm; }
-    const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+    const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — Práctica Social</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
     const accionesHTML = admin ? `<div class="nota-acciones">
         ${!n.analisis?`<button class="btn btn-sm btn-amber" onclick="genA('${n.id}')">Generar análisis social ↗</button>`:`<button class="btn btn-sm" onclick="genA('${n.id}')">Regenerar análisis ↗</button>`}
         <button class="btn btn-sm btn-danger" onclick="delN('${n.id}')">Eliminar</button>
@@ -715,6 +723,14 @@ function renderL() {
       ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref.length>60?n.ref.slice(0,60)+'...':n.ref}</a></div>`:''}
       <div class="nota-resumen">${n.resumen}</div>
       ${analisisHTML}
+      ${n.analisis ? `<div class="nota-share-row">
+        <span class="share-lbl">Compartir análisis:</span>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','linkedin')" title="LinkedIn">in</button>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','twitter')" title="X / Twitter">𝕏</button>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','facebook')" title="Facebook">f</button>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','instagram')" title="Instagram">ig</button>
+        <button class="share-nota-btn share-copy-btn" onclick="compartirNota('${n.id}','copiar')" title="Copiar texto">copiar</button>
+      </div>` : ''}
       ${accionesHTML}
     </div>`;
   });
@@ -763,7 +779,7 @@ async function buscarPublico() {
     document.getElementById('pubS').textContent=local.length+' resultado(s) en el historial.';
     let h='';
     local.forEach(n => {
-      const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+      const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — Práctica Social</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
       h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(n.fecha)}</span><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div><div class="nota-titulo">${n.titulo}</div>${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref}</a></div>`:''}<div class="nota-resumen">${n.resumen}</div>${analisisHTML}</div>`;
     });
     document.getElementById('pubR').innerHTML=h;
@@ -774,7 +790,7 @@ async function buscarPublico() {
       document.getElementById('pubS').textContent='Análisis generado sobre "'+q+'".';
       let h='';
       res.forEach(x => {
-        const analisisHTML = x.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — David Salgado</div><div class="analisis-texto">${x.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
+        const analisisHTML = x.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — Práctica Social</div><div class="analisis-texto">${x.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
         h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(x.fecha)}</span><span class="badge badge-pais">${x.pais}</span><span class="badge badge-fuente">${x.fuente}</span><span class="badge badge-indicador">${x.indicador}</span></div><div class="nota-titulo">${x.titulo}</div><div class="nota-resumen">${x.resumen}</div>${analisisHTML}</div>`;
       });
       document.getElementById('pubR').innerHTML=h;
