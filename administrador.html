@@ -274,11 +274,7 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
                 title="Mostrar/ocultar">👁</button>
       </div>
     </div>
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:#ccc;
-                margin-bottom:.7rem;">
-      Contraseña por defecto: <span style="color:var(--p);">Temporal123/</span>
-      (cámbiala en Configuración)
-    </div>
+
     <button class="login-btn" onclick="doLogin()">Entrar al panel</button>
     <div class="login-err" id="loginErr">Contraseña incorrecta. Intenta de nuevo.</div>
   </div>
@@ -809,20 +805,25 @@ function guardarGAS() {
 
 async function gasPost(body) {
   const url = gasURL();
-  if (!url) { toast('Configura la GAS URL en Configuración primero.'); throw new Error('Sin GAS URL'); }
+  if (!url) { toast('GAS URL no configurada.'); throw new Error('Sin GAS URL'); }
+  // Apps Script requiere text/plain para evitar CORS preflight
   const resp = await fetch(url, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(body),
+    redirect: 'follow'
   });
-  return resp.json();
+  const txt = await resp.text();
+  try { return JSON.parse(txt); } catch(e) { return { ok: false, error: txt }; }
 }
 
 async function gasGet(params) {
   const url = gasURL();
   if (!url) return null;
   const qs = new URLSearchParams(params).toString();
-  const resp = await fetch(url + '?' + qs);
-  return resp.json();
+  const resp = await fetch(url + '?' + qs, { redirect: 'follow' });
+  const txt = await resp.text();
+  try { return JSON.parse(txt); } catch(e) { return null; }
 }
 
 // ── PUBLICACIONES ─────────────────────────────────────────────
