@@ -48,12 +48,12 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .share-btn:hover{border-color:#a78bfa;color:#fff;background:rgba(124,58,237,.15);}
 .share-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;
   text-transform:uppercase;color:rgba(237,233,254,.4);}
-.share-nota-btn{font-family:'DM Mono',monospace;font-size:.65rem;font-weight:700;
-  letter-spacing:.06em;padding:.3rem .65rem;background:transparent;
-  border:1px solid rgba(109,40,217,.4);color:rgba(167,139,250,.8);cursor:pointer;
+.share-nota-btn{font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;
+  letter-spacing:.08em;padding:.28rem .65rem;background:#fff;
+  border:1px solid #18181B;color:#18181B;cursor:pointer;
   transition:all .15s;text-transform:uppercase;}
-.share-nota-btn:hover{background:rgba(109,40,217,.2);border-color:#a78bfa;color:#fff;}
-.share-copy-btn{letter-spacing:.04em;font-size:.6rem;}
+.share-nota-btn:hover{background:#18181B;color:#fff;}
+.share-copy-btn{letter-spacing:.04em;}
 .sb-stats{padding:1.1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
 .sstat-n{font-size:1.5rem;font-weight:700;color:var(--pm);line-height:1;}
 .sstat-l{font-size:.65rem;color:rgba(237,233,254,.4);margin-top:.15rem;}
@@ -724,12 +724,12 @@ function renderL() {
       <div class="nota-resumen">${n.resumen}</div>
       ${analisisHTML}
       ${n.analisis ? `<div class="nota-share-row">
-        <span class="share-lbl">Compartir análisis:</span>
-        <button class="share-nota-btn" onclick="compartirNota('${n.id}','linkedin')" title="LinkedIn">in</button>
-        <button class="share-nota-btn" onclick="compartirNota('${n.id}','twitter')" title="X / Twitter">𝕏</button>
-        <button class="share-nota-btn" onclick="compartirNota('${n.id}','facebook')" title="Facebook">f</button>
-        <button class="share-nota-btn" onclick="compartirNota('${n.id}','instagram')" title="Instagram">ig</button>
-        <button class="share-nota-btn share-copy-btn" onclick="compartirNota('${n.id}','copiar')" title="Copiar texto">copiar</button>
+        <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-right:.3rem;">Compartir:</span>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','linkedin')" title="LinkedIn">LinkedIn</button>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','twitter')" title="X / Twitter">X</button>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','facebook')" title="Facebook">Facebook</button>
+        <button class="share-nota-btn" onclick="compartirNota('${n.id}','instagram')" title="Instagram">Instagram</button>
+        <button class="share-nota-btn share-copy-btn" onclick="compartirNota('${n.id}','copiar')" title="Copiar texto">Copiar</button>
       </div>` : ''}
       ${accionesHTML}
     </div>`;
