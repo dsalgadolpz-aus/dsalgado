@@ -1379,6 +1379,47 @@ function revisarPublicacionNueva() {
   }, { threshold: .4 });
   obs.observe(strip);
 }
+
+// ── Compartir publicación del mapa D3 ────────────────────────
+function compartirPublicacion(red) {
+  var titulo   = document.getElementById('liDetTitulo') ? document.getElementById('liDetTitulo').textContent : '';
+  var resumen  = document.getElementById('liDetResumen') ? document.getElementById('liDetResumen').textContent : '';
+  var linkEl   = document.getElementById('liDetLink');
+  var linkHref = linkEl ? linkEl.href : location.href;
+  var url      = location.href;
+
+  var texto = titulo + '\n\n' + resumen.slice(0, 200) + '...\n\n' +
+    '#PráticaSocial #ObservatorioDelTrabajo\n' + linkHref;
+
+  var textoEnc = encodeURIComponent(texto);
+  var urlEnc   = encodeURIComponent(url);
+
+  if (red === 'linkedin') {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + urlEnc + '&summary=' + textoEnc, '_blank', 'width=600,height=560');
+  } else if (red === 'twitter') {
+    window.open('https://twitter.com/intent/tweet?text=' + textoEnc, '_blank', 'width=600,height=400');
+  } else if (red === 'facebook') {
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + urlEnc, '_blank', 'width=600,height=400');
+  } else if (red === 'instagram') {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(function() {
+        alert('Texto copiado — pégalo en Instagram');
+        window.open('https://www.instagram.com/', '_blank');
+      });
+    } else {
+      prompt('Copia este texto para Instagram:', texto);
+    }
+  } else if (red === 'copiar') {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(function() {
+        alert('Copiado al portapapeles');
+      });
+    } else {
+      prompt('Copia este texto:', texto);
+    }
+  }
+}
+
 </script>
 
 </body>

@@ -351,7 +351,69 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 </main>
 </div>
 
-<script src="admin.js"></script>
+<script src="admin.js">
+// ── Compartir análisis de nota individual ────────────────────
+function compartirNota(id, red) {
+  const n = notas.find(x => x.id === id);
+  if (!n) return;
+
+  const url      = location.origin + location.pathname;
+  const titulo   = n.titulo || '';
+  const analisis = n.analisis || '';
+  const parrafos = analisis.split('\n').filter(p => p.trim()).slice(0, 2).join('\n\n');
+  const hashtags = '#PráticaSocial #ObservatorioDelTrabajo #SociologíaDelTrabajo';
+
+  const texto =
+    '📌 ' + titulo + '\n\n' +
+    '🔍 Análisis social — Práctica Social\n\n' +
+    parrafos + '\n\n' +
+    hashtags + '\n\n' +
+    'Observatorio del Trabajo: ' + url;
+
+  const textoEnc = encodeURIComponent(texto);
+  const urlEnc   = encodeURIComponent(url);
+
+  if (red === 'linkedin') {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + urlEnc + '&summary=' + textoEnc, '_blank', 'width=600,height=560');
+  } else if (red === 'twitter') {
+    window.open('https://twitter.com/intent/tweet?text=' + textoEnc, '_blank', 'width=600,height=400');
+  } else if (red === 'facebook') {
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + urlEnc + '&quote=' + encodeURIComponent(analisis.slice(0, 200)), '_blank', 'width=600,height=400');
+  } else if (red === 'instagram') {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(function() {
+        mostrarToastObs('Texto copiado — pégalo en Instagram');
+        setTimeout(function() { window.open('https://www.instagram.com/', '_blank'); }, 800);
+      });
+    } else {
+      prompt('Copia este texto para Instagram:', texto);
+    }
+  } else if (red === 'copiar') {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(function() {
+        mostrarToastObs('Texto copiado al portapapeles');
+      });
+    } else {
+      prompt('Copia este texto:', texto);
+    }
+  }
+}
+
+// ── Toast del observatorio ────────────────────────────────────
+function mostrarToastObs(msg) {
+  document.querySelectorAll('.toast-obs').forEach(function(t) { t.remove(); });
+  var t = document.createElement('div');
+  t.className = 'toast-obs';
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);' +
+    'background:#13111C;color:#fff;padding:.6rem 1.4rem;' +
+    'font-family:monospace;font-size:.72rem;letter-spacing:.05em;' +
+    'z-index:999;white-space:nowrap;border:1px solid #3d2b6b;';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 2800);
+}
+
+</script>
 <script>
 // Ligero reemplazo de window.storage (API propia del entorno de Claude.ai,
 // no existe en un sitio publicado normal) respaldado en localStorage del
