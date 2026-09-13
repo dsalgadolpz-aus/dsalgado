@@ -795,17 +795,27 @@ function renderL() {
       ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref.length>60?n.ref.slice(0,60)+'...':n.ref}</a></div>`:''}
       <div class="nota-resumen">${n.resumen}</div>
       ${analisisHTML}
-      ${n.analisis ? `<div class="nota-share-row">
+      ${n.analisis ? `<div class="nota-share-row" data-nota-id="${n.id}">
         <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-right:.3rem;">Compartir:</span>
-        <button class="share-nota-btn" onclick="compartirNota('${n.id}','linkedin')" title="LinkedIn">LinkedIn</button>
-        <button class="share-nota-btn" onclick="compartirNota('${n.id}','twitter')" title="X / Twitter">X</button>
-        <button class="share-nota-btn" onclick="compartirNota('${n.id}','facebook')" title="Facebook">Facebook</button>
-        <button class="share-nota-btn share-copy-btn" onclick="compartirNota('${n.id}','copiar')" title="Copiar texto">Copiar</button>
+        <button class="share-nota-btn" data-red="linkedin">LinkedIn</button>
+        <button class="share-nota-btn" data-red="twitter">X</button>
+        <button class="share-nota-btn" data-red="facebook">Facebook</button>
+        <button class="share-nota-btn share-copy-btn" data-red="copiar">Copiar</button>
       </div>` : ''}
       ${accionesHTML}
     </div>`;
   });
   c.innerHTML = html;
+
+  // Delegación de eventos para botones compartir
+  c.querySelectorAll('.nota-share-row').forEach(function(row) {
+    var notaId = row.getAttribute('data-nota-id');
+    row.querySelectorAll('.share-nota-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        compartirNota(notaId, btn.getAttribute('data-red'));
+      });
+    });
+  });
 }
 
 async function genA(id) {
