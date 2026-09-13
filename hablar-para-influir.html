@@ -1190,6 +1190,7 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
     <div class="act-hdr" onclick="toggleAct(this)"><span class="act-tipo at-q">Práctica</span><div class="act-hdr-txt"><h4>Tres versiones del mismo mensaje</h4><p>Aplicar PREP, Minto y Storytelling a una propuesta real</p></div><span class="act-chv">▶</span></div>
     <div class="act-body"><div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Elige un mensaje profesional que tengas que comunicar próximamente. Escribe tres versiones: PREP (máx. 60 seg.), Pirámide de Minto (empieza con la conclusión) y Storytelling (situación → tensión → resolución → acción).</p></div><textarea class="p-ta" id="ta-m2t2p" placeholder="Escribe tus tres versiones..."></textarea><button class="p-save" onclick="guardar('ta-m2t2p','sv-m2t2p')">Guardar</button><div class="r-saved" id="sv-m2t2p">✓ Guardado</div></div>
   </div>
+  </div>
   <div class="nt"><button class="nt-btn" onclick="ir('m2t1')">← Tema anterior</button><button class="nt-btn pri" onclick="ir('m2t3')">Siguiente tema →</button></div>
 </div>
 <!-- ─── M2 · TEMA 3 ─── -->
@@ -2130,7 +2131,21 @@ function ir(vid) {
   window.scrollTo(0,0);
 
   if (GAS_URL && USER) {
-    fetch(GAS_URL + '?action=progreso', {method:'GET'}).catch(()=>{});
+    fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'registrarProgreso',
+        email:   USER.email || '',
+        nombre:  USER.nombre || '',
+        modulo:  vid.replace(/t\d+$/,'').replace(/^sm/,'m') || vid,
+        actividad: vid,
+        estado: 'visitado',
+        calificacion: modsOK.includes(parseInt(vid.replace(/\D/g,''))) ? 'aprobado' : 'en progreso',
+        totalModulos: modsOK.length
+      }),
+      redirect: 'follow'
+    }).catch(() => {});
   }
 }
 

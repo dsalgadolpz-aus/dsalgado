@@ -354,24 +354,43 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 <script src="admin.js">
 // ── Compartir análisis de nota individual ────────────────────
 function compartirNota(id, red) {
-  const n = notas.find(x => x.id === id);
-  if (!n) return;
+  // Buscar en el array notas (puede estar cargado o no)
+  var n = notas.find(function(x) { return x.id === id; });
 
-  const url      = location.origin + location.pathname;
-  const titulo   = n.titulo || '';
-  const analisis = n.analisis || '';
-  const parrafos = analisis.split('\n').filter(p => p.trim()).slice(0, 2).join('\n\n');
-  const hashtags = '#PráticaSocial #ObservatorioDelTrabajo #SociologíaDelTrabajo';
+  // Si no está en el array, leer del DOM
+  var titulo   = '';
+  var analisis = '';
+  if (n) {
+    titulo   = n.titulo   || '';
+    analisis = n.analisis || '';
+  } else {
+    var elNota = document.getElementById('n-' + id);
+    if (elNota) {
+      var h2 = elNota.querySelector('h3,h2,.nota-tit');
+      titulo   = h2 ? h2.textContent.trim() : '';
+      var analEl = elNota.querySelector('.analisis-texto');
+      analisis = analEl ? analEl.textContent.trim() : '';
+    }
+  }
 
-  const texto =
+  if (!titulo && !analisis) {
+    mostrarToastObs('No se encontraron datos de la nota');
+    return;
+  }
+
+  var url      = location.origin + location.pathname;
+  var parrafos = analisis.split('\n').filter(function(p) { return p.trim(); }).slice(0, 2).join('\n\n');
+  var hashtags = '#PráticaSocial #ObservatorioDelTrabajo #SociologíaDelTrabajo';
+
+  var texto =
     '📌 ' + titulo + '\n\n' +
     '🔍 Análisis social — Práctica Social\n\n' +
-    parrafos + '\n\n' +
+    (parrafos || analisis.slice(0, 300)) + '\n\n' +
     hashtags + '\n\n' +
     'Observatorio del Trabajo: ' + url;
 
-  const textoEnc = encodeURIComponent(texto);
-  const urlEnc   = encodeURIComponent(url);
+  var textoEnc = encodeURIComponent(texto);
+  var urlEnc   = encodeURIComponent(url);
 
   if (red === 'linkedin') {
     window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + urlEnc + '&summary=' + textoEnc, '_blank', 'width=600,height=560');
@@ -379,15 +398,6 @@ function compartirNota(id, red) {
     window.open('https://twitter.com/intent/tweet?text=' + textoEnc, '_blank', 'width=600,height=400');
   } else if (red === 'facebook') {
     window.open('https://www.facebook.com/sharer/sharer.php?u=' + urlEnc + '&quote=' + encodeURIComponent(analisis.slice(0, 200)), '_blank', 'width=600,height=400');
-  } else if (red === 'instagram') {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(texto).then(function() {
-        mostrarToastObs('Texto copiado — pégalo en Instagram');
-        setTimeout(function() { window.open('https://www.instagram.com/', '_blank'); }, 800);
-      });
-    } else {
-      prompt('Copia este texto para Instagram:', texto);
-    }
   } else if (red === 'copiar') {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(texto).then(function() {
