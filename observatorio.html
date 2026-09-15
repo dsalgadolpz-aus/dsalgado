@@ -51,7 +51,7 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
 .share-nota-btn{font-family:'DM Mono',monospace;font-size:.6rem;font-weight:700;
   letter-spacing:.08em;padding:.28rem .65rem;background:#fff;
   border:1px solid #18181B;color:#18181B;cursor:pointer;
-  transition:all .15s;text-transform:uppercase;}
+  transition:all .15s;text-transform:uppercase;text-decoration:none;display:inline-block;}
 .share-nota-btn:hover{background:#18181B;color:#fff;}
 .share-copy-btn{letter-spacing:.04em;}
 .sb-stats{padding:1.1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,.07);display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
@@ -795,27 +795,23 @@ function renderL() {
       ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref.length>60?n.ref.slice(0,60)+'...':n.ref}</a></div>`:''}
       <div class="nota-resumen">${n.resumen}</div>
       ${analisisHTML}
-      ${n.analisis ? `<div class="nota-share-row" data-nota-id="${n.id}">
+      ${n.analisis ? (()=>{
+        const _url = encodeURIComponent(location.origin + location.pathname);
+        const _txt = encodeURIComponent('📌 ' + n.titulo + '\n\n🔍 Análisis social — Práctica Social\n\n' + (n.analisis||'').split('\n').filter(p=>p.trim()).slice(0,2).join('\n\n') + '\n\n#PráticaSocial #ObservatorioDelTrabajo\n' + location.origin + location.pathname);
+        return `<div class="nota-share-row">
         <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-right:.3rem;">Compartir:</span>
-        <button class="share-nota-btn" data-red="linkedin">LinkedIn</button>
-        <button class="share-nota-btn" data-red="twitter">X</button>
-        <button class="share-nota-btn" data-red="facebook">Facebook</button>
-        <button class="share-nota-btn share-copy-btn" data-red="copiar">Copiar</button>
-      </div>` : ''}
+        <a class="share-nota-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${_url}&summary=${_txt}" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="share-nota-btn" href="https://twitter.com/intent/tweet?text=${_txt}" target="_blank" rel="noopener">X</a>
+        <a class="share-nota-btn" href="https://www.facebook.com/sharer/sharer.php?u=${_url}" target="_blank" rel="noopener">Facebook</a>
+        <button class="share-nota-btn share-copy-btn" onclick="(function(){var t='📌 ${n.titulo.replace(/'/g,\"\\'\")}\\n\\n${(n.analisis||'').slice(0,200).replace(/'/g,\"\\'\")}';if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){mostrarToastObs('Copiado')});else prompt('Copia:',t)})()">Copiar</button>
+      </div>`;
+      })() : ''}
       ${accionesHTML}
     </div>`;
   });
   c.innerHTML = html;
 
-  // Delegación de eventos para botones compartir
-  c.querySelectorAll('.nota-share-row').forEach(function(row) {
-    var notaId = row.getAttribute('data-nota-id');
-    row.querySelectorAll('.share-nota-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        compartirNota(notaId, btn.getAttribute('data-red'));
-      });
-    });
-  });
+
 }
 
 async function genA(id) {
