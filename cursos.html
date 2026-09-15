@@ -252,8 +252,8 @@ nav{position:sticky;top:0;z-index:200;background:rgba(250,250,248,.96);backdrop-
   <div class="cursos-grid">
     <div class="cc" onclick="abrirCurso('c08')">
       <div class="cc-num">Curso 08</div>
-      <div class="cc-titulo">Empleabilidad Social: Competencias para el Mundo del Trabajo</div>
-      <div class="cc-desc">Modelo IMES, competencias blandas y técnicas, CV por evidencias, entrevista por competencias y mercado laboral.</div>
+      <div class="cc-titulo">Empleabilidad Social: Encuentra tu lugar en el mundo del trabajo</div>
+      <div class="cc-desc">El trabajo como práctica social, contexto laboral en México, recursos y agencia para la búsqueda de empleo con metodología de Práctica Social.</div>
       <div class="cc-footer"><span class="cc-h">30h</span><span class="cc-entregable">CV revisado con IA</span><span class="cc-dot dot-d"></span><span class="cc-est est-prx">Próximamente</span></div>
     </div>
     <div class="cc" onclick="abrirCurso('c09')">
@@ -352,14 +352,14 @@ const CURSOS = {
     ia:'Retroalimentación automática de la coherencia entre teoría del cambio e indicadores propuestos.',
     refs:['Rossi, P. H., Lipsey, M. W. y Henry, G. T. (2019). Evaluation: A Systematic Approach (8ª ed.). SAGE.','Jara, O. (2018). La sistematización de experiencias. CINDE.','Social Value International. (2021). A Guide to Social Return on Investment (2ª ed.). Social Value International.'],
     archivo:'cursos/evaluacion-impacto.html'},
-  c08:{num:'Curso 08',pk:'Paquete D — Trabajo y Empleabilidad',tit:'Empleabilidad Social: Competencias para el Mundo del Trabajo',h:30,mods:6,acts:24,est:'prx',
+  c08:{num:'Curso 08',pk:'Paquete D — Trabajo y Empleabilidad',tit:'Empleabilidad Social: Encuentra tu lugar en el mundo del trabajo',h:30,mods:6,acts:24,est:'ok',
     desc:'La empleabilidad no es un atributo individual: es el resultado de la interacción entre las competencias de una persona y las condiciones del mercado de trabajo.',
     comp:['Aplicar el modelo IMES para medir y desarrollar la empleabilidad social','Construir un CV basado en competencias y evidencias verificables','Prepararse para entrevistas por competencias con metodología STAR','Gestionar la identidad profesional digital con coherencia y propósito','Identificar y navegar rutas de inserción diferenciadas por perfil','Desarrollar un plan personal de empleabilidad a 6 meses'],
     mods:['El modelo IMES: midiendo la empleabilidad social','Competencias blandas y técnicas: identificación y evidencia','CV basado en competencias: construcción y revisión con IA','Entrevista por competencias y metodología STAR','Identidad profesional digital: LinkedIn y más','Plan de empleabilidad: entregable y cierre'],
     entregable:'CV revisado con IA + Plan personal de empleabilidad a 6 meses: diagnóstico de competencias, rutas de desarrollo y estrategia de búsqueda.',
     ia:'Revisión automática del CV con criterios de rúbrica y retroalimentación de respuestas a preguntas de entrevista por competencias.',
     refs:['Salgado López, D. (2023). Análisis Conecta Empleo: marco metodológico de empleabilidad social. Sintropía Social.','Spencer, L. M. y Spencer, S. M. (1993). Competence at Work. John Wiley & Sons.','Weller, J. (2007). La inserción laboral de los jóvenes: características, tensiones y desafíos. Revista de la CEPAL, 92, 61–82.'],
-    archivo:'cursos/empleabilidad-social.html'},
+    archivo:'empleabilidad-social.html'},
   c09:{num:'Curso 09',pk:'Paquete D — Trabajo y Empleabilidad',tit:'Conecta Empleo: Orientación Laboral para Poblaciones Vulnerables',h:30,mods:6,acts:24,est:'prx',
     desc:'La orientación laboral para poblaciones en situación de vulnerabilidad requiere sensibilidad social, metodologías participativas y rutas diferenciadas que reconozcan las barreras estructurales.',
     comp:['Aplicar el marco metodológico Conecta Empleo México en contextos locales','Diseñar rutas de orientación laboral diferenciadas por perfil y territorio','Facilitar talleres de empleabilidad con metodología participativa','Vincular a participantes con empleadores con enfoque de responsabilidad social','Evaluar programas de orientación laboral con indicadores pertinentes','Construir una ruta de orientación adaptada a un contexto específico'],
@@ -367,13 +367,8 @@ const CURSOS = {
     entregable:'Ruta de orientación laboral para un perfil de participante específico: diagnóstico de barreras, itinerario de sesiones y alianzas necesarias.',
     ia:'Retroalimentación automática del diagnóstico de barreras y coherencia de la ruta propuesta con el perfil seleccionado.',
     refs:['De la Garza Toledo, E. (2010). Hacia un concepto ampliado de trabajo. Anthropos.','Salgado López, D. (2023). Análisis Conecta Empleo: marco metodológico de empleabilidad social. Sintropía Social.','OIT. (2020). Panorama Laboral 2020 América Latina y el Caribe. Organización Internacional del Trabajo.'],
-    archivo:'cursos/conecta-empleo.html'},
-  cemp:{num:'Curso 05',pk:'Paquete D — Trabajo y Empleabilidad',tit:'Empleabilidad Social: Encuentra tu lugar en el mundo del trabajo',h:30,mods:6,acts:24,est:'ok',
-    desc:'La empleabilidad no es solo tener un buen CV. Es entender el trabajo como práctica social — con historia, contexto, significado y agencia propia. Este curso parte de la Metodología de Práctica Social de Sintropía Social para acompañar a jóvenes en la construcción de su trayectoria laboral con sentido crítico y herramientas concretas.',
-    mod:['El trabajo como práctica social','Contexto laboral en México','Mis recursos para emplearse','Agencia y búsqueda de empleo','Significados del trabajo para mí','Mi plan de empleabilidad'],
-    ia:'Retroalimentación personalizada sobre reflexiones, ensayos y el plan de empleabilidad final.',
-    refs:['De la Garza Toledo, E. (2010). Hacia un concepto ampliado de trabajo. Anthropos Editorial.','Arendt, H. (1958). The Human Condition. University of Chicago Press.','Sennett, R. (1998). The Corrosion of Character. W. W. Norton.','Castel, R. (1997). Las metamorfosis de la cuestión social. Paidós.','Sintropía Social (2024). Metodología de Práctica Social. Sintropía Social.'],
-    archivo:'empleabilidad-social.html'}
+    archivo:'cursos/conecta-empleo.html'}
+
 };
 
 function filtrar(pk,btn){
