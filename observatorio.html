@@ -500,6 +500,54 @@ async function callGemini(promptText, maxTokens) {
 let notas = [];
 let nF = [];
 
+// ── Delegación global para botones compartir ─────────────────
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.share-nota-btn');
+  if (!btn) return;
+  var nid = btn.getAttribute('data-nid');
+  var red = btn.getAttribute('data-red');
+  if (!nid || !red) return;
+  e.preventDefault();
+
+  var n = notas.find(function(x) { return x.id === nid; });
+  var titulo   = n ? (n.titulo   || '') : '';
+  var analisis = n ? (n.analisis || '') : '';
+
+  // Fallback DOM si el array no tiene la nota
+  if (!titulo) {
+    var elNota = document.getElementById('n-' + nid);
+    if (elNota) {
+      var titEl = elNota.querySelector('.nota-titulo');
+      titulo = titEl ? titEl.textContent.trim() : '';
+      var analEl = elNota.querySelector('.analisis-texto');
+      analisis = analEl ? analEl.textContent.trim() : '';
+    }
+  }
+
+  var url = location.origin + location.pathname;
+  var parrs = analisis.split('\n').filter(function(p){return p.trim();}).slice(0,2).join('\n\n');
+  var texto = '📌 ' + titulo + '\n\n🔍 Análisis social — Práctica Social\n\n' +
+    (parrs || analisis.slice(0,300)) + '\n\n' +
+    '#PráticaSocial #ObservatorioDelTrabajo\n' + url;
+
+  var tEnc = encodeURIComponent(texto);
+  var uEnc = encodeURIComponent(url);
+
+  if (red === 'linkedin') {
+    location.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + uEnc + '&summary=' + tEnc;
+  } else if (red === 'twitter') {
+    location.href = 'https://twitter.com/intent/tweet?text=' + tEnc;
+  } else if (red === 'facebook') {
+    location.href = 'https://www.facebook.com/sharer/sharer.php?u=' + uEnc;
+  } else if (red === 'copiar') {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(texto).then(function(){ mostrarToastObs('Copiado al portapapeles'); });
+    } else {
+      prompt('Copia este texto:', texto);
+    }
+  }
+});
+
 async function load() {
   try { const r = await window.storage.get('obs_v3'); if (r && r.value) notas = JSON.parse(r.value); } catch(e) { notas = []; }
   try { const last = await window.storage.get('obs_last_auto'); if (last && last.value) document.getElementById('syncInfo').textContent = 'Última búsqueda: ' + last.value; } catch(e) {}
@@ -795,17 +843,13 @@ function renderL() {
       ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref.length>60?n.ref.slice(0,60)+'...':n.ref}</a></div>`:''}
       <div class="nota-resumen">${n.resumen}</div>
       ${analisisHTML}
-      ${n.analisis ? (()=>{
-        const _url = encodeURIComponent(location.origin + location.pathname);
-        const _txt = encodeURIComponent('📌 ' + n.titulo + '\n\n🔍 Análisis social — Práctica Social\n\n' + (n.analisis||'').split('\n').filter(p=>p.trim()).slice(0,2).join('\n\n') + '\n\n#PráticaSocial #ObservatorioDelTrabajo\n' + location.origin + location.pathname);
-        return `<div class="nota-share-row">
+      ${n.analisis ? `<div class="nota-share-row">
         <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-right:.3rem;">Compartir:</span>
-        <a class="share-nota-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=${_url}&summary=${_txt}" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="share-nota-btn" href="https://twitter.com/intent/tweet?text=${_txt}" target="_blank" rel="noopener">X</a>
-        <a class="share-nota-btn" href="https://www.facebook.com/sharer/sharer.php?u=${_url}" target="_blank" rel="noopener">Facebook</a>
-        <button class="share-nota-btn share-copy-btn" onclick="(function(){var t='📌 ${n.titulo.replace(/'/g,\"\\'\")}\\n\\n${(n.analisis||'').slice(0,200).replace(/'/g,\"\\'\")}';if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){mostrarToastObs('Copiado')});else prompt('Copia:',t)})()">Copiar</button>
-      </div>`;
-      })() : ''}
+        <button class="share-nota-btn" data-nid="${n.id}" data-red="linkedin">LinkedIn</button>
+        <button class="share-nota-btn" data-nid="${n.id}" data-red="twitter">X</button>
+        <button class="share-nota-btn" data-nid="${n.id}" data-red="facebook">Facebook</button>
+        <button class="share-nota-btn share-copy-btn" data-nid="${n.id}" data-red="copiar">Copiar</button>
+      </div>` : ''}
       ${accionesHTML}
     </div>`;
   });
