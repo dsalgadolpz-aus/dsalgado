@@ -371,7 +371,20 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
       <li><a href="cursos.html">Formación</a></li>
       <li><a href="observatorio.html">Observatorio</a></li>
     </ul>
-    <a class="nav-cta" href="mailto:d.salgado.lpz@gmail.com">Contactar</a>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span id="nav-usuario" style="font-family:'DM Mono',monospace;font-size:.65rem;
+            letter-spacing:.06em;text-transform:uppercase;color:var(--soft);display:none;"></span>
+      <button id="btn-cerrar-sesion" onclick="cerrarSesion()"
+              style="display:none;font-family:'DM Mono',monospace;font-size:.62rem;
+                     letter-spacing:.08em;text-transform:uppercase;color:var(--red);
+                     background:none;border:1px solid var(--red);padding:.3rem .7rem;
+                     cursor:pointer;transition:all .15s;"
+              onmouseover="this.style.background='var(--red)';this.style.color='#fff'"
+              onmouseout="this.style.background='none';this.style.color='var(--red)'">
+        Cerrar sesión
+      </button>
+      <a class="nav-cta" href="mailto:d.salgado.lpz@gmail.com">Contactar</a>
+    </div>
   </div>
 </nav>
 <!-- PANTALLA DE ACCESO -->
@@ -520,11 +533,15 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
 <!-- ═══════════ MÓDULO 1 ═══════════ -->
 <div id="v-sm1">
   <!-- Bloque bienvenida — aparece primero, antes del portada del módulo -->
-  <div style="background:#13111C;padding:1.8rem 2rem;margin-bottom:1rem;
+  <div id="bloque-bienvenida" style="background:#13111C;padding:1.8rem 2rem;margin-bottom:1rem;
               border-left:4px solid #6D28D9;display:flex;gap:1.5rem;align-items:flex-start;">
-    <img src="https://dsalgadolpz-aus.github.io/dsalgado/assets/avatar-david.png" alt="David Salgado"
-         style="width:80px;height:80px;border-radius:50%;
-                object-fit:cover;border:2px solid #3d2b6b;flex-shrink:0;"/>
+    <img id="avatar-david"
+         src="https://dsalgadolpz-aus.github.io/dsalgado/assets/avatar-david.png"
+         alt="David Salgado"
+         style="width:80px;height:80px;border-radius:50%;object-fit:cover;
+                border:2px solid #3d2b6b;flex-shrink:0;display:none;"
+         onload="this.style.display='block';document.getElementById('frase-futuro').style.display='block';"
+         onerror="this.style.display='none';document.getElementById('frase-futuro').style.display='none';"/>
     <div>
       <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
                   text-transform:uppercase;color:#a78bfa;margin-bottom:.6rem;">
@@ -538,8 +555,8 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
         detenerte, releer y escribir con tus propias palabras. Te invito a regresar
         a la lectura como medio de conocimiento real."
       </p>
-      <p style="font-family:'DM Mono',monospace;font-size:.72rem;font-weight:700;
-                color:#a78bfa;letter-spacing:.05em;margin:0;
+      <p id="frase-futuro" style="font-family:'DM Mono',monospace;font-size:.72rem;font-weight:700;
+                color:#a78bfa;letter-spacing:.05em;margin:0;display:none;
                 border-top:1px solid #2d2541;padding-top:.7rem;">
         El futuro es hoy hermano.
       </p>
@@ -561,6 +578,34 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
       <span class="mc-tag">Escucha activa · Rogers</span>
     </div>
   </div>
+  <!-- Desplegable de ponderación -->
+  <details style="background:var(--white);border:1px solid var(--rule);margin-bottom:1rem;">
+    <summary style="padding:.9rem 1.2rem;cursor:pointer;font-family:'DM Mono',monospace;
+                    font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+                    color:var(--soft);list-style:none;display:flex;justify-content:space-between;
+                    align-items:center;user-select:none;">
+      <span>Ponderación de actividades</span>
+      <span style="color:var(--p);">▸</span>
+    </summary>
+    <div style="padding:.8rem 1.2rem 1rem;border-top:1px solid var(--rule);">
+      <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:.4rem .6rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);border-bottom:1px solid var(--rule);">Actividad</th>
+            <th style="text-align:center;padding:.4rem .6rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);border-bottom:1px solid var(--rule);">Ponderación</th>
+            <th style="text-align:left;padding:.4rem .6rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);border-bottom:1px solid var(--rule);">Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:.4rem .6rem;color:var(--ink);border-bottom:1px solid var(--rule);">Reflexiones (×3 por módulo)</td><td style="text-align:center;padding:.4rem .6rem;color:var(--o);font-weight:700;border-bottom:1px solid var(--rule);">Formativa</td><td style="padding:.4rem .6rem;color:var(--soft);border-bottom:1px solid var(--rule);">No se califican — son para tu proceso de aprendizaje</td></tr>
+          <tr><td style="padding:.4rem .6rem;color:var(--ink);border-bottom:1px solid var(--rule);">Dinámicas (puzzle, matching, laberinto)</td><td style="text-align:center;padding:.4rem .6rem;color:var(--o);font-weight:700;border-bottom:1px solid var(--rule);">Formativa</td><td style="padding:.4rem .6rem;color:var(--soft);border-bottom:1px solid var(--rule);">Práctica de conceptos — puedes repetirlas</td></tr>
+          <tr><td style="padding:.4rem .6rem;color:var(--ink);border-bottom:1px solid var(--rule);">Ensayo de cierre (con retroalimentación IA)</td><td style="text-align:center;padding:.4rem .6rem;color:var(--p);font-weight:700;border-bottom:1px solid var(--rule);">20%</td><td style="padding:.4rem .6rem;color:var(--soft);border-bottom:1px solid var(--rule);">Reflexión integradora del módulo con retroalimentación personalizada</td></tr>
+          <tr><td style="padding:.4rem .6rem;color:var(--ink);border-bottom:1px solid var(--rule);">Evaluación del módulo (5 preguntas)</td><td style="text-align:center;padding:.4rem .6rem;color:var(--p);font-weight:700;border-bottom:1px solid var(--rule);">80%</td><td style="padding:.4rem .6rem;color:var(--soft);border-bottom:1px solid var(--rule);">Necesitas 80% (4/5) para avanzar — puedes repetir</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:.75rem;color:var(--soft);margin-top:.8rem;line-height:1.55;">La constancia se genera automáticamente al completar todos los módulos con 80% o más en cada evaluación y entregar el plan final del módulo 6.</p>
+    </div>
+  </details>
   <div class="splash">
     <div class="splash-ico">💬</div>
     <h2>¿Listo para comenzar?</h2>
@@ -970,6 +1015,14 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
     </div>
   </div>
 
+  <div style="height:1.5rem;border-top:2px solid var(--rule);margin:1.5rem 0 1.5rem;display:flex;align-items:center;justify-content:center;">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#ccc;background:var(--paper);padding:0 .8rem;">Evaluación del módulo</span>
+  </div>
+
+  <div style="height:1.5rem;border-top:2px solid var(--rule);margin:1.5rem 0 1.5rem;display:flex;align-items:center;justify-content:center;">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#ccc;background:var(--paper);padding:0 .8rem;">Evaluación del módulo</span>
+  </div>
+
   <div class="eval-card">
     <div class="eval-lbl">Evaluación del módulo 1</div>
     <h3 class="eval-h">Comunicación como práctica social</h3>
@@ -1186,10 +1239,6 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
       </div>
     </div>
   </div>
-  <div class="act-card">
-    <div class="act-hdr" onclick="toggleAct(this)"><span class="act-tipo at-q">Práctica</span><div class="act-hdr-txt"><h4>Tres versiones del mismo mensaje</h4><p>Aplicar PREP, Minto y Storytelling a una propuesta real</p></div><span class="act-chv">▶</span></div>
-    <div class="act-body"><div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Elige un mensaje profesional que tengas que comunicar próximamente. Escribe tres versiones: PREP (máx. 60 seg.), Pirámide de Minto (empieza con la conclusión) y Storytelling (situación → tensión → resolución → acción).</p></div><textarea class="p-ta" id="ta-m2t2p" placeholder="Escribe tus tres versiones..."></textarea><button class="p-save" onclick="guardar('ta-m2t2p','sv-m2t2p')">Guardar</button><div class="r-saved" id="sv-m2t2p">✓ Guardado</div></div>
-  </div>
   </div>
   <div class="nt"><button class="nt-btn" onclick="ir('m2t1')">← Tema anterior</button><button class="nt-btn pri" onclick="ir('m2t3')">Siguiente tema →</button></div>
 </div>
@@ -1239,6 +1288,11 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
 <div id="v-m2ev" style="display:none">
   <div class="bc"><span onclick="ir('sm2')" style="cursor:pointer">Módulo 2</span><span class="bc-sep">›</span>Evaluación</div>
   <div class="mod-bar"><div class="mod-bar-fill" style="width:100%"></div></div>
+<div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)"><span class="act-tipo at-q">Práctica</span><div class="act-hdr-txt"><h4>Tres versiones del mismo mensaje</h4><p>Aplicar PREP, Minto y Storytelling a una propuesta real</p></div><span class="act-chv">▶</span></div>
+    <div class="act-body"><div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Elige un mensaje profesional que tengas que comunicar próximamente. Escribe tres versiones: PREP (máx. 60 seg.), Pirámide de Minto (empieza con la conclusión) y Storytelling (situación → tensión → resolución → acción).</p></div><textarea class="p-ta" id="ta-m2t2p" placeholder="Escribe tus tres versiones..."></textarea><button class="p-save" onclick="guardar('ta-m2t2p','sv-m2t2p')">Guardar</button><div class="r-saved" id="sv-m2t2p">✓ Guardado</div></div>
+  </div>
+
   <div class="act-card" style="margin-bottom:1rem;">
     <div class="act-hdr" onclick="toggleAct(this)"><span class="act-tipo at-ia">IA · Retroalimentación Gemini</span><div class="act-hdr-txt"><h4>Ensayo de cierre: el cuerpo como mensaje</h4><p>Integra los tres temas del módulo en una reflexión aplicada</p></div><span class="act-chv">▶</span></div>
     <div class="act-body">
@@ -1710,6 +1764,10 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
       <div class="ia-loading" id="ia-m3-loading">Analizando tu ensayo<span>...</span></div>
       <div class="ia-result" id="ia-m3-result"><div class="ia-result-lbl">Retroalimentación · David Salgado</div><div class="ia-result-txt" id="ia-m3-txt"></div></div>
     </div>
+  </div>
+
+  <div style="height:1.5rem;border-top:2px solid var(--rule);margin:1.5rem 0 1.5rem;display:flex;align-items:center;justify-content:center;">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#ccc;background:var(--paper);padding:0 .8rem;">Evaluación del módulo</span>
   </div>
 
   <div class="eval-card">
@@ -2189,6 +2247,10 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
       <div class="ia-loading" id="ia-m4-loading">Analizando tu ensayo<span>...</span></div>
       <div class="ia-result" id="ia-m4-result"><div class="ia-result-lbl">Retroalimentación · David Salgado</div><div class="ia-result-txt" id="ia-m4-txt"></div></div>
     </div>
+  </div>
+
+  <div style="height:1.5rem;border-top:2px solid var(--rule);margin:1.5rem 0 1.5rem;display:flex;align-items:center;justify-content:center;">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#ccc;background:var(--paper);padding:0 .8rem;">Evaluación del módulo</span>
   </div>
 
   <div class="eval-card">
@@ -2676,6 +2738,10 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
     </div>
   </div>
 
+  <div style="height:1.5rem;border-top:2px solid var(--rule);margin:1.5rem 0 1.5rem;display:flex;align-items:center;justify-content:center;">
+    <span style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#ccc;background:var(--paper);padding:0 .8rem;">Evaluación del módulo</span>
+  </div>
+
   <div class="eval-card">
     <div class="eval-lbl">Evaluación del módulo 5</div>
     <h3 class="eval-h">Comunicación intercultural y reuniones efectivas</h3>
@@ -2754,89 +2820,364 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
 </div>
 
 
+
+<!-- ═══════════ MÓDULO 6 ═══════════ -->
 <div id="v-sm6" style="display:none">
   <div class="mod-cover">
-    <div class="mc-num">Módulo 06 · 5 horas · Entregable final</div>
+    <div class="mc-num">Módulo 06 · 5 horas · 3 temas</div>
     <h1>Plan de comunicación<br>profesional</h1>
-    <p class="mc-desc">El módulo final integra las competencias de los cinco módulos anteriores en un entregable concreto: tu plan de comunicación profesional personalizado, revisado con Gemini AI.</p>
-    <div class="mc-meta"><div class="mc-stat"><strong>3</strong><span>Partes</span></div><div class="mc-stat"><strong>1</strong><span>Entregable</span></div><div class="mc-stat"><strong>80%</strong><span>Para constancia</span></div></div>
-    <div class="mc-tags"><span class="mc-tag">Diagnóstico comunicativo</span><span class="mc-tag">Diseño del plan</span><span class="mc-tag">Revisión con IA</span></div>
+    <p class="mc-desc">Todo lo que aprendiste en este curso converge aquí. El módulo 6 no es solo un cierre — es el momento en que la teoría se vuelve práctica propia. Construirás tu plan de comunicación profesional: un documento real, tuyo, que podrás usar desde hoy.</p>
+    <div class="mc-meta">
+      <div class="mc-stat"><strong>3</strong><span>Temas</span></div>
+      <div class="mc-stat"><strong>9</strong><span>Actividades</span></div>
+      <div class="mc-stat"><strong>100%</strong><span>Entregable final</span></div>
+      <div class="mc-stat"><strong>~3h</strong><span>Trabajo activo</span></div>
+    </div>
+    <div class="mc-tags">
+      <span class="mc-tag">Diagnóstico · Audiencias</span>
+      <span class="mc-tag">Mensajes · Canales</span>
+      <span class="mc-tag">Entregable final</span>
+    </div>
   </div>
-  <div class="splash"><div class="splash-ico">🎯</div><h2>Módulo 6 — Integración final</h2><p>El entregable que produces aquí avala tus competencias del curso completo.</p><button class="splash-btn" onclick="ir('m6t1')">Comenzar →</button></div>
+  <div class="splash">
+    <div class="splash-ico">📋</div>
+    <h2>Módulo final desbloqueado</h2>
+    <p>Llegaste al módulo de cierre. Aquí no hay respuestas correctas predefinidas — hay un proceso de construcción que solo tú puedes completar. El resultado será tu plan de comunicación profesional.</p>
+    <button class="splash-btn" onclick="ir('m6t1')">Comenzar módulo 6 →</button>
+    <div class="splash-meta">
+      <div class="sm-item"><strong>3</strong><span>Reflexiones</span></div>
+      <div class="sm-item"><strong>3</strong><span>Prácticas</span></div>
+      <div class="sm-item"><strong>1</strong><span>Entregable</span></div>
+    </div>
+  </div>
 </div>
+
+<!-- ─── M6 · TEMA 1 ─── -->
 <div id="v-m6t1" style="display:none">
-  <div class="bc"><span onclick="ir('sm6')" style="cursor:pointer">Módulo 6</span><span class="bc-sep">›</span>Parte 1</div>
+  <div class="bc"><span onclick="ir('sm6')" style="cursor:pointer">Módulo 6</span><span class="bc-sep">›</span>Tema 1</div>
   <div class="mod-bar"><div class="mod-bar-fill" style="width:25%"></div></div>
+
   <div style="background:var(--white);border:1px solid var(--rule);padding:1.4rem 1.6rem;margin-bottom:1rem;">
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Parte 1 de 3 · Módulo 6</div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Diagnóstico comunicativo personal</h2>
-    <p style="font-size:.84rem;color:var(--soft);">El punto de partida de cualquier plan es un diagnóstico honesto de la situación actual.</p>
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Tema 1 de 3 · Módulo 6</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Diagnóstico comunicacional: situación, audiencias y objetivos</h2>
+    <p style="font-size:.84rem;color:var(--soft);line-height:1.65;">Un plan de comunicación sin diagnóstico es una respuesta sin pregunta. Antes de decidir qué decir y cómo, hay que entender con precisión desde dónde se comunica, a quién y para qué.</p>
   </div>
-  <div class="cb"><div class="cb-lbl tool">Instrumento</div><div class="cb-tit">Cuatro dimensiones del diagnóstico</div>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Fundamento</div>
+    <div class="cb-tit">El diagnóstico como práctica social</div>
+    <div class="cb-body">
+      <p>Desde la perspectiva de la Metodología de la Práctica Social desarrollada en Sintropía Social, el diagnóstico comunicacional no es una auditoría técnica — es una práctica de <em>lectura del campo</em>: entender qué posiciones ocupan los actores, qué capitales circulan (Bourdieu, 1991), qué relatos son dominantes y cuáles están silenciados.</p>
+      <p>Un buen diagnóstico comunicacional responde tres preguntas fundamentales: ¿cuál es la situación actual de comunicación?, ¿quiénes son las audiencias relevantes y qué les importa?, y ¿qué quiero transformar con este plan? Sin claridad en estas tres preguntas, cualquier plan de comunicación es, en el mejor de los casos, ruido bien producido.</p>
+    </div>
+    <div class="aq">
+      <div class="aq-txt">Comprender una cultura es comprender el campo de fuerzas en el que los agentes actúan, los capitales que están en juego y las posiciones que cada uno ocupa en relación con los demás.</div>
+      <div class="aq-ref">Bourdieu, P. (1991). <em>El sentido práctico</em> (p. 107). Taurus.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl tool">Herramienta</div>
+    <div class="cb-tit">Las tres preguntas del diagnóstico</div>
     <ul class="alist">
-      <li class="aitem"><div class="anum">1</div><div class="acont"><strong>Estilo predominante</strong><p>¿Qué patrón activas más? ¿En qué contextos eres más asertivo y en cuáles menos?</p></div></li>
-      <li class="aitem"><div class="anum">2</div><div class="acont"><strong>Fortalezas actuales</strong><p>¿Qué habilidades comunicativas ya posees y que otros reconocen en ti?</p></div></li>
-      <li class="aitem"><div class="anum">3</div><div class="acont"><strong>Áreas de mejora</strong><p>¿Qué situaciones comunicativas te generan mayor dificultad o evitas sistemáticamente?</p></div></li>
-      <li class="aitem"><div class="anum">4</div><div class="acont"><strong>Contextos estratégicos</strong><p>¿En qué tres contextos el impacto de mejorar tu comunicación sería mayor?</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">1</div><div class="acont"><strong>¿Cuál es la situación actual?</strong><p>Describir el estado presente de la comunicación: ¿qué mensajes se están emitiendo?, ¿cómo se percibe actualmente el emisor?, ¿qué brechas existen entre cómo quieres ser percibido y cómo te perciben realmente? Esta pregunta requiere honestidad — no describir la situación ideal sino la real.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">2</div><div class="acont"><strong>¿Quiénes son las audiencias y qué les importa?</strong><p>Mapear los públicos relevantes con precisión: no "los clientes" sino "organizaciones de 10 a 50 personas en el sector educativo que buscan formación para sus mandos medios". Cuanto más específica la audiencia, más efectivo el mensaje. Cada audiencia tiene sus propias preguntas, miedos y motivaciones.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">3</div><div class="acont"><strong>¿Qué quiero transformar?</strong><p>Definir el objetivo de comunicación con precisión: no "quiero ser más conocido" sino "quiero que los directores de recursos humanos en CDMX me identifiquen como referente en comunicación organizacional para sus procesos de cambio". Un objetivo vago produce un plan vago.</p></div></li>
     </ul>
   </div>
-  <div class="act-card"><div class="act-hdr" onclick="toggleAct(this)"><span class="act-tipo at-r">Diagnóstico · Parte 1</span><div class="act-hdr-txt"><h4>Mi perfil comunicativo actual</h4><p>Base del entregable final</p></div><span class="act-chv">▶</span></div>
-    <div class="act-body"><div class="r-prompt">Responde las cuatro dimensiones con honestidad. Este diagnóstico es la base de tu plan.</div><textarea class="r-ta" id="ta-m6t1" placeholder="Diagnóstico..." style="min-height:180px;"></textarea><button class="r-save" onclick="guardar('ta-m6t1','sv-m6t1')">Guardar</button><div class="r-saved" id="sv-m6t1">✓ Guardado</div></div>
+
+  <div class="cb">
+    <div class="cb-lbl tool">Audiencias</div>
+    <div class="cb-tit">El mapa de audiencias</div>
+    <div class="cb-body">
+      <p>Lasswell (1948) formuló la pregunta clásica de la comunicación: ¿quién dice qué, por qué canal, a quién y con qué efecto? La segunda y la cuarta variable — el contenido y la audiencia — son las más determinantes para un plan de comunicación profesional. Conocer a la audiencia no es un lujo metodológico: es la condición para que el mensaje llegue.</p>
+      <p>Para cada audiencia relevante, el diagnóstico debe responder: ¿qué sabe ya de mí o de mi organización?, ¿qué le preocupa en su trabajo o vida profesional?, ¿qué necesita para tomar la decisión que quiero que tome?, ¿qué canales usa para informarse?, ¿qué voces considera confiables?</p>
+    </div>
+    <div class="fbox">
+      <div class="fbox-txt">¿Quién · Qué · Canal · Audiencia · Efecto</div>
+      <div class="fbox-desc">Modelo de Lasswell (1948) — aplicado al diagnóstico</div>
+    </div>
+    <div class="aq">
+      <div class="aq-txt">Una forma conveniente de describir un acto de comunicación es responder las siguientes preguntas: ¿Quién dice qué, en qué canal, a quién, con qué efecto?</div>
+      <div class="aq-ref">Lasswell, H. D. (1948). The structure and function of communication in society. En L. Bryson (Ed.), <em>The Communication of Ideas</em> (p. 37). Harper and Row.</div>
+    </div>
   </div>
-  <div class="nt"><button class="nt-btn" onclick="ir('m5ev')">← Módulo anterior</button><button class="nt-btn pri" onclick="ir('m6t2')">Diseñar el plan →</button></div>
+
+  <!-- ACT 1: Reflexión -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-r">Reflexión</span>
+      <div class="act-hdr-txt"><h4>Mi situación comunicacional actual</h4><p>Primera parte del diagnóstico para tu plan</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="r-prompt"><strong>Instrucción:</strong> Describe tu situación comunicacional actual con honestidad. ¿Qué mensajes estás emitiendo en este momento (en redes, en reuniones, con clientes o colegas)? ¿Cómo crees que te perciben actualmente? ¿Hay una brecha entre cómo quieres ser percibido y cómo te perciben? No describas la situación ideal — describe la real. Esto es el punto de partida de tu plan.</div>
+      <textarea class="r-ta" id="ta-m6t1r1" placeholder="Escribe tu diagnóstico de situación actual..."></textarea>
+      <button class="r-save" onclick="guardar('ta-m6t1r1','sv-m6t1r1')">Guardar</button>
+      <div class="r-saved" id="sv-m6t1r1">✓ Guardado</div>
+    </div>
+  </div>
+
+  <!-- ACT 2: Práctica — mapa de audiencias -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-q">Práctica · Mapa de audiencias</span>
+      <div class="act-hdr-txt"><h4>Identificar y caracterizar tus tres audiencias principales</h4><p>Segunda parte del diagnóstico para tu plan</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Identifica las tres audiencias más relevantes para tu comunicación profesional. Para cada una responde: ¿quiénes son con precisión?, ¿qué saben ya de ti?, ¿qué les preocupa en su trabajo?, ¿qué necesitan para confiar en ti o tomar una decisión a tu favor?, ¿qué canales usan para informarse?</p></div>
+      <ul class="p-steps">
+        <li class="p-step"><div class="p-sn">A1</div><div class="p-stxt">Primera audiencia — descríbela con la mayor precisión posible</div></li>
+        <li class="p-step"><div class="p-sn">A2</div><div class="p-stxt">Segunda audiencia — ¿qué la diferencia de la primera en términos de necesidades y canales?</div></li>
+        <li class="p-step"><div class="p-sn">A3</div><div class="p-stxt">Tercera audiencia — ¿es interna (colegas, jefes) o externa (clientes, comunidad)?</div></li>
+      </ul>
+      <textarea class="p-ta" id="ta-m6t1p" placeholder="Escribe tu mapa de audiencias aquí..."></textarea>
+      <button class="p-save" onclick="guardar('ta-m6t1p','sv-m6t1p')">Guardar</button>
+      <div class="r-saved" id="sv-m6t1p">✓ Guardado</div>
+      <div class="p-tip">El error más frecuente es definir audiencias demasiado amplias: "los profesionistas" no es una audiencia — es una población. "Directores de RH de empresas medianas en el sector financiero en CDMX que están atravesando procesos de cambio organizacional" sí lo es.</div>
+    </div>
+  </div>
+
+  <!-- ACT 3: Práctica — objetivos -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-q">Práctica · Objetivos de comunicación</span>
+      <div class="act-hdr-txt"><h4>Definir tus objetivos con precisión</h4><p>Tercera parte del diagnóstico para tu plan</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Define entre uno y tres objetivos de comunicación para los próximos seis meses. Cada objetivo debe ser: específico (¿qué exactamente?), orientado a una audiencia concreta, y verificable (¿cómo sabré que lo logré?). Usa el formato: "Quiero que [audiencia específica] [acción o percepción] para [fecha o período]."</p></div>
+      <textarea class="p-ta" id="ta-m6t1ob" placeholder="Escribe tus objetivos de comunicación aquí..."></textarea>
+      <button class="p-save" onclick="guardar('ta-m6t1ob','sv-m6t1ob')">Guardar</button>
+      <div class="r-saved" id="sv-m6t1ob">✓ Guardado</div>
+      <div class="p-tip">Ejemplo de objetivo vago: "Quiero tener más presencia en redes." Ejemplo de objetivo preciso: "Quiero que los coordinadores de formación de organizaciones civiles en CDMX me identifiquen como referente en diagnóstico organizacional antes de marzo de 2027."</div>
+    </div>
+  </div>
+
+  <div class="nt">
+    <button class="nt-btn" onclick="ir('m5ev')">← Módulo anterior</button>
+    <button class="nt-btn pri" onclick="ir('m6t2')">Siguiente tema →</button>
+  </div>
 </div>
+
+<!-- ─── M6 · TEMA 2 ─── -->
 <div id="v-m6t2" style="display:none">
-  <div class="bc"><span onclick="ir('sm6')" style="cursor:pointer">Módulo 6</span><span class="bc-sep">›</span>Parte 2</div>
+  <div class="bc"><span onclick="ir('sm6')" style="cursor:pointer">Módulo 6</span><span class="bc-sep">›</span>Tema 2</div>
   <div class="mod-bar"><div class="mod-bar-fill" style="width:50%"></div></div>
+
   <div style="background:var(--white);border:1px solid var(--rule);padding:1.4rem 1.6rem;margin-bottom:1rem;">
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Parte 2 de 3 · Módulo 6</div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Plan de comunicación profesional</h2>
-    <p style="font-size:.84rem;color:var(--soft);">Con base en el diagnóstico, defines objetivos SMART, estrategias por contexto e indicadores de seguimiento.</p>
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Tema 2 de 3 · Módulo 6</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Diseño del plan: mensajes clave, canales y calendario</h2>
+    <p style="font-size:.84rem;color:var(--soft);line-height:1.65;">Con el diagnóstico claro, el plan toma forma. Los mensajes clave, los canales adecuados para cada audiencia y un calendario realista son los tres componentes que convierten una intención comunicativa en una práctica sostenida.</p>
   </div>
-  <div class="cb"><div class="cb-lbl tool">Estructura del plan</div><div class="cb-tit">Cuatro componentes</div>
-    <ul class="alist">
-      <li class="aitem"><div class="anum">1</div><div class="acont"><strong>Tres objetivos SMART (90 días)</strong><p>Específicos, medibles, alcanzables, relevantes y temporales.</p></div></li>
-      <li class="aitem"><div class="anum">2</div><div class="acont"><strong>Estrategia por contexto</strong><p>Para cada uno de los tres contextos estratégicos: ¿qué técnica o enfoque vas a aplicar?</p></div></li>
-      <li class="aitem"><div class="anum">3</div><div class="acont"><strong>Protocolo de presentaciones</strong><p>Tu protocolo personal para preparar y ejecutar presentaciones: antes, durante y después.</p></div></li>
-      <li class="aitem"><div class="anum">4</div><div class="acont"><strong>Indicadores de seguimiento</strong><p>Al menos dos indicadores observables por objetivo. ¿Cómo sabrás que estás mejorando?</p></div></li>
-    </ul>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Fundamento</div>
+    <div class="cb-tit">El mensaje clave: qué decir y cómo</div>
+    <div class="cb-body">
+      <p>Un mensaje clave no es un slogan — es la idea central que quieres que tu audiencia retenga después de cualquier interacción contigo. Roderick Hart y Don Burks (1972) describen la comunicación retórica como la capacidad de adaptar el mensaje a la situación y al interlocutor sin perder la sustancia. El mensaje clave es esa sustancia: lo que permanece constante mientras el tono, el formato y el canal se adaptan.</p>
+      <p>Para cada audiencia identificada en el diagnóstico, el plan debe definir: el mensaje central (¿qué quiero que sepan o crean?), la prueba o evidencia que lo sustenta (¿por qué deberían creerlo?), y la acción que espero que tomen (¿qué quiero que hagan después de recibir el mensaje?).</p>
+    </div>
+    <div class="cbox">
+      <div class="cbox-term">Estructura del mensaje clave</div>
+      <div class="cbox-def">
+        <strong>Mensaje central:</strong> Lo que quiero que la audiencia sepa, crea o sienta.<br>
+        <strong>Prueba/evidencia:</strong> Por qué es cierto — casos, datos, testimonios, experiencia.<br>
+        <strong>Llamada a la acción:</strong> Qué quiero que haga la audiencia con esta información.
+      </div>
+    </div>
+    <div class="aq">
+      <div class="aq-txt">La comunicación retórica implica la adaptación consciente del mensaje al interlocutor, a la situación y al propósito — sin que esa adaptación comprometa la integridad del contenido.</div>
+      <div class="aq-ref">Hart, R. P. y Burks, D. M. (1972). Rhetorical sensitivity and social interaction. <em>Speech Monographs</em>, <em>39</em>(2), 75-91.</div>
+    </div>
   </div>
-  <div class="act-card"><div class="act-hdr" onclick="toggleAct(this)"><span class="act-tipo at-r">Plan · Parte 2</span><div class="act-hdr-txt"><h4>Mi plan de comunicación profesional</h4><p>Núcleo del entregable</p></div><span class="act-chv">▶</span></div>
-    <div class="act-body"><div class="r-prompt">Desarrolla los cuatro componentes. Sé específico: evita "mejorar mi comunicación" — escribe acciones concretas como "aplicar el mensaje en primera persona en reuniones de equipo".</div><textarea class="r-ta" id="ta-m6t2" placeholder="Plan..." style="min-height:220px;"></textarea><button class="r-save" onclick="guardar('ta-m6t2','sv-m6t2')">Guardar</button><div class="r-saved" id="sv-m6t2">✓ Guardado</div></div>
+
+  <div class="cb">
+    <div class="cb-lbl tool">Canales</div>
+    <div class="cb-tit">Elegir el canal correcto para cada audiencia y objetivo</div>
+    <div class="cb-body">
+      <p>Marshall McLuhan (1964) formuló la idea de que "el medio es el mensaje": el canal no es un contenedor neutro — tiene su propia lógica, sus propias normas de atención y sus propias implicaciones de credibilidad. LinkedIn no es lo mismo que un correo personalizado. Una conferencia presencial no produce el mismo efecto que un webinar. La elección del canal es parte del mensaje.</p>
+    </div>
+    <table class="ctbl">
+      <thead><tr><th>Canal</th><th>Fortaleza principal</th><th>Mejor para</th><th>Limitación</th></tr></thead>
+      <tbody>
+        <tr><td>LinkedIn</td><td>Alcance profesional, autoridad temática</td><td>Construir reputación, llegar a nuevas audiencias</td><td>Algoritmo cambiante, bajo en relaciones profundas</td></tr>
+        <tr><td>Correo personalizado</td><td>Relación directa, alta tasa de atención</td><td>Audiencias específicas, propuestas, seguimiento</td><td>Escala limitada, requiere lista de contactos</td></tr>
+        <tr><td>Conferencias / charlas</td><td>Credibilidad alta, conexión en persona</td><td>Posicionamiento como experto, networking</td><td>Alto costo en tiempo y preparación</td></tr>
+        <tr><td>Publicaciones escritas</td><td>Profundidad, durabilidad, SEO</td><td>Audiencias que buscan información detallada</td><td>Producción lenta, requiere constancia</td></tr>
+        <tr><td>Redes conversacionales (WhatsApp, comunidades)</td><td>Relación cercana, alta confianza</td><td>Audiencias que ya te conocen, fidelización</td><td>No escala, requiere gestión activa</td></tr>
+      </tbody>
+    </table>
+    <div class="aq">
+      <div class="aq-txt">El medio no es simplemente el canal a través del cual viaja un mensaje — es él mismo un mensaje que condiciona cómo se percibe, se entiende y se recuerda lo que se dice.</div>
+      <div class="aq-ref">McLuhan, M. (1964). <em>Understanding Media: The Extensions of Man</em> (p. 7). McGraw-Hill.</div>
+    </div>
   </div>
-  <div class="nt"><button class="nt-btn" onclick="ir('m6t1')">← Diagnóstico</button><button class="nt-btn pri" onclick="ir('m6t3')">Revisión con IA →</button></div>
+
+  <div class="cb">
+    <div class="cb-lbl tool">Calendario</div>
+    <div class="cb-tit">La constancia como estrategia</div>
+    <div class="cb-body">
+      <p>El error más frecuente en los planes de comunicación no es el contenido — es la inconsistencia. Comunicar con intensidad durante dos semanas y luego desaparecer durante dos meses produce el efecto contrario al deseado: sugiere falta de solidez o de compromiso. La constancia — incluso a una frecuencia modesta — construye más credibilidad que la intensidad esporádica.</p>
+      <p>Un calendario de comunicación realista considera: la frecuencia sostenible (¿cuántas piezas puedo producir con calidad por semana o mes?), los momentos de mayor atención de la audiencia (¿cuándo están más receptivos?), y los hitos o eventos relevantes del sector que justifican comunicación específica.</p>
+    </div>
+    <div class="tbox">
+      <div class="tbox-lbl">Principio práctico</div>
+      <p>Antes de comprometerte con una frecuencia de publicación, pregunta: ¿puedo sostener esto durante seis meses, incluso cuando esté ocupado? Si la respuesta es no, baja la frecuencia. Un post sólido por semana es infinitamente mejor que cinco posts mediocres durante dos semanas y luego silencio.</p>
+    </div>
+  </div>
+
+  <!-- ACT 1: Reflexión -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-r">Reflexión</span>
+      <div class="act-hdr-txt"><h4>El canal que más descuido y por qué</h4><p>Identificar brechas entre los canales que usas y los que necesitas</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="r-prompt"><strong>Instrucción:</strong> Revisa los canales que usas actualmente para comunicar profesionalmente. ¿Hay algún canal que tu audiencia principal usa y tú estás ausente? ¿Por qué no lo usas — falta de tiempo, inseguridad, no sabes cómo? ¿Qué cambiaría en tu presencia profesional si estuvieras activo en ese canal con consistencia?</div>
+      <textarea class="r-ta" id="ta-m6t2r" placeholder="Escribe tu reflexión..."></textarea>
+      <button class="r-save" onclick="guardar('ta-m6t2r','sv-m6t2r')">Guardar</button>
+      <div class="r-saved" id="sv-m6t2r">✓ Guardado</div>
+    </div>
+  </div>
+
+  <!-- ACT 2: Práctica — mensajes clave -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-q">Práctica · Mensajes clave</span>
+      <div class="act-hdr-txt"><h4>Construir el mensaje clave para cada audiencia</h4><p>Usando la estructura: mensaje central + prueba + llamada a la acción</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Retoma las tres audiencias que definiste en el Tema 1. Para cada una construye un mensaje clave usando la estructura del módulo: 1) mensaje central (qué quiero que sepan o crean), 2) prueba o evidencia (por qué es cierto), 3) llamada a la acción (qué quiero que hagan).</p></div>
+      <textarea class="p-ta" id="ta-m6t2p" placeholder="Escribe aquí los mensajes clave para cada audiencia..."></textarea>
+      <button class="p-save" onclick="guardar('ta-m6t2p','sv-m6t2p')">Guardar</button>
+      <div class="r-saved" id="sv-m6t2p">✓ Guardado</div>
+      <div class="p-tip">El mensaje clave no es el copy de una publicación — es el núcleo que se puede expresar en diez formatos distintos. Si no puedes decirlo en una oración, todavía no está claro.</div>
+    </div>
+  </div>
+
+  <!-- ACT 3: Práctica — canales y calendario -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-q">Práctica · Canales y calendario</span>
+      <div class="act-hdr-txt"><h4>Diseñar la matriz de canales y la frecuencia sostenible</h4><p>Conectar cada audiencia con sus canales y definir un ritmo realista</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Para cada audiencia: ¿qué canal usarás?, ¿con qué frecuencia?, ¿qué tipo de contenido producirás? Diseña una tabla simple con tres columnas: Audiencia | Canal principal | Frecuencia y tipo de contenido. Luego define: ¿cuál es la frecuencia mínima que puedes sostener durante seis meses sin sacrificar calidad?</p></div>
+      <textarea class="p-ta" id="ta-m6t2cc" placeholder="Escribe aquí tu matriz de canales y calendario..."></textarea>
+      <button class="p-save" onclick="guardar('ta-m6t2cc','sv-m6t2cc')">Guardar</button>
+      <div class="r-saved" id="sv-m6t2cc">✓ Guardado</div>
+    </div>
+  </div>
+
+  <div class="nt">
+    <button class="nt-btn" onclick="ir('m6t1')">← Tema anterior</button>
+    <button class="nt-btn pri" onclick="ir('m6t3')">Entregable final →</button>
+  </div>
 </div>
+
+<!-- ─── M6 · TEMA 3 — ENTREGABLE FINAL ─── -->
 <div id="v-m6t3" style="display:none">
   <div class="bc"><span onclick="ir('sm6')" style="cursor:pointer">Módulo 6</span><span class="bc-sep">›</span>Entregable final</div>
   <div class="mod-bar"><div class="mod-bar-fill" style="width:75%"></div></div>
-  <div style="background:var(--white);border:1px solid var(--rule);padding:1.4rem 1.6rem;margin-bottom:1rem;">
-    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Parte 3 · Entregable final</div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Revisión con Gemini AI</h2>
-    <p style="font-size:.84rem;color:var(--soft);">Pega tu plan completo. Gemini lo revisará con criterios de rúbrica académica.</p>
+
+  <div style="background:var(--dk);padding:1.6rem 1.8rem;margin-bottom:1rem;">
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:#a78bfa;margin-bottom:.6rem;">Entregable final · Módulo 6</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:.5rem;">Tu plan de comunicación profesional</h2>
+    <p style="font-size:.88rem;color:#bbb;line-height:1.7;">Este es el momento en que todo converge. No es un ejercicio teórico — es tu plan real, el que vas a usar. Integra lo que construiste en los Temas 1 y 2: diagnóstico, audiencias, objetivos, mensajes clave, canales y calendario.</p>
   </div>
-  <div class="act-card">
-    <div class="act-hdr" onclick="toggleAct(this)"><span class="act-tipo at-ia">IA · Revisión del entregable final</span>
-      <div class="act-hdr-txt"><h4>Plan completo → Gemini AI</h4><p>Rúbrica: claridad, coherencia, especificidad y aplicabilidad</p></div><span class="act-chv">▶</span>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Estructura del plan</div>
+    <div class="cb-tit">Los seis componentes del plan de comunicación profesional</div>
+    <ul class="alist">
+      <li class="aitem"><div class="anum" style="background:var(--p)">1</div><div class="acont"><strong>Diagnóstico de situación</strong><p>¿Dónde estoy comunicativamente hoy? Brecha entre percepción actual y percepción deseada.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">2</div><div class="acont"><strong>Audiencias prioritarias</strong><p>Tres audiencias específicas con su caracterización: quiénes son, qué saben, qué les importa, qué necesitan.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">3</div><div class="acont"><strong>Objetivos de comunicación</strong><p>Uno a tres objetivos específicos, orientados a audiencias concretas y verificables en el tiempo.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">4</div><div class="acont"><strong>Mensajes clave</strong><p>Un mensaje por audiencia: mensaje central + prueba + llamada a la acción.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">5</div><div class="acont"><strong>Matriz de canales</strong><p>Canal principal por audiencia, con frecuencia y tipo de contenido sostenibles.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">6</div><div class="acont"><strong>Calendario de los próximos 90 días</strong><p>Las primeras acciones concretas, con fechas. Un plan sin acciones inmediatas es solo una intención.</p></div></li>
+    </ul>
+  </div>
+
+  <!-- ENTREGABLE FINAL -->
+  <div class="act-card" style="border:2px solid var(--p);">
+    <div class="act-hdr" onclick="toggleAct(this)" style="background:var(--pbg);">
+      <span class="act-tipo at-ia">Entregable final · Retroalimentación David Salgado</span>
+      <div class="act-hdr-txt"><h4>Mi plan de comunicación profesional</h4><p>Documento completo con los seis componentes</p></div>
+      <span class="act-chv">▶</span>
     </div>
     <div class="act-body">
-      <div class="ia-intro">Copia tu diagnóstico y plan completo. Gemini evaluará: (1) claridad y especificidad de los objetivos, (2) coherencia entre diagnóstico y estrategias, (3) factibilidad de las acciones y (4) pertinencia de los indicadores.</div>
-      <textarea class="ia-ta" id="ia-m6final" placeholder="Pega aquí tu diagnóstico + plan completo..." style="min-height:200px;"></textarea>
-      <button class="ia-btn" id="ia-m6final-btn" onclick="pedirFeedback('ia-m6final','ia-m6final-result','ia-m6final-loading','ia-m6final-btn','Plan de comunicación profesional — revisión con rúbrica del curso Hablar para Influir')">Revisar mi plan con IA</button>
-      <div class="ia-loading" id="ia-m6final-loading">Revisando con criterios de rúbrica<span>...</span></div>
-      <div class="ia-result" id="ia-m6final-result"><div class="ia-result-lbl">Retroalimentación del entregable · Gemini AI</div><div class="ia-result-txt" id="ia-m6final-txt"></div></div>
+      <div class="ia-intro">
+        <strong>Instrucción:</strong> Escribe tu plan de comunicación profesional completo integrando los seis componentes. Puedes retomar lo que construiste en los temas anteriores y organizarlo en este documento final. Mínimo 300 palabras. No hay formato fijo — lo que importa es que los seis componentes estén presentes y que el plan sea genuinamente tuyo y aplicable desde hoy.<br><br>
+        <em>David revisará tu plan y te dará retroalimentación personalizada sobre su solidez, coherencia y aplicabilidad.</em>
+      </div>
+      <textarea class="ia-ta" id="ia-m6" style="min-height:320px;" placeholder="Escribe aquí tu plan de comunicación profesional completo...&#10;&#10;1. Diagnóstico de situación&#10;2. Audiencias prioritarias&#10;3. Objetivos de comunicación&#10;4. Mensajes clave&#10;5. Matriz de canales&#10;6. Calendario primeros 90 días"></textarea>
+      <button class="ia-btn" id="ia-m6-btn" onclick="pedirFeedback('ia-m6','ia-m6-result','ia-m6-loading','ia-m6-btn','Plan de comunicación profesional — entregable final del curso Hablar para Influir. Revisa: claridad del diagnóstico, precisión de audiencias, viabilidad de objetivos, solidez de mensajes clave, pertinencia de canales y concreción del calendario. Da retroalimentación constructiva y específica sobre cada componente.')">Enviar plan para retroalimentación</button>
+      <div class="ia-loading" id="ia-m6-loading">Analizando tu plan<span>...</span></div>
+      <div class="ia-result" id="ia-m6-result"><div class="ia-result-lbl">Retroalimentación · David Salgado</div><div class="ia-result-txt" id="ia-m6-txt"></div></div>
     </div>
   </div>
-  <div class="nt"><button class="nt-btn" onclick="ir('m6t2')">← Plan</button><button class="nt-btn pri" onclick="ir('m6ev')">Ver constancia →</button></div>
+
+  <div class="nt">
+    <button class="nt-btn" onclick="ir('m6t2')">← Tema anterior</button>
+    <button class="nt-btn pri" onclick="ir('m6ev')">Cerrar curso →</button>
+  </div>
 </div>
+
+<!-- ─── M6 · CIERRE DEL CURSO ─── -->
 <div id="v-m6ev" style="display:none">
-  <div class="bc"><span onclick="ir('sm6')" style="cursor:pointer">Módulo 6</span><span class="bc-sep">›</span>Constancia</div>
+  <div class="bc"><span onclick="ir('sm6')" style="cursor:pointer">Módulo 6</span><span class="bc-sep">›</span>Cierre</div>
   <div class="mod-bar"><div class="mod-bar-fill" style="width:100%"></div></div>
-  <div id="constancia-container"></div>
+
+  <div style="background:var(--dk);padding:2rem 2rem 1.8rem;margin-bottom:1rem;text-align:center;">
+    <div style="font-size:2.5rem;margin-bottom:.8rem;">🎓</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#a78bfa;margin-bottom:.6rem;">Curso completado</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:.5rem;">Hablar para Influir</h2>
+    <p style="font-size:.9rem;color:#bbb;line-height:1.7;max-width:480px;margin:0 auto;">30 horas · 6 módulos · 1 plan de comunicación propio. Lo que aprendiste no se queda en el curso — se va contigo.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Lo que construiste en este curso</div>
+    <div class="cb-tit">Un mapa de lo que llevás</div>
+    <ul class="alist">
+      <li class="aitem"><div class="anum" style="background:var(--p)">M1</div><div class="acont"><strong>Comunicación como práctica social</strong><p>Habermas, Watzlawick, Rogers. La comunicación no es transmisión — es acción que construye realidad.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">M2</div><div class="acont"><strong>Hablar en público</strong><p>PREP, Pirámide de Minto, Storytelling. Tres estructuras para tres situaciones distintas.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">M3</div><div class="acont"><strong>Negociación y conflictos</strong><p>Fisher y Ury, Rosenberg, Moore. Del conflicto como problema al conflicto como oportunidad.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">M4</div><div class="acont"><strong>Comunicación digital estratégica</strong><p>Hall, Castells, Cialdini, Coombs. Presencia digital con intención, influencia con ética.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">M5</div><div class="acont"><strong>Comunicación intercultural</strong><p>Hofstede, Meyer, Trompenaars, Doyle. Leer diferencias culturales sin estereotipar, facilitar sin imponer.</p></div></li>
+      <li class="aitem"><div class="anum" style="background:var(--p)">M6</div><div class="acont"><strong>Plan de comunicación profesional</strong><p>Tu plan. Tu diagnóstico, tus audiencias, tus mensajes. Listo para usar desde hoy.</p></div></li>
+    </ul>
+  </div>
+
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-r">Reflexión final</span>
+      <div class="act-hdr-txt"><h4>¿Qué cambió en tu forma de entender la comunicación?</h4><p>El cierre más importante es el que tú escribes</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="r-prompt"><strong>Instrucción:</strong> Escribe libremente. ¿Qué idea del curso cambió algo en tu forma de pensar o de actuar? ¿Qué concepto vas a usar en los próximos días? ¿Qué queda pendiente — qué profundizarías si tuvieras más tiempo? No hay respuesta correcta. Este es tu cierre.</div>
+      <textarea class="r-ta" id="ta-m6cierre" style="min-height:200px;" placeholder="Escribe tu reflexión de cierre..."></textarea>
+      <button class="r-save" onclick="guardar('ta-m6cierre','sv-m6cierre')">Guardar</button>
+      <div class="r-saved" id="sv-m6cierre">✓ Guardado</div>
+    </div>
+  </div>
+
+  <div id="constancia-wrap" style="margin-top:1.2rem;"></div>
+
+  <div style="background:var(--dk);padding:1.4rem 1.6rem;margin-top:1rem;text-align:center;">
+    <p style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:.5rem;">Una última cosa</p>
+    <p style="font-size:.92rem;color:#ddd;line-height:1.75;font-style:italic;font-family:'Playfair Display',serif;margin-bottom:.8rem;">"El conocimiento que no se aplica es solo información almacenada. Lo que hace la diferencia no es haber completado el curso — es lo que haces con él mañana."</p>
+    <p style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:700;color:#a78bfa;letter-spacing:.05em;">El futuro es hoy hermano.</p>
+    <p style="font-size:.8rem;color:#666;margin-top:.8rem;">David Salgado López · d.salgado.lpz@gmail.com</p>
+  </div>
 </div>
-</div><!-- /main-inner -->
-</main>
-</div><!-- /curso-wrap -->
-</div><!-- /cursoApp -->
+
 
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycby7gH1pJzfZgmYo6ScEkFHoYAbQqOneQDGnb3BJV0pP_Av0lz5WX3SwxKCwZhmnesF9hQ/exec'; // ← tu URL de Apps Script
@@ -2898,6 +3239,25 @@ function mostrarErr(msg) {
   e.textContent = msg; e.style.display = 'block';
 }
 
+function cerrarSesion() {
+  localStorage.removeItem('hpi_user');
+  localStorage.removeItem('hpi_visitados');
+  localStorage.removeItem('hpi_mods_ok');
+  USER = null;
+  location.reload();
+}
+
+function mostrarUsuarioNav() {
+  if (!USER) return;
+  const navU = document.getElementById('nav-usuario');
+  const btnCerrar = document.getElementById('btn-cerrar-sesion');
+  if (navU) {
+    navU.textContent = USER.nombre || USER.email || 'Participante';
+    navU.style.display = 'inline';
+  }
+  if (btnCerrar) btnCerrar.style.display = 'inline-block';
+}
+
 function iniciarCurso() {
   document.getElementById('accessScreen').style.display = 'none';
   document.getElementById('cursoApp').style.display = 'block';
@@ -2907,18 +3267,25 @@ function iniciarCurso() {
 }
 
 // ══ NAVEGACIÓN ══
-function ir(vid) {
-  const isM2plus = vid.startsWith('m2')||vid==='sm2';
-  const isM3plus = vid.startsWith('m3')||vid==='sm3';
-  const isM4plus = vid.startsWith('m4')||vid==='sm4';
-  const isM5plus = vid.startsWith('m5')||vid==='sm5';
-  const isM6plus = vid.startsWith('m6')||vid==='sm6';
+function esAdmin() {
+  return USER && (USER.rol === 'admin' || USER.email === 'd.salgado.lpz@gmail.com');
+}
 
-  if (isM2plus && !modsOK.includes(1)) { toast('Completa y aprueba el módulo 1 primero'); return; }
-  if (isM3plus && !modsOK.includes(2)) { toast('Completa el módulo 2 primero'); return; }
-  if (isM4plus && !modsOK.includes(3)) { toast('Completa el módulo 3 primero'); return; }
-  if (isM5plus && !modsOK.includes(4)) { toast('Completa el módulo 4 primero'); return; }
-  if (isM6plus && !modsOK.includes(5)) { toast('Completa el módulo 5 primero'); return; }
+function ir(vid) {
+  // Admin navega sin restricciones
+  if (!esAdmin()) {
+    const isM2plus = vid.startsWith('m2')||vid==='sm2';
+    const isM3plus = vid.startsWith('m3')||vid==='sm3';
+    const isM4plus = vid.startsWith('m4')||vid==='sm4';
+    const isM5plus = vid.startsWith('m5')||vid==='sm5';
+    const isM6plus = vid.startsWith('m6')||vid==='sm6';
+
+    if (isM2plus && !modsOK.includes(1)) { toast('Completa y aprueba el módulo 1 primero'); return; }
+    if (isM3plus && !modsOK.includes(2)) { toast('Completa el módulo 2 primero'); return; }
+    if (isM4plus && !modsOK.includes(3)) { toast('Completa el módulo 3 primero'); return; }
+    if (isM5plus && !modsOK.includes(4)) { toast('Completa el módulo 4 primero'); return; }
+    if (isM6plus && !modsOK.includes(5)) { toast('Completa el módulo 5 primero'); return; }
+  }
 
   TODAS.forEach(v => {
     const el = document.getElementById('v-'+v);
