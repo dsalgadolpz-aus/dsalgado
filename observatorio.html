@@ -534,11 +534,11 @@ document.addEventListener('click', function(e) {
   var uEnc = encodeURIComponent(url);
 
   if (red === 'linkedin') {
-    location.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + uEnc + '&summary=' + tEnc;
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + uEnc + '&summary=' + tEnc, '_blank');
   } else if (red === 'twitter') {
-    location.href = 'https://twitter.com/intent/tweet?text=' + tEnc;
+    window.open('https://twitter.com/intent/tweet?text=' + tEnc, '_blank');
   } else if (red === 'facebook') {
-    location.href = 'https://www.facebook.com/sharer/sharer.php?u=' + uEnc;
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + uEnc, '_blank');
   } else if (red === 'copiar') {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(texto).then(function(){ mostrarToastObs('Copiado al portapapeles'); });
