@@ -227,6 +227,40 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
   .stats-row{grid-template-columns:1fr 1fr;}
 }
 </style>
+<script>
+// Google Sign-In callback — debe estar antes de que GSI cargue
+// ── GOOGLE SIGN-IN ────────────────────────────────────────────
+const ALLOWED_EMAIL = 'd.salgado.lpz@gmail.com'; // ← solo este correo puede entrar
+
+function onGoogleLogin(response) {
+  try {
+    // Decodificar el JWT de Google (sin verificar firma — solo para UI)
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const email   = payload.email || '';
+    const nombre  = payload.name  || '';
+
+    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+      document.getElementById('loginErr').textContent =
+        `Acceso no autorizado para ${email}`;
+      document.getElementById('loginErr').style.display = 'block';
+      return;
+    }
+
+    // Email autorizado — iniciar sesión
+    sessionStorage.setItem('admin_ok', '1');
+    sessionStorage.setItem('admin_email', email);
+    sessionStorage.setItem('admin_nombre', nombre);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display   = 'block';
+    onPanelReady();
+  } catch(e) {
+    console.error('Error en Google Sign-In:', e);
+    document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+
+</script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -648,36 +682,7 @@ function getPass() {
 }
 
 
-// ── GOOGLE SIGN-IN ────────────────────────────────────────────
-const ALLOWED_EMAIL = 'd.salgado.lpz@gmail.com'; // ← solo este correo puede entrar
-
-function onGoogleLogin(response) {
-  try {
-    // Decodificar el JWT de Google (sin verificar firma — solo para UI)
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    const email   = payload.email || '';
-    const nombre  = payload.name  || '';
-
-    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
-      document.getElementById('loginErr').textContent =
-        `Acceso no autorizado para ${email}`;
-      document.getElementById('loginErr').style.display = 'block';
-      return;
-    }
-
-    // Email autorizado — iniciar sesión
-    sessionStorage.setItem('admin_ok', '1');
-    sessionStorage.setItem('admin_email', email);
-    sessionStorage.setItem('admin_nombre', nombre);
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('panelMain').style.display   = 'block';
-    onPanelReady();
-  } catch(e) {
-    console.error('Error en Google Sign-In:', e);
-    document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
-    document.getElementById('loginErr').style.display = 'block';
-  }
-}
+// onGoogleLogin — definida en <head>
 
 // ── LOGIN ─────────────────────────────────────────────────────
 function doLogin() {
