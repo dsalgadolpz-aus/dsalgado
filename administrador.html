@@ -721,8 +721,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function onPanelReady() {
-  cargarPublicaciones();
-  cargarStats();
+  showSection('publicaciones');
 }
 
 // ── OJO CONTRASEÑA ───────────────────────────────────────────
@@ -768,11 +767,17 @@ function cambiarPassword() {
 function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.pnl').forEach(p => p.classList.remove('active'));
-  document.getElementById('s-'+id).classList.add('active');
-  event.target.classList.add('active');
-  if (id === 'formacion') cargarStats();
-  if (id === 'publicaciones') cargarPublicaciones();
-  if (id === 'portafolio') cargarPortafolio();
+  const sec = document.getElementById('s-'+id);
+  if (sec) sec.classList.add('active');
+  // Marcar el tab activo en el nav
+  document.querySelectorAll('.pnl').forEach(p => {
+    if (p.getAttribute('onclick') && p.getAttribute('onclick').includes("'"+id+"'")) {
+      p.classList.add('active');
+    }
+  });
+  if (id === 'formacion')      cargarStats();
+  if (id === 'publicaciones')  cargarPublicaciones();
+  if (id === 'portafolio')     cargarPortafolio();
 }
 
 // ── TABS FORMACIÓN ────────────────────────────────────────────
