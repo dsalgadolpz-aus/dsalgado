@@ -228,6 +228,32 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
 }
 </style>
 
+<script>
+// Google Sign-In callback
+const ALLOWED_EMAIL = 'd.salgado.lpz@gmail.com';
+function onGoogleLogin(response) {
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const email = payload.email || '';
+    const nombre = payload.name || '';
+    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+      document.getElementById('loginErr').textContent = 'Acceso no autorizado para ' + email;
+      document.getElementById('loginErr').style.display = 'block';
+      return;
+    }
+    sessionStorage.setItem('admin_ok', '1');
+    sessionStorage.setItem('admin_email', email);
+    sessionStorage.setItem('admin_nombre', nombre);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display = 'block';
+    setTimeout(function() { onPanelReady(); }, 100);
+  } catch(e) {
+    document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+</script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
@@ -235,6 +261,31 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
   <div class="login-box">
     <div class="login-logo">Panel interno · David Salgado López</div>
     <h2>Acceso restringido</h2>
+
+    <!-- Google Sign-In -->
+    <div style="margin-bottom:1rem;">
+      <div id="g_id_onload"
+           data-client_id="421817004617-c999lnv8bjgre830ucqiop4cc7dgq55l.apps.googleusercontent.com"
+           data-context="signin"
+           data-ux_mode="popup"
+           data-callback="onGoogleLogin"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="outline"
+           data-text="signin_with"
+           data-size="large"
+           data-locale="es"
+           style="display:flex;justify-content:center;">
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.7rem;margin:.8rem 0;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:#ccc;">
+      <div style="flex:1;height:1px;background:var(--rule);"></div>
+      o con contraseña
+      <div style="flex:1;height:1px;background:var(--rule);"></div>
+    </div>
 
     <div class="field-wrap">
       <label>Contraseña</label>
@@ -668,8 +719,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // GAS URL fija en código
   if (document.getElementById('cfg-gas')) document.getElementById('cfg-gas').value = GAS_URL;
-}););
-
+});
 function onPanelReady() {
   showSection('publicaciones');
 }
@@ -1184,7 +1234,6 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => {
     if (e.target === bg) bg.classList.remove('open');
   });
-});
 </script>
 </body>
 </html>
