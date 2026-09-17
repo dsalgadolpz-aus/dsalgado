@@ -250,22 +250,11 @@ function onGoogleLogin(response) {
     sessionStorage.setItem('admin_ok', '1');
     sessionStorage.setItem('admin_email', email);
     sessionStorage.setItem('admin_nombre', nombre);
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('panelMain').style.display   = 'block';
-    // Esperar a que el script del body cargue onPanelReady
-    var intentos = 0;
-    var esperar = setInterval(function() {
-      intentos++;
-      if (typeof onPanelReady === 'function') {
-        clearInterval(esperar);
-        onPanelReady();
-      } else if (intentos > 50) {
-        clearInterval(esperar);
-        // Fallback directo si onPanelReady nunca carga
-        var s = document.getElementById('s-publicaciones');
-        if (s) s.classList.add('active');
-      }
-    }, 50);
+    // Guardar sesión y recargar — DOMContentLoaded iniciará el panel correctamente
+    sessionStorage.setItem('admin_ok', '1');
+    sessionStorage.setItem('admin_email', email);
+    sessionStorage.setItem('admin_nombre', nombre);
+    location.reload();
   } catch(e) {
     console.error('Error en Google Sign-In:', e);
     document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
@@ -778,20 +767,17 @@ function cambiarPassword() {
 
 // ── NAV ──────────────────────────────────────────────────────
 function showSection(id) {
-  // Esperar al siguiente frame para asegurar que el DOM está listo
-  requestAnimationFrame(function() {
-    document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
-    document.querySelectorAll('.pnl').forEach(function(p) { p.classList.remove('active'); });
-    var sec = document.getElementById('s-' + id);
-    if (sec) sec.classList.add('active');
-    document.querySelectorAll('.pnl').forEach(function(p) {
-      var oc = p.getAttribute('onclick') || '';
-      if (oc.indexOf("'" + id + "'") !== -1) p.classList.add('active');
-    });
-    if (id === 'formacion')     cargarStats();
-    if (id === 'publicaciones') cargarPublicaciones();
-    if (id === 'portafolio')    cargarPortafolio();
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.pnl').forEach(function(p) { p.classList.remove('active'); });
+  var sec = document.getElementById('s-' + id);
+  if (sec) sec.classList.add('active');
+  document.querySelectorAll('.pnl').forEach(function(p) {
+    var oc = p.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1) p.classList.add('active');
   });
+  if (id === 'formacion')     cargarStats();
+  if (id === 'publicaciones') cargarPublicaciones();
+  if (id === 'portafolio')    cargarPortafolio();
 }
 
 // ── TABS FORMACIÓN ────────────────────────────────────────────
