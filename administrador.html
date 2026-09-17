@@ -248,7 +248,7 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
     </div>
 
     <button class="login-btn" onclick="doLogin()">Entrar al panel</button>
-    <div class="login-err" id="loginErr">Contraseña incorrecta. Intenta de nuevo.</div>
+    <div class="login-err" id="loginErr">Contraseña incorrecta. La contraseña por defecto es <strong>Temporal123/</strong></div>
   </div>
 </div>
 
@@ -654,6 +654,10 @@ function doLogout() {
 
 // Auto-login si la sesión sigue activa
 window.addEventListener('DOMContentLoaded', () => {
+  // Asegurar que la contraseña por defecto esté disponible
+  // (si se limpió el localStorage, vuelve a Temporal123/)
+  // No hay nada que hacer — getPass() ya tiene el fallback
+
   if (sessionStorage.getItem('admin_ok') === '1') {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('panelMain').style.display = 'block';
