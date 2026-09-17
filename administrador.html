@@ -250,10 +250,10 @@ function onGoogleLogin(response) {
     sessionStorage.setItem('admin_ok', '1');
     sessionStorage.setItem('admin_email', email);
     sessionStorage.setItem('admin_nombre', nombre);
-    // Guardar sesión y recargar — DOMContentLoaded iniciará el panel correctamente
-    sessionStorage.setItem('admin_ok', '1');
-    sessionStorage.setItem('admin_email', email);
-    sessionStorage.setItem('admin_nombre', nombre);
+    // Guardar en localStorage (persiste entre recargas) y recargar
+    localStorage.setItem('admin_google_ok', '1');
+    localStorage.setItem('admin_google_email', email);
+    localStorage.setItem('admin_google_nombre', nombre);
     location.reload();
   } catch(e) {
     console.error('Error en Google Sign-In:', e);
@@ -687,6 +687,14 @@ function getPass() {
 // onGoogleLogin — definida en <head>
 
 // ── LOGIN ─────────────────────────────────────────────────────
+function cerrarSesion() {
+  sessionStorage.removeItem('admin_ok');
+  localStorage.removeItem('admin_google_ok');
+  localStorage.removeItem('admin_google_email');
+  localStorage.removeItem('admin_google_nombre');
+  location.reload();
+}
+
 function doLogin() {
   const val = document.getElementById('loginPass').value;
   const err = document.getElementById('loginErr');
@@ -710,7 +718,14 @@ function doLogout() {
 
 // Auto-login si la sesión sigue activa
 window.addEventListener('DOMContentLoaded', () => {
-  if (sessionStorage.getItem('admin_ok') === '1') {
+  // Login por contraseña (sessionStorage) o por Google (localStorage)
+  const adminOk = sessionStorage.getItem('admin_ok') === '1'
+                  || localStorage.getItem('admin_google_ok') === '1';
+  if (adminOk) {
+    // Si vino de Google, cargar nombre para mostrarlo
+    if (!sessionStorage.getItem('admin_ok') && localStorage.getItem('admin_google_ok')) {
+      sessionStorage.setItem('admin_ok', '1');
+    }
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('panelMain').style.display = 'block';
     onPanelReady();
