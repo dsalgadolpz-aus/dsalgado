@@ -227,43 +227,7 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
   .stats-row{grid-template-columns:1fr 1fr;}
 }
 </style>
-<script>
-// Google Sign-In callback — debe estar antes de que GSI cargue
-// ── GOOGLE SIGN-IN ────────────────────────────────────────────
-const ALLOWED_EMAIL = 'd.salgado.lpz@gmail.com'; // ← solo este correo puede entrar
 
-function onGoogleLogin(response) {
-  try {
-    // Decodificar el JWT de Google (sin verificar firma — solo para UI)
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    const email   = payload.email || '';
-    const nombre  = payload.name  || '';
-
-    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
-      document.getElementById('loginErr').textContent =
-        `Acceso no autorizado para ${email}`;
-      document.getElementById('loginErr').style.display = 'block';
-      return;
-    }
-
-    // Email autorizado — iniciar sesión
-    sessionStorage.setItem('admin_ok', '1');
-    sessionStorage.setItem('admin_email', email);
-    sessionStorage.setItem('admin_nombre', nombre);
-    // Guardar en localStorage (persiste entre recargas) y recargar
-    localStorage.setItem('admin_google_ok', '1');
-    localStorage.setItem('admin_google_email', email);
-    localStorage.setItem('admin_google_nombre', nombre);
-    location.reload();
-  } catch(e) {
-    console.error('Error en Google Sign-In:', e);
-    document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
-    document.getElementById('loginErr').style.display = 'block';
-  }
-}
-
-</script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
@@ -271,34 +235,6 @@ function onGoogleLogin(response) {
   <div class="login-box">
     <div class="login-logo">Panel interno · David Salgado López</div>
     <h2>Acceso restringido</h2>
-
-    <!-- Google Sign-In -->
-    <div id="g_signin_wrap" style="margin-bottom:1rem;">
-      <div id="g_id_onload"
-           data-client_id="421817004617-c999lnv8bjgre830ucqiop4cc7dgq55l.apps.googleusercontent.com"
-           data-context="signin"
-           data-ux_mode="popup"
-           data-callback="onGoogleLogin"
-           data-auto_prompt="false">
-      </div>
-      <div class="g_id_signin"
-           data-type="standard"
-           data-shape="rectangular"
-           data-theme="outline"
-           data-text="signin_with"
-           data-size="large"
-           data-locale="es"
-           style="display:flex;justify-content:center;">
-      </div>
-    </div>
-
-    <div style="display:flex;align-items:center;gap:.7rem;margin:.8rem 0;
-                font-family:'DM Mono',monospace;font-size:.6rem;
-                letter-spacing:.08em;text-transform:uppercase;color:#ccc;">
-      <div style="flex:1;height:1px;background:var(--rule);"></div>
-      o con contraseña
-      <div style="flex:1;height:1px;background:var(--rule);"></div>
-    </div>
 
     <div class="field-wrap">
       <label>Contraseña</label>
@@ -718,14 +654,7 @@ function doLogout() {
 
 // Auto-login si la sesión sigue activa
 window.addEventListener('DOMContentLoaded', () => {
-  // Login por contraseña (sessionStorage) o por Google (localStorage)
-  const adminOk = sessionStorage.getItem('admin_ok') === '1'
-                  || localStorage.getItem('admin_google_ok') === '1';
-  if (adminOk) {
-    // Si vino de Google, cargar nombre para mostrarlo
-    if (!sessionStorage.getItem('admin_ok') && localStorage.getItem('admin_google_ok')) {
-      sessionStorage.setItem('admin_ok', '1');
-    }
+  if (sessionStorage.getItem('admin_ok') === '1') {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('panelMain').style.display = 'block';
     onPanelReady();
