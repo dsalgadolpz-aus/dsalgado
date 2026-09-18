@@ -26,7 +26,7 @@ a{color:inherit;text-decoration:none;}
 
 /* ── LOGIN ── */
 .login-screen{min-height:100vh;display:flex;align-items:center;
-              justify-content:center;padding:2rem;background:var(--dk);}
+              justify-content:center;padding:2rem;background:var(--dk);z-index:100;position:relative;}
 .login-box{background:var(--white);border:1px solid var(--rule);
            padding:2.5rem 2rem;max-width:380px;width:100%;}
 .login-logo{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
@@ -244,8 +244,10 @@ function onGoogleLogin(response) {
     sessionStorage.setItem('admin_ok', '1');
     sessionStorage.setItem('admin_email', email);
     sessionStorage.setItem('admin_nombre', nombre);
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('panelMain').style.display = 'block';
+    var ls = document.getElementById('loginScreen');
+    var pm = document.getElementById('panelMain');
+    if (ls) { ls.style.display = 'none'; ls.style.visibility = 'hidden'; ls.style.pointerEvents = 'none'; }
+    if (pm) { pm.style.display = 'block'; pm.style.visibility = 'visible'; }
     setTimeout(function() { onPanelReady(); }, 100);
   } catch(e) {
     document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
@@ -683,18 +685,24 @@ function cerrarSesion() {
 }
 
 function doLogin() {
-  const val = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginErr');
-  if (val === getPass()) {
-    sessionStorage.setItem('admin_ok','1');
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('panelMain').style.display = 'block';
-    onPanelReady();
-    err.style.display = 'none';
-  } else {
-    err.style.display = 'block';
-    document.getElementById('loginPass').value = '';
-    document.getElementById('loginPass').focus();
+  try {
+    var val = document.getElementById('loginPass').value;
+    var err = document.getElementById('loginErr');
+    if (val === getPass()) {
+      sessionStorage.setItem('admin_ok','1');
+      var ls = document.getElementById('loginScreen');
+      var pm = document.getElementById('panelMain');
+      if (ls) { ls.style.display = 'none'; ls.style.visibility = 'hidden'; ls.style.pointerEvents = 'none'; }
+      if (pm) { pm.style.display = 'block'; pm.style.visibility = 'visible'; }
+      if (err) err.style.display = 'none';
+      onPanelReady();
+    } else {
+      if (err) err.style.display = 'block';
+      document.getElementById('loginPass').value = '';
+      document.getElementById('loginPass').focus();
+    }
+  } catch(e) {
+    console.error('doLogin error:', e);
   }
 }
 
@@ -710,8 +718,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // No hay nada que hacer — getPass() ya tiene el fallback
 
   if (sessionStorage.getItem('admin_ok') === '1') {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('panelMain').style.display = 'block';
+    var ls = document.getElementById('loginScreen');
+    var pm = document.getElementById('panelMain');
+    if (ls) { ls.style.display = 'none'; ls.style.visibility = 'hidden'; ls.style.pointerEvents = 'none'; }
+    if (pm) { pm.style.display = 'block'; pm.style.visibility = 'visible'; }
     onPanelReady();
   }
   document.getElementById('loginPass')
