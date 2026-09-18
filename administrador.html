@@ -801,6 +801,22 @@ function switchFormTab(id) {
 // ── MODALES ───────────────────────────────────────────────────
 function abrirModal(id) { document.getElementById(id).classList.add('open'); }
 function cerrarModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function editarPublicacion(idx) {
+  // Reutilizar el modal de nueva publicación con datos existentes
+  if (!window._pubData || !window._pubData[idx]) {
+    toast('No se encontró la publicación'); return;
+  }
+  const p = window._pubData[idx];
+  document.getElementById('pub-titulo').value = p.titulo || '';
+  document.getElementById('pub-sub').value    = p.sub    || '';
+  document.getElementById('pub-anio').value   = p.anio   || '';
+  document.getElementById('pub-resumen').value = p.resumen || '';
+  document.getElementById('pub-linkedin').value = p.linkedin || '';
+  window._editando_pub_idx = idx;
+  abrirModalPub();
+}
+
 function abrirModalPub() {
   ['pub-titulo','pub-sub','pub-desc','pub-url','pub-anio'].forEach(id => {
     document.getElementById(id).value = '';
@@ -821,7 +837,7 @@ function guardarGAS() {
   toast('La URL está fija en el código. Para cambiarla actualiza el archivo administrador.html.');
 }
 
-async function gasPost(body) {
+async async function gasPost(body) {
   const url = gasURL();
   if (!url) { toast('GAS URL no configurada.'); throw new Error('Sin GAS URL'); }
   // Apps Script requiere text/plain para evitar CORS preflight
@@ -835,7 +851,7 @@ async function gasPost(body) {
   try { return JSON.parse(txt); } catch(e) { return { ok: false, error: txt }; }
 }
 
-async function gasGet(params) {
+async async function gasGet(params) {
   const url = gasURL();
   if (!url) return null;
   const qs = new URLSearchParams(params).toString();
@@ -845,11 +861,12 @@ async function gasGet(params) {
 }
 
 // ── PUBLICACIONES ─────────────────────────────────────────────
-async function cargarPublicaciones() {
+async async function cargarPublicaciones() {
   const el = document.getElementById('pub-lista');
   el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
   try {
     const data = await gasGet({ action: 'listarPublicaciones' });
+    window._pubData = data?.items || [];
     if (!data?.items?.length) {
       el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">No hay publicaciones aún.</p>';
       return;
@@ -872,7 +889,7 @@ async function cargarPublicaciones() {
   }
 }
 
-async function guardarPublicacion() {
+async async function guardarPublicacion() {
   const body = {
     action: 'guardarPublicacion',
     titulo: document.getElementById('pub-titulo').value.trim(),
@@ -890,7 +907,7 @@ async function guardarPublicacion() {
   } catch(e) { toast('Error al guardar.'); }
 }
 
-async function eliminarPublicacion(idx) {
+async async function eliminarPublicacion(idx) {
   if (!confirm('¿Eliminar esta publicación?')) return;
   try {
     await gasPost({ action: 'eliminarPublicacion', idx });
@@ -900,11 +917,12 @@ async function eliminarPublicacion(idx) {
 }
 
 // ── PORTAFOLIO ────────────────────────────────────────────────
-async function cargarPortafolio() {
+async async function cargarPortafolio() {
   const el = document.getElementById('port-lista');
   el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
   try {
     const data = await gasGet({ action: 'listarPortafolio' });
+    window._pubData = data?.items || [];
     if (!data?.items?.length) {
       el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">No hay proyectos aún.</p>';
       return;
@@ -925,7 +943,7 @@ async function cargarPortafolio() {
   }
 }
 
-async function guardarProyecto() {
+async async function guardarProyecto() {
   const body = {
     action:   'guardarPortafolio',
     cat:      document.getElementById('port-cat').value,
@@ -945,7 +963,7 @@ async function guardarProyecto() {
   } catch(e) { toast('Error al guardar.'); }
 }
 
-async function eliminarProyecto(idx) {
+async async function eliminarProyecto(idx) {
   if (!confirm('¿Eliminar este proyecto?')) return;
   try {
     await gasPost({ action: 'eliminarPortafolio', idx });
@@ -955,7 +973,7 @@ async function eliminarProyecto(idx) {
 }
 
 // ── FORMACIÓN — STATS ─────────────────────────────────────────
-async function cargarStats() {
+async async function cargarStats() {
   try {
     const data = await gasGet({ action: 'estadisticas' });
     if (!data) return;
@@ -1068,7 +1086,7 @@ function parsearLote() {
   document.getElementById('btn-lote').style.display     = validos > 0 ? 'inline-flex' : 'none';
 }
 
-async function enviarLote() {
+async async function enviarLote() {
   const validos  = loteData.filter(p => p.valido);
   const curso    = document.getElementById('lote-curso').value;
   const duracion = parseInt(document.getElementById('lote-duracion').value);
@@ -1109,7 +1127,7 @@ async function enviarLote() {
 // ── PARTICIPANTES ─────────────────────────────────────────────
 let todosParticipantes = [];
 
-async async function cargarParticipantes() {
+async async async function cargarParticipantes() {
   const el = document.getElementById('part-lista');
   el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
   try {
@@ -1194,7 +1212,7 @@ function verParticipante(idx) {
   abrirModal('modal-part');
 }
 
-async function reactivarParticipante() {
+async async function reactivarParticipante() {
   if (!partActual) return;
   const dias = parseInt(document.getElementById('reactivar-dias').value);
   try {
@@ -1212,7 +1230,7 @@ async function reactivarParticipante() {
 }
 
 // ── OBSERVATORIO ──────────────────────────────────────────────
-async function generarResumenManual() {
+async async function generarResumenManual() {
   try {
     const data = await gasPost({ action: 'generarResumenSemanal' });
     if (data.ok) toast('Resumen semanal generado y publicado.');
