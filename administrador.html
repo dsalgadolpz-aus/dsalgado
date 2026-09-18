@@ -26,7 +26,7 @@ a{color:inherit;text-decoration:none;}
 
 /* ── LOGIN ── */
 .login-screen{min-height:100vh;display:flex;align-items:center;
-              justify-content:center;padding:2rem;background:var(--dk);z-index:100;position:relative;}
+              justify-content:center;padding:2rem;background:var(--dk);}
 .login-box{background:var(--white);border:1px solid var(--rule);
            padding:2.5rem 2rem;max-width:380px;width:100%;}
 .login-logo{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;
@@ -227,34 +227,6 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
   .stats-row{grid-template-columns:1fr 1fr;}
 }
 </style>
-
-<script>
-// Google Sign-In callback
-const ALLOWED_EMAIL = 'd.salgado.lpz@gmail.com';
-function onGoogleLogin(response) {
-  try {
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    const email = payload.email || '';
-    const nombre = payload.name || '';
-    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
-      document.getElementById('loginErr').textContent = 'Acceso no autorizado para ' + email;
-      document.getElementById('loginErr').style.display = 'block';
-      return;
-    }
-    sessionStorage.setItem('admin_ok', '1');
-    sessionStorage.setItem('admin_email', email);
-    sessionStorage.setItem('admin_nombre', nombre);
-    var ls = document.getElementById('loginScreen');
-    var pm = document.getElementById('panelMain');
-    if (ls) { ls.style.display = 'none'; ls.style.visibility = 'hidden'; ls.style.pointerEvents = 'none'; }
-    if (pm) { pm.style.display = 'block'; pm.style.visibility = 'visible'; }
-    setTimeout(function() { onPanelReady(); }, 100);
-  } catch(e) {
-    document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
-    document.getElementById('loginErr').style.display = 'block';
-  }
-}
-</script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -265,7 +237,7 @@ function onGoogleLogin(response) {
     <h2>Acceso restringido</h2>
 
     <!-- Google Sign-In -->
-    <div style="margin-bottom:1rem;">
+    <div id="g_signin_wrap" style="margin-bottom:1rem;">
       <div id="g_id_onload"
            data-client_id="421817004617-c999lnv8bjgre830ucqiop4cc7dgq55l.apps.googleusercontent.com"
            data-context="signin"
@@ -283,7 +255,10 @@ function onGoogleLogin(response) {
            style="display:flex;justify-content:center;">
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:.7rem;margin:.8rem 0;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:#ccc;">
+
+    <div style="display:flex;align-items:center;gap:.7rem;margin:.8rem 0;
+                font-family:'DM Mono',monospace;font-size:.6rem;
+                letter-spacing:.08em;text-transform:uppercase;color:#ccc;">
       <div style="flex:1;height:1px;background:var(--rule);"></div>
       o con contraseña
       <div style="flex:1;height:1px;background:var(--rule);"></div>
@@ -301,7 +276,7 @@ function onGoogleLogin(response) {
     </div>
 
     <button class="login-btn" onclick="doLogin()">Entrar al panel</button>
-    <div class="login-err" id="loginErr">Contraseña incorrecta. La contraseña por defecto es <strong>Temporal123/</strong></div>
+    <div class="login-err" id="loginErr">Contraseña incorrecta. Intenta de nuevo.</div>
   </div>
 </div>
 
@@ -320,6 +295,7 @@ function onGoogleLogin(response) {
       <li><span class="pnl" onclick="showSection('configuracion')">Configuración</span></li>
     </ul>
     <div class="panel-nav-right">
+      <span id="nav-admin-nombre" style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:#aaa;"></span>
       <a class="nav-site-link" href="index.html" target="_blank">Ver sitio →</a>
       <button class="nav-logout" onclick="doLogout()">Cerrar sesión</button>
     </div>
@@ -673,36 +649,51 @@ function getPass() {
 }
 
 
-// onGoogleLogin — definida en <head>
+// ── GOOGLE SIGN-IN ────────────────────────────────────────────
+const ALLOWED_EMAIL = 'd.salgado.lpz@gmail.com'; // ← solo este correo puede entrar
 
-// ── LOGIN ─────────────────────────────────────────────────────
-function cerrarSesion() {
-  sessionStorage.removeItem('admin_ok');
-  localStorage.removeItem('admin_google_ok');
-  localStorage.removeItem('admin_google_email');
-  localStorage.removeItem('admin_google_nombre');
-  location.reload();
+function onGoogleLogin(response) {
+  try {
+    // Decodificar el JWT de Google (sin verificar firma — solo para UI)
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const email   = payload.email || '';
+    const nombre  = payload.name  || '';
+
+    if (email.toLowerCase() !== ALLOWED_EMAIL.toLowerCase()) {
+      document.getElementById('loginErr').textContent =
+        `Acceso no autorizado para ${email}`;
+      document.getElementById('loginErr').style.display = 'block';
+      return;
+    }
+
+    // Email autorizado — iniciar sesión
+    sessionStorage.setItem('admin_ok', '1');
+    sessionStorage.setItem('admin_email', email);
+    sessionStorage.setItem('admin_nombre', nombre);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display   = 'block';
+    onPanelReady();
+  } catch(e) {
+    console.error('Error en Google Sign-In:', e);
+    document.getElementById('loginErr').textContent = 'Error al verificar cuenta de Google.';
+    document.getElementById('loginErr').style.display = 'block';
+  }
 }
 
+// ── LOGIN ─────────────────────────────────────────────────────
 function doLogin() {
-  try {
-    var val = document.getElementById('loginPass').value;
-    var err = document.getElementById('loginErr');
-    if (val === getPass()) {
-      sessionStorage.setItem('admin_ok','1');
-      var ls = document.getElementById('loginScreen');
-      var pm = document.getElementById('panelMain');
-      if (ls) { ls.style.display = 'none'; ls.style.visibility = 'hidden'; ls.style.pointerEvents = 'none'; }
-      if (pm) { pm.style.display = 'block'; pm.style.visibility = 'visible'; }
-      if (err) err.style.display = 'none';
-      onPanelReady();
-    } else {
-      if (err) err.style.display = 'block';
-      document.getElementById('loginPass').value = '';
-      document.getElementById('loginPass').focus();
-    }
-  } catch(e) {
-    console.error('doLogin error:', e);
+  const val = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  if (val === getPass()) {
+    sessionStorage.setItem('admin_ok','1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display = 'block';
+    onPanelReady();
+    err.style.display = 'none';
+  } else {
+    err.style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
   }
 }
 
@@ -713,15 +704,9 @@ function doLogout() {
 
 // Auto-login si la sesión sigue activa
 window.addEventListener('DOMContentLoaded', () => {
-  // Asegurar que la contraseña por defecto esté disponible
-  // (si se limpió el localStorage, vuelve a Temporal123/)
-  // No hay nada que hacer — getPass() ya tiene el fallback
-
   if (sessionStorage.getItem('admin_ok') === '1') {
-    var ls = document.getElementById('loginScreen');
-    var pm = document.getElementById('panelMain');
-    if (ls) { ls.style.display = 'none'; ls.style.visibility = 'hidden'; ls.style.pointerEvents = 'none'; }
-    if (pm) { pm.style.display = 'block'; pm.style.visibility = 'visible'; }
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('panelMain').style.display = 'block';
     onPanelReady();
   }
   document.getElementById('loginPass')
@@ -730,7 +715,12 @@ window.addEventListener('DOMContentLoaded', () => {
   // GAS URL fija en código
   if (document.getElementById('cfg-gas')) document.getElementById('cfg-gas').value = GAS_URL;
 });
+
 function onPanelReady() {
+  // Mostrar nombre del admin
+  const nombre = sessionStorage.getItem('admin_nombre') || '';
+  const el = document.getElementById('nav-admin-nombre');
+  if (el && nombre) el.textContent = nombre;
   showSection('publicaciones');
 }
 
@@ -775,17 +765,18 @@ function cambiarPassword() {
 
 // ── NAV ──────────────────────────────────────────────────────
 function showSection(id) {
-  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
-  document.querySelectorAll('.pnl').forEach(function(p) { p.classList.remove('active'); });
-  var sec = document.getElementById('s-' + id);
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.pnl').forEach(p => p.classList.remove('active'));
+  const sec = document.getElementById('s-'+id);
   if (sec) sec.classList.add('active');
-  document.querySelectorAll('.pnl').forEach(function(p) {
-    var oc = p.getAttribute('onclick') || '';
-    if (oc.indexOf("'" + id + "'") !== -1) p.classList.add('active');
+  // Marcar tab activo sin depender de event.target
+  document.querySelectorAll('.pnl').forEach(p => {
+    const oc = p.getAttribute('onclick') || '';
+    if (oc.includes("'"+id+"'")) p.classList.add('active');
   });
-  if (id === 'formacion')     cargarStats();
+  if (id === 'formacion') cargarStats();
   if (id === 'publicaciones') cargarPublicaciones();
-  if (id === 'portafolio')    cargarPortafolio();
+  if (id === 'portafolio') cargarPortafolio();
 }
 
 // ── TABS FORMACIÓN ────────────────────────────────────────────
@@ -801,22 +792,6 @@ function switchFormTab(id) {
 // ── MODALES ───────────────────────────────────────────────────
 function abrirModal(id) { document.getElementById(id).classList.add('open'); }
 function cerrarModal(id) { document.getElementById(id).classList.remove('open'); }
-
-function editarPublicacion(idx) {
-  // Reutilizar el modal de nueva publicación con datos existentes
-  if (!window._pubData || !window._pubData[idx]) {
-    toast('No se encontró la publicación'); return;
-  }
-  const p = window._pubData[idx];
-  document.getElementById('pub-titulo').value = p.titulo || '';
-  document.getElementById('pub-sub').value    = p.sub    || '';
-  document.getElementById('pub-anio').value   = p.anio   || '';
-  document.getElementById('pub-resumen').value = p.resumen || '';
-  document.getElementById('pub-linkedin').value = p.linkedin || '';
-  window._editando_pub_idx = idx;
-  abrirModalPub();
-}
-
 function abrirModalPub() {
   ['pub-titulo','pub-sub','pub-desc','pub-url','pub-anio'].forEach(id => {
     document.getElementById(id).value = '';
@@ -837,7 +812,7 @@ function guardarGAS() {
   toast('La URL está fija en el código. Para cambiarla actualiza el archivo administrador.html.');
 }
 
-async async function gasPost(body) {
+async function gasPost(body) {
   const url = gasURL();
   if (!url) { toast('GAS URL no configurada.'); throw new Error('Sin GAS URL'); }
   // Apps Script requiere text/plain para evitar CORS preflight
@@ -851,7 +826,7 @@ async async function gasPost(body) {
   try { return JSON.parse(txt); } catch(e) { return { ok: false, error: txt }; }
 }
 
-async async function gasGet(params) {
+async function gasGet(params) {
   const url = gasURL();
   if (!url) return null;
   const qs = new URLSearchParams(params).toString();
@@ -861,12 +836,11 @@ async async function gasGet(params) {
 }
 
 // ── PUBLICACIONES ─────────────────────────────────────────────
-async async function cargarPublicaciones() {
+async function cargarPublicaciones() {
   const el = document.getElementById('pub-lista');
   el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
   try {
     const data = await gasGet({ action: 'listarPublicaciones' });
-    window._pubData = data?.items || [];
     if (!data?.items?.length) {
       el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">No hay publicaciones aún.</p>';
       return;
@@ -889,7 +863,7 @@ async async function cargarPublicaciones() {
   }
 }
 
-async async function guardarPublicacion() {
+async function guardarPublicacion() {
   const body = {
     action: 'guardarPublicacion',
     titulo: document.getElementById('pub-titulo').value.trim(),
@@ -907,7 +881,7 @@ async async function guardarPublicacion() {
   } catch(e) { toast('Error al guardar.'); }
 }
 
-async async function eliminarPublicacion(idx) {
+async function eliminarPublicacion(idx) {
   if (!confirm('¿Eliminar esta publicación?')) return;
   try {
     await gasPost({ action: 'eliminarPublicacion', idx });
@@ -917,12 +891,11 @@ async async function eliminarPublicacion(idx) {
 }
 
 // ── PORTAFOLIO ────────────────────────────────────────────────
-async async function cargarPortafolio() {
+async function cargarPortafolio() {
   const el = document.getElementById('port-lista');
   el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
   try {
     const data = await gasGet({ action: 'listarPortafolio' });
-    window._pubData = data?.items || [];
     if (!data?.items?.length) {
       el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">No hay proyectos aún.</p>';
       return;
@@ -943,7 +916,7 @@ async async function cargarPortafolio() {
   }
 }
 
-async async function guardarProyecto() {
+async function guardarProyecto() {
   const body = {
     action:   'guardarPortafolio',
     cat:      document.getElementById('port-cat').value,
@@ -963,7 +936,7 @@ async async function guardarProyecto() {
   } catch(e) { toast('Error al guardar.'); }
 }
 
-async async function eliminarProyecto(idx) {
+async function eliminarProyecto(idx) {
   if (!confirm('¿Eliminar este proyecto?')) return;
   try {
     await gasPost({ action: 'eliminarPortafolio', idx });
@@ -973,7 +946,7 @@ async async function eliminarProyecto(idx) {
 }
 
 // ── FORMACIÓN — STATS ─────────────────────────────────────────
-async async function cargarStats() {
+async function cargarStats() {
   try {
     const data = await gasGet({ action: 'estadisticas' });
     if (!data) return;
@@ -1086,7 +1059,7 @@ function parsearLote() {
   document.getElementById('btn-lote').style.display     = validos > 0 ? 'inline-flex' : 'none';
 }
 
-async async function enviarLote() {
+async function enviarLote() {
   const validos  = loteData.filter(p => p.valido);
   const curso    = document.getElementById('lote-curso').value;
   const duracion = parseInt(document.getElementById('lote-duracion').value);
@@ -1127,7 +1100,7 @@ async async function enviarLote() {
 // ── PARTICIPANTES ─────────────────────────────────────────────
 let todosParticipantes = [];
 
-async async async function cargarParticipantes() {
+async async function cargarParticipantes() {
   const el = document.getElementById('part-lista');
   el.innerHTML = '<p style="font-size:.82rem;color:var(--soft);">Cargando...</p>';
   try {
@@ -1212,7 +1185,7 @@ function verParticipante(idx) {
   abrirModal('modal-part');
 }
 
-async async function reactivarParticipante() {
+async function reactivarParticipante() {
   if (!partActual) return;
   const dias = parseInt(document.getElementById('reactivar-dias').value);
   try {
@@ -1230,7 +1203,7 @@ async async function reactivarParticipante() {
 }
 
 // ── OBSERVATORIO ──────────────────────────────────────────────
-async async function generarResumenManual() {
+async function generarResumenManual() {
   try {
     const data = await gasPost({ action: 'generarResumenSemanal' });
     if (data.ok) toast('Resumen semanal generado y publicado.');
@@ -1262,6 +1235,7 @@ document.querySelectorAll('.modal-bg').forEach(bg => {
   bg.addEventListener('click', e => {
     if (e.target === bg) bg.classList.remove('open');
   });
+});
 </script>
 </body>
 </html>
