@@ -414,6 +414,12 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
       <div class="sb-mod-tit">Contexto laboral en México</div>
       <div class="sb-horas">5h</div>
     </div>
+    <div class="sb-items" id="si-m2" style="display:none">
+      <div class="sb-item" id="si-m2t1" onclick="ir('m2t1')"><span class="sb-item-ico">○</span>T1 · Estructura del mercado laboral</div>
+      <div class="sb-item" id="si-m2t2" onclick="ir('m2t2')"><span class="sb-item-ico">○</span>T2 · Juventudes y trabajo precario</div>
+      <div class="sb-item" id="si-m2t3" onclick="ir('m2t3')"><span class="sb-item-ico">○</span>T3 · Estrategia en contexto</div>
+      <div class="sb-item" id="si-m2ev" onclick="ir('m2ev')"><span class="sb-item-ico">◇</span>Evaluación</div>
+    </div>
   </div>
   <div class="sb-div"></div>
 
@@ -995,15 +1001,525 @@ nav{position:sticky;top:0;z-index:300;background:rgba(250,250,248,.97);backdrop-
 <!-- ═══════════ MÓDULO 2 ═══════════ -->
 <div id="v-sm2" style="display:none">
   <div class="mod-cover">
-    <div class="mc-num">Módulo 02</div>
-    <h1>En construcción</h1>
-    <p class="mc-desc">Este módulo estará disponible pronto.</p>
+    <div class="mc-num">Módulo 02 · 5 horas · 3 temas</div>
+    <h1>Contexto laboral<br>en México</h1>
+    <p class="mc-desc">No buscas empleo en abstracto — lo buscas en un mercado laboral concreto, con reglas específicas, tendencias reales y desigualdades estructurales. Entender cómo funciona el mercado de trabajo en México es el primer paso para moverte en él con inteligencia.</p>
+    <div class="mc-meta">
+      <div class="mc-stat"><strong>3</strong><span>Temas</span></div>
+      <div class="mc-stat"><strong>12</strong><span>Actividades</span></div>
+      <div class="mc-stat"><strong>80%</strong><span>Para avanzar</span></div>
+      <div class="mc-stat"><strong>~2h</strong><span>Lectura activa</span></div>
+    </div>
+    <div class="mc-tags">
+      <span class="mc-tag">Mercado laboral</span>
+      <span class="mc-tag">ENOE · INEGI · Informalidad</span>
+      <span class="mc-tag">Juventudes · Precarización</span>
+    </div>
+  </div>
+
+  <div style="background:#13111C;padding:1.8rem 2rem;margin-bottom:1rem;border-left:4px solid #6D28D9;display:flex;gap:1.5rem;align-items:flex-start;">
+    <img src="https://dsalgadolpz-aus.github.io/dsalgado/assets/avatar-david.png" alt="David Salgado"
+         style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #3d2b6b;flex-shrink:0;"/>
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:#a78bfa;margin-bottom:.6rem;">David Salgado López</div>
+      <p style="font-size:.92rem;color:#ddd;line-height:1.75;margin:0 0 .9rem;font-style:italic;font-family:'Playfair Display',serif;">
+        "Cuando entendí que la informalidad no era el fracaso de ciertos trabajadores sino la lógica normal del mercado en México, cambié completamente cómo orientaba a la gente. El mercado no es neutro — tiene historia, tiene poder, tiene víctimas y beneficiarios."
+      </p>
+      <p style="font-family:'DM Mono',monospace;font-size:.72rem;font-weight:700;color:#a78bfa;letter-spacing:.05em;margin:0;border-top:1px solid #2d2541;padding-top:.7rem;">
+        Los datos sin contexto no sirven de nada.
+      </p>
+    </div>
+  </div>
+
+  <div class="splash">
+    <div class="splash-ico">📊</div>
+    <h2>¿Listo para continuar?</h2>
+    <p>Este módulo dura aproximadamente 2 horas de lectura activa. Explorarás datos reales del mercado laboral mexicano y aprenderás a leerlos críticamente.</p>
+    <button class="splash-btn" onclick="ir('m2t1')">Comenzar módulo 2 →</button>
+    <div class="splash-meta">
+      <div class="sm-item"><strong>3</strong><span>Reflexiones</span></div>
+      <div class="sm-item"><strong>3</strong><span>Prácticas</span></div>
+      <div class="sm-item"><strong>3</strong><span>Dinámicas</span></div>
+      <div class="sm-item"><strong>1</strong><span>Evaluación</span></div>
+    </div>
   </div>
 </div>
-<div id="v-m2t1" style="display:none"><div class="bc">M2 · T1</div></div>
-<div id="v-m2t2" style="display:none"><div class="bc">M2 · T2</div></div>
-<div id="v-m2t3" style="display:none"><div class="bc">M2 · T3</div></div>
-<div id="v-m2ev" style="display:none"><div class="bc">M2 · Evaluación</div></div>
+
+<!-- ─── M2 · TEMA 1 ─── -->
+<div id="v-m2t1" style="display:none">
+  <div class="bc"><span onclick="ir('sm2')" style="cursor:pointer">Módulo 2</span><span class="bc-sep">›</span>Tema 1</div>
+  <div class="mod-bar"><div class="mod-bar-fill" style="width:25%"></div></div>
+
+  <div style="background:var(--white);border:1px solid var(--rule);padding:1.4rem 1.6rem;margin-bottom:1rem;">
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Tema 1 de 3 · Módulo 2</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Estructura del mercado laboral mexicano</h2>
+    <p style="font-size:.84rem;color:var(--soft);line-height:1.65;">Para buscar trabajo con inteligencia en México hay que entender primero cómo está organizado el mercado de trabajo: quiénes participan, bajo qué condiciones, con qué derechos y con qué brechas. Los datos de la Encuesta Nacional de Ocupación y Empleo (ENOE) del INEGI son la fuente más rigurosa para entender esta realidad.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Fundamento</div>
+    <div class="cb-tit">¿Qué mide la ENOE y por qué importa?</div>
+    <div class="cb-body">
+      <p>La Encuesta Nacional de Ocupación y Empleo (ENOE) es levantada trimestralmente por el INEGI y es la principal fuente de datos sobre el mercado laboral en México. Loría Díaz (2009) señala que las estadísticas del empleo son instrumentos de política económica tanto como instrumentos de medición — su definición de quién "cuenta" como ocupado o desocupado tiene consecuencias directas en cómo el Estado diseña sus programas.</p>
+      <p>La ENOE distingue entre <strong>Población Económicamente Activa (PEA)</strong> — quienes trabajan o buscan trabajo activamente — y <strong>Población No Económicamente Activa (PNEA)</strong> — quienes están fuera del mercado laboral por distintas razones (estudian, cuidan a familiares, están desalentados). Esta distinción es crucial: la tasa de desempleo oficial solo cuenta a los desocupados dentro de la PEA.</p>
+      <p>Para 2024, según el INEGI, la PEA en México supera los 60 millones de personas. La tasa de desocupación abierta ronda el 2.7% — un dato que suena positivo hasta que se analiza qué hay detrás: millones de personas en subocupación, informalidad o que ya dejaron de buscar trabajo.</p>
+    </div>
+    <div class="aq">
+      <div class="aq-txt">El análisis del mercado de trabajo requiere ir más allá de la tasa de desempleo abierto. Las condiciones de calidad del empleo — acceso a seguridad social, estabilidad contractual, nivel salarial — son dimensiones igualmente decisivas para comprender la situación laboral de la población.</div>
+      <div class="aq-ref">Loría Díaz, E. (2009). <em>Sobre el lento crecimiento económico de México: una explicación estructural</em>. <em>Investigación Económica</em>, 68(270), 37–68. UNAM.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl warn">Tensión crítica</div>
+    <div class="cb-tit">La informalidad: cifras reales y su lectura política</div>
+    <div class="cb-body">
+      <p>El dato más revelador del mercado laboral mexicano no es la tasa de desempleo — es la tasa de informalidad. Según el INEGI (2024), la <strong>Tasa de Informalidad Laboral</strong> (TIL) se ubica alrededor del 55%. Esto significa que más de la mitad de los trabajadores en México no tienen contrato formal, no cotizan al IMSS o al ISSSTE, y carecen de acceso a prestaciones de ley.</p>
+      <p>Tokman (2004), quien estudió la informalidad latinoamericana durante décadas desde la OIT, distingue entre <strong>informalidad de subsistencia</strong> — trabajos de refugio ante la falta de empleo formal — e <strong>informalidad estructural</strong> — segmentos de la economía que deliberadamente operan fuera de la regulación para reducir costos. Ambas coexisten en México, pero tienen lógicas distintas y requieren respuestas distintas.</p>
+    </div>
+    <div class="tbox">
+      <div class="tbox-lbl">⚠ Para reflexionar</div>
+      <p>Si la informalidad es la norma y no la excepción, ¿qué significa eso para los cursos y orientadores de empleo que solo enseñan a hacer un CV para el sector formal? ¿Estamos preparando a las juventudes para un mercado real o para un mercado idealizado?</p>
+    </div>
+    <table class="ctbl">
+      <thead><tr><th>Indicador</th><th>Cifra aprox. (INEGI 2024)</th><th>Lo que revela</th></tr></thead>
+      <tbody>
+        <tr><td>Tasa de desocupación abierta</td><td>~2.7%</td><td>Baja, pero oculta la calidad del empleo</td></tr>
+        <tr><td>Tasa de informalidad laboral</td><td>~55%</td><td>Mayoría de trabajadores sin seguridad social</td></tr>
+        <tr><td>Tasa de subocupación</td><td>~7%</td><td>Trabajan menos horas de las que desean</td></tr>
+        <tr><td>Trabajadores sin acceso a salud</td><td>~57%</td><td>La formalidad no garantiza prestaciones completas</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Marco analítico</div>
+    <div class="cb-tit">Segmentación del mercado de trabajo</div>
+    <div class="cb-body">
+      <p>Salas Páez (2003) propone que el mercado de trabajo en México no es uno solo sino varios mercados superpuestos. Esta segmentación explica por qué las mismas habilidades tienen precios tan distintos dependiendo del sector, la empresa y la región.</p>
+      <ul>
+        <li><strong>Segmento primario superior:</strong> Empresas grandes, nacionales o transnacionales. Contratos indefinidos, prestaciones superiores a la ley, escalera salarial. Acceso difícil, alta competencia.</li>
+        <li><strong>Segmento primario inferior:</strong> Empresas medianas formales. Prestaciones de ley básicas, algo de movilidad. La mayoría del empleo formal asalariado.</li>
+        <li><strong>Segmento secundario formal:</strong> Microempresas formales, contratos precarios, rotación alta, salarios bajos.</li>
+        <li><strong>Sector informal:</strong> Sin contrato, sin seguridad social, pero con ingreso inmediato. La puerta de entrada más frecuente al mercado para las juventudes.</li>
+      </ul>
+      <p>Conocer en qué segmento estás buscando trabajo no es un dato menor — define tus probabilidades, tus derechos y tu estrategia.</p>
+    </div>
+    <div class="cbox">
+      <div class="cbox-term">Implicación práctica</div>
+      <div class="cbox-def">La segmentación del mercado significa que no existe una sola estrategia de búsqueda de empleo que funcione para todos los segmentos. Buscar en el sector informal requiere estrategias distintas a buscar en una empresa trasnacional. Saber en qué segmento quieres o puedes estar es el punto de partida de cualquier estrategia inteligente.</div>
+    </div>
+  </div>
+
+  <!-- ACT 1: Reflexión -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-r">Reflexión</span>
+      <div class="act-hdr-txt"><h4>¿En qué segmento he trabajado?</h4><p>Conectar tu trayectoria laboral con la estructura del mercado</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="r-prompt"><strong>Instrucción:</strong> Piensa en los trabajos que has tenido o en los que has observado en tu familia y comunidad. ¿En qué segmento del mercado de trabajo han estado? ¿Formal o informal? ¿Grande empresa o micro negocio? ¿Con prestaciones o sin ellas? ¿Cómo ha afectado eso las condiciones de vida de las personas que conoces?</div>
+      <textarea class="r-ta" id="ta-m2t1r" placeholder="Escribe tu reflexión..."></textarea>
+      <button class="r-save" onclick="guardar('ta-m2t1r','sv-m2t1r')">Guardar reflexión</button>
+      <div class="r-saved" id="sv-m2t1r">✓ Guardado</div>
+    </div>
+  </div>
+
+  <!-- ACT 2: Puzzle -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-d">Dinámica · Rompecabezas</span>
+      <div class="act-hdr-txt"><h4>Segmento del mercado → Característica</h4><p>Asocia cada segmento con su rasgo principal</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="puzzle-wrap">
+        <p class="puzzle-instruc">Haz clic en una pieza y luego en el espacio donde pertenece.</p>
+        <div class="puzzle-pieces" id="pp-m2t1">
+          <div class="piece" onclick="selPieza(this,'pp-m2t1')" data-val="pris">Primario superior</div>
+          <div class="piece" onclick="selPieza(this,'pp-m2t1')" data-val="prii">Primario inferior</div>
+          <div class="piece" onclick="selPieza(this,'pp-m2t1')" data-val="secu">Secundario formal</div>
+          <div class="piece" onclick="selPieza(this,'pp-m2t1')" data-val="info">Sector informal</div>
+        </div>
+        <div class="puzzle-slots">
+          <div class="puzzle-slot"><span class="slot-lbl">Microempresa, rotación alta, salarios bajos, sí tiene RFC —</span><div class="slot-drop" onclick="colocarPieza(this,'pp-m2t1','secu')" data-ok="secu">clic para colocar</div></div>
+          <div class="puzzle-slot"><span class="slot-lbl">Empresa grande o transnacional, prestaciones superiores a la ley —</span><div class="slot-drop" onclick="colocarPieza(this,'pp-m2t1','pris')" data-ok="pris">clic para colocar</div></div>
+          <div class="puzzle-slot"><span class="slot-lbl">Sin contrato, sin seguridad social, ingreso inmediato —</span><div class="slot-drop" onclick="colocarPieza(this,'pp-m2t1','info')" data-ok="info">clic para colocar</div></div>
+          <div class="puzzle-slot"><span class="slot-lbl">Empresa mediana formal, prestaciones de ley básicas —</span><div class="slot-drop" onclick="colocarPieza(this,'pp-m2t1','prii')" data-ok="prii">clic para colocar</div></div>
+        </div>
+        <button class="puzzle-check" onclick="verificarPuzzle('pp-m2t1','pr-m2t1')">Verificar</button>
+        <div class="puzzle-result" id="pr-m2t1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT 3: Laberinto -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-q">Laberinto · Aplicación</span>
+      <div class="act-hdr-txt"><h4>Lectura crítica de datos laborales</h4><p>Interpretar correctamente las estadísticas del mercado laboral</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="maze-wrap" id="maze-m2t1">
+        <div class="maze-prog" id="maze-m2t1-prog">Pregunta 1 de 2</div>
+        <div id="maze-m2t1-q"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nt">
+    <button class="nt-btn dis">← Módulo anterior</button>
+    <button class="nt-btn pri" onclick="ir('m2t2')">Siguiente tema →</button>
+  </div>
+</div>
+
+<!-- ─── M2 · TEMA 2 ─── -->
+<div id="v-m2t2" style="display:none">
+  <div class="bc"><span onclick="ir('sm2')" style="cursor:pointer">Módulo 2</span><span class="bc-sep">›</span>Tema 2</div>
+  <div class="mod-bar"><div class="mod-bar-fill" style="width:50%"></div></div>
+
+  <div style="background:var(--white);border:1px solid var(--rule);padding:1.4rem 1.6rem;margin-bottom:1rem;">
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Tema 2 de 3 · Módulo 2</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Juventudes y trabajo precario: brechas y tendencias</h2>
+    <p style="font-size:.84rem;color:var(--soft);line-height:1.65;">El mercado laboral no trata a todos de la misma manera. Las juventudes — especialmente las que no cuentan con redes de contacto, títulos universitarios de alto valor o capital económico familiar — enfrentan condiciones de entrada particularmente adversas. Nombrar esas condiciones es el primer paso para no internalizarlas como fracasos personales.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Fundamento</div>
+    <div class="cb-tit">¿Qué es el trabajo precario y por qué se concentra en jóvenes?</div>
+    <div class="cb-body">
+      <p>Castel (1997) acuñó el concepto de <strong>precariedad laboral</strong> para describir una zona de vulnerabilidad entre la integración plena al mercado de trabajo y la exclusión total. La precariedad no es simplemente tener un trabajo "malo" — es una condición de inestabilidad crónica que impide construir proyectos de vida a largo plazo.</p>
+      <p>Las juventudes mexicanas enfrentan una concentración de factores de precariedad:</p>
+      <ul>
+        <li><strong>Primer empleo difícil:</strong> Las empresas exigen experiencia que los jóvenes no pueden tener si nadie les da la primera oportunidad.</li>
+        <li><strong>Contratos de período de prueba o eventuales:</strong> El 60% de los jóvenes que se insertan al mercado laboral lo hacen sin contrato o con contratos temporales (ENOE, 2023).</li>
+        <li><strong>Salarios de entrada bajos:</strong> Los salarios de los trabajadores de 15 a 24 años son en promedio 40% menores que los de trabajadores de 35 a 44 años, incluso con el mismo nivel educativo.</li>
+        <li><strong>Ninis estructurales:</strong> No todos los jóvenes que no estudian ni trabajan están "desinteresados" — muchos están realizando trabajo de cuidado no remunerado o están desalentados por el mercado.</li>
+      </ul>
+    </div>
+    <div class="aq">
+      <div class="aq-txt">La precariedad es una zona de vulnerabilidad social que combina la fragilidad de la relación de trabajo y la fragilidad de los soportes de sociabilidad. No se trata únicamente de pobreza — se trata de inestabilidad que impide la construcción de biografías coherentes.</div>
+      <div class="aq-ref">Castel, R. (1997). <em>Las metamorfosis de la cuestión social: una crónica del salariado</em> (pp. 13–14). Paidós.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl warn">Tensión crítica</div>
+    <div class="cb-tit">La trampa del discurso meritocrático</div>
+    <div class="cb-body">
+      <p>El discurso meritocrático — "quien se esfuerza, triunfa" — es particularmente dañino cuando se aplica sin considerar el punto de partida. Tokman (2004) señala que en economías con alta informalidad estructural y débil movilidad social, el esfuerzo individual, aunque necesario, no es suficiente ni garantía de nada.</p>
+      <p>Esto no significa que el esfuerzo no importe. Significa que el esfuerzo opera dentro de restricciones estructurales que lo condicionan. Un joven que trabaja en el mercado informal de San Cristóbal de las Casas y otro que trabaja en el sector tecnológico de Monterrey pueden esforzarse exactamente igual — y tener trayectorias laborales radicalmente distintas. La diferencia no es el esfuerzo: es el contexto.</p>
+    </div>
+    <div class="tbox">
+      <div class="tbox-lbl">⚠ Para reflexionar</div>
+      <p>¿Alguna vez has escuchado o pensado "ese joven no tiene trabajo porque no quiere"? ¿Qué información sobre el mercado laboral real haría más complejo ese juicio? ¿Qué parte de la situación laboral de las juventudes en México es responsabilidad individual y qué parte es estructural?</p>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl tool">Aplicación</div>
+    <div class="cb-tit">Tendencias del mercado laboral que marcan la próxima década</div>
+    <div class="cb-body">
+      <p>Más allá de los datos actuales, hay tendencias estructurales que van a definir el mercado de trabajo en México para las próximas generaciones. Identificarlas permite anticiparse:</p>
+      <ul>
+        <li><strong>Automatización y desplazamiento tecnológico:</strong> La OCDE estima que entre el 30% y el 40% de los empleos actuales en México tienen alta probabilidad de automatización en los próximos 15 años. Los más vulnerables son los trabajos rutinarios de baja cualificación — que son exactamente los trabajos de primer acceso para las juventudes.</li>
+        <li><strong>Nearshoring y manufactura avanzada:</strong> La relocalización de empresas de Asia a México (nearshoring) está generando nuevas oportunidades en manufactura avanzada, logística y servicios tecnológicos, especialmente en el norte del país y el Bajío.</li>
+        <li><strong>Economía de plataformas:</strong> Uber, Rappi, Mercado Libre y similares emplean a cientos de miles de jóvenes en México en condiciones que la ley laboral aún no clasifica claramente — ni como asalariados ni como independientes.</li>
+        <li><strong>Brecha regional:</strong> La diferencia entre el mercado laboral de la CDMX o Monterrey y el de Oaxaca, Guerrero o Chiapas no se reduce — en algunos indicadores se amplía.</li>
+      </ul>
+    </div>
+    <div class="fbox">
+      <div class="fbox-txt">Contexto → Tendencias → Posición personal</div>
+      <div class="fbox-desc">El análisis del mercado laboral tiene tres escalas que deben conectarse</div>
+    </div>
+  </div>
+
+  <!-- ACT 1: Reflexión -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-r">Reflexión</span>
+      <div class="act-hdr-txt"><h4>¿Qué condiciones estructurales han afectado mi trayectoria?</h4><p>Distinguir lo que depende de ti de lo que depende del contexto</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="r-prompt"><strong>Instrucción:</strong> Piensa en tu trayectoria laboral (o en la de alguien cercano). ¿Qué parte de los resultados obtenidos se explica por decisiones y esfuerzo personal? ¿Qué parte se explica por condiciones del mercado: la región donde vives, el sector en que trabajas, el momento económico, la red de contactos disponible? ¿Cómo cambia tu lectura de esa trayectoria cuando tomas en cuenta ambas dimensiones?</div>
+      <textarea class="r-ta" id="ta-m2t2r" placeholder="Escribe tu reflexión..."></textarea>
+      <button class="r-save" onclick="guardar('ta-m2t2r','sv-m2t2r')">Guardar reflexión</button>
+      <div class="r-saved" id="sv-m2t2r">✓ Guardado</div>
+    </div>
+  </div>
+
+  <!-- ACT 2: Matching -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-d">Dinámica · Une los pares</span>
+      <div class="act-hdr-txt"><h4>Fenómeno → Definición</h4><p>Conecta cada concepto con su descripción correcta</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="match-wrap">
+        <p style="font-size:.8rem;color:var(--soft);margin-bottom:.8rem;">Haz clic en un elemento y luego en su par correcto.</p>
+        <div class="match-cols">
+          <div>
+            <div class="match-col-lbl">Fenómeno</div>
+            <div class="match-item" onclick="matchSel(this,'match-m2t2')" data-id="prec1">Precariedad laboral</div>
+            <div class="match-item" onclick="matchSel(this,'match-m2t2')" data-id="near1">Nearshoring</div>
+            <div class="match-item" onclick="matchSel(this,'match-m2t2')" data-id="nini1">Ninis estructurales</div>
+          </div>
+          <div>
+            <div class="match-col-lbl">Definición</div>
+            <div class="match-item" onclick="matchSel(this,'match-m2t2')" data-id="nini1">Jóvenes que no estudian ni trabajan por razones estructurales, no por falta de interés</div>
+            <div class="match-item" onclick="matchSel(this,'match-m2t2')" data-id="prec1">Inestabilidad crónica que impide construir proyectos de vida a largo plazo</div>
+            <div class="match-item" onclick="matchSel(this,'match-m2t2')" data-id="near1">Relocalización de empresas hacia México por su posición geográfica frente a EE.UU.</div>
+          </div>
+        </div>
+        <div class="match-score" id="match-m2t2-score"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT 3: Práctica -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-q">Práctica · Análisis de contexto</span>
+      <div class="act-hdr-txt"><h4>Radiografía de mi mercado laboral local</h4><p>Aplicar las categorías del módulo a tu contexto específico</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="p-scen"><div class="p-scen-lbl">Instrucción</div><p>Este ejercicio te ayuda a construir un mapa del mercado laboral en tu ciudad, municipio o región — no del mercado en abstracto.</p></div>
+      <ul class="p-steps">
+        <li class="p-step"><div class="p-sn">1</div><div class="p-stxt">¿Cuáles son los sectores económicos predominantes en tu localidad? (manufactura, comercio, servicios, agricultura, turismo, gobierno…) ¿Son formales o informales en su mayoría?</div></li>
+        <li class="p-step"><div class="p-sn">2</div><div class="p-stxt">¿Cuáles son las principales barreras de entrada al empleo que observas en tu contexto? (falta de experiencia, discriminación por edad, género, apariencia; distancias geográficas; redes de contacto necesarias…)</div></li>
+        <li class="p-step"><div class="p-sn">3</div><div class="p-stxt">¿Hay alguna tendencia del mercado laboral (nearshoring, plataformas, automatización) que esté llegando a tu región o que podría llegar en los próximos cinco años? ¿Cómo te afecta o podría afectarte?</div></li>
+      </ul>
+      <textarea class="p-ta" id="ta-m2t2p" placeholder="Escribe tu análisis aquí..."></textarea>
+      <button class="p-save" onclick="guardar('ta-m2t2p','sv-m2t2p')">Guardar ejercicio</button>
+      <div class="r-saved" id="sv-m2t2p">✓ Guardado</div>
+      <div class="p-tip">No hay respuestas "correctas" aquí — hay respuestas más o menos informadas. Si no sabes la respuesta, ese es exactamente el punto: identificar qué información del mercado laboral local necesitas buscar.</div>
+    </div>
+  </div>
+
+  <div class="nt">
+    <button class="nt-btn" onclick="ir('m2t1')">← Tema anterior</button>
+    <button class="nt-btn pri" onclick="ir('m2t3')">Siguiente tema →</button>
+  </div>
+</div>
+
+<!-- ─── M2 · TEMA 3 ─── -->
+<div id="v-m2t3" style="display:none">
+  <div class="bc"><span onclick="ir('sm2')" style="cursor:pointer">Módulo 2</span><span class="bc-sep">›</span>Tema 3</div>
+  <div class="mod-bar"><div class="mod-bar-fill" style="width:75%"></div></div>
+
+  <div style="background:var(--white);border:1px solid var(--rule);padding:1.4rem 1.6rem;margin-bottom:1rem;">
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Tema 3 de 3 · Módulo 2</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Estrategia en contexto: leer el mercado para actuar en él</h2>
+    <p style="font-size:.84rem;color:var(--soft);line-height:1.65;">Entender el mercado laboral no es un ejercicio académico — es una herramienta práctica. Conocer la estructura del mercado en el que estás buscando trabajo te permite construir estrategias más inteligentes, con expectativas más realistas y mayor capacidad de adaptación.</p>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Fundamento</div>
+    <div class="cb-tit">De la información al posicionamiento: cómo leer el mercado para actuar</div>
+    <div class="cb-body">
+      <p>Tokman (2004) propone que la principal desventaja de los trabajadores informales y de los jóvenes en el mercado laboral no es solo la falta de habilidades técnicas — es la falta de información sobre cómo funciona el mercado. Quien conoce las reglas del juego puede moverse en él con mucha más eficiencia.</p>
+      <p>Leer el mercado laboral significa desarrollar la capacidad de responder cuatro preguntas antes de buscar empleo:</p>
+      <ol style="padding-left:1.2rem;margin:.7rem 0;">
+        <li style="margin-bottom:.4rem;color:var(--soft);font-size:.84rem;"><strong style="color:var(--ink);">¿Dónde hay vacantes reales?</strong> No dónde deberían haberlas — dónde las hay de verdad, en tu sector y región.</li>
+        <li style="margin-bottom:.4rem;color:var(--soft);font-size:.84rem;"><strong style="color:var(--ink);">¿Qué condiciones ofrecen?</strong> Salario, jornada, formalidad, posibilidades de desarrollo.</li>
+        <li style="margin-bottom:.4rem;color:var(--soft);font-size:.84rem;"><strong style="color:var(--ink);">¿Qué piden en realidad?</strong> No lo que dicen en el anuncio — lo que realmente valoran en la selección.</li>
+        <li style="margin-bottom:.4rem;color:var(--soft);font-size:.84rem;"><strong style="color:var(--ink);">¿Qué tengo yo que sea relevante para ese mercado?</strong> No en general — específicamente para ese segmento, ese sector, esa empresa.</li>
+      </ol>
+    </div>
+    <div class="aq">
+      <div class="aq-txt">La brecha entre la oferta y la demanda de trabajo en los países en desarrollo no es solo cuantitativa — es también de información. Los trabajadores, especialmente los más vulnerables, toman decisiones con información incompleta sobre un mercado que funciona con reglas que no siempre están escritas.</div>
+      <div class="aq-ref">Tokman, V. E. (2004). <em>Una voz en el camino: empleo y equidad en América Latina</em> (p. 87). Fondo de Cultura Económica.</div>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl tool">Aplicación</div>
+    <div class="cb-tit">Herramientas para leer el mercado laboral en tiempo real</div>
+    <div class="cb-body">
+      <p>Existen fuentes de información públicas y accesibles que permiten hacer un análisis del mercado laboral sin necesidad de ser economista:</p>
+      <ul>
+        <li><strong>ENOE (INEGI):</strong> Datos trimestrales de empleo, desempleo, informalidad, salarios y ocupaciones. Disponible en inegi.org.mx. Permite consultar datos por estado y municipio.</li>
+        <li><strong>Portales de empleo:</strong> Computrabajo, OCC, LinkedIn y Bumeran no son solo herramientas de búsqueda — son ventanas al mercado. El número de vacantes en una categoría, el rango salarial ofrecido y los requisitos más frecuentes son datos de mercado que se pueden leer en 30 minutos.</li>
+        <li><strong>Reportes sectoriales:</strong> Cámaras empresariales (CANACINTRA, COPARMEX), sindicatos y asociaciones profesionales publican análisis del sector que dan información sobre tendencias, salarios promedio y perfiles más demandados.</li>
+        <li><strong>Red de contactos como fuente de inteligencia:</strong> Las personas que ya trabajan en el sector que te interesa tienen información de primera mano que ningún portal ni estadística captura. Hablar con ellas es, en muchos casos, la fuente más valiosa.</li>
+      </ul>
+    </div>
+    <div class="ebox">
+      <div class="ebox-lbl">Ejemplo aplicado</div>
+      <p>Una joven de 23 años quiere trabajar en diseño gráfico en Guadalajara. Antes de enviar un solo CV, dedica dos tardes a: (1) revisar 50 vacantes de diseño en OCC y LinkedIn para identificar los programas más pedidos y el rango salarial; (2) consultar la ENOE para ver el crecimiento del sector creativo en Jalisco; (3) hablar con tres diseñadores activos en la ciudad a través de Instagram. Al final de ese proceso, sabe exactamente qué piden, qué pagan, dónde están las vacantes reales y qué necesita desarrollar. Su búsqueda empieza desde otro lugar.</p>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-lbl concept">Síntesis del módulo</div>
+    <div class="cb-tit">Empleabilidad situada: tu posición en el mercado real</div>
+    <div class="cb-body">
+      <p>La <strong>Metodología de Práctica Social</strong> aplicada al empleo propone que la empleabilidad no es una propiedad que alguien tiene o no tiene — es el resultado dinámico de la interacción entre tres elementos:</p>
+      <ul>
+        <li><strong>Estructura:</strong> Las características del mercado laboral (segmentación, informalidad, tendencias, brechas regionales).</li>
+        <li><strong>Recursos:</strong> Lo que tú traes al mercado: habilidades, credenciales, experiencia, red de contactos, capital social y económico.</li>
+        <li><strong>Agencia:</strong> Las decisiones y acciones que tomas dentro de esas condiciones — dónde buscas, cómo te presentas, qué priorizas, cómo negocias.</li>
+      </ul>
+      <p>Ninguno de los tres elementos basta por sí solo. Una persona con muchos recursos pero sin agencia espera a que el empleo llegue. Una persona con mucha agencia pero sin información sobre la estructura choca contra muros que no entiende. La empleabilidad inteligente trabaja los tres al mismo tiempo.</p>
+    </div>
+    <div class="fbox">
+      <div class="fbox-txt">Empleabilidad = Estructura × Recursos × Agencia</div>
+      <div class="fbox-desc">Ninguno de los tres factores opera de forma aislada — Sintropía Social (2024)</div>
+    </div>
+  </div>
+
+  <!-- ACT 1: Reflexión -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-r">Reflexión</span>
+      <div class="act-hdr-txt"><h4>Mi posición en el mercado laboral real</h4><p>Aplicar la fórmula Estructura × Recursos × Agencia a tu situación</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="r-prompt"><strong>Instrucción:</strong> Usando los tres elementos de la Metodología de Práctica Social, haz un diagnóstico honesto de tu situación actual. ¿Cómo es la estructura del mercado donde estás buscando? ¿Qué recursos tienes y cuáles te faltan? ¿Qué acciones específicas podrías tomar en las próximas dos semanas para mejorar tu posición en ese mercado?</div>
+      <textarea class="r-ta" id="ta-m2t3r" placeholder="Escribe tu reflexión..."></textarea>
+      <button class="r-save" onclick="guardar('ta-m2t3r','sv-m2t3r')">Guardar reflexión</button>
+      <div class="r-saved" id="sv-m2t3r">✓ Guardado</div>
+    </div>
+  </div>
+
+  <!-- ACT 2: Laberinto -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-q">Laberinto · Aplicación</span>
+      <div class="act-hdr-txt"><h4>Estructura, recursos o agencia</h4><p>Identificar a qué elemento corresponde cada situación</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="maze-wrap" id="maze-m2t3">
+        <div class="maze-prog" id="maze-m2t3-prog">Pregunta 1 de 2</div>
+        <div id="maze-m2t3-q"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT 3: Ensayo con IA -->
+  <div class="act-card">
+    <div class="act-hdr" onclick="toggleAct(this)">
+      <span class="act-tipo at-ia">Ensayo · Con IA</span>
+      <div class="act-hdr-txt"><h4>Análisis situado del mercado laboral</h4><p>Escribir un ensayo corto con retroalimentación de IA</p></div>
+      <span class="act-chv">▶</span>
+    </div>
+    <div class="act-body">
+      <div class="ia-intro">
+        <strong>Instrucción:</strong> Escribe un análisis de entre 200 y 350 palabras sobre el mercado laboral en tu sector o región. Incluye: (1) una descripción del mercado que observas (estructura), (2) qué condiciones favorecen o dificultan la inserción de jóvenes como tú (brechas y oportunidades), y (3) qué acciones concretas —tuyas, no del gobierno— podrías tomar en los próximos tres meses para mejorar tu posición en ese mercado. La IA te dará retroalimentación sobre la calidad del análisis y la coherencia del argumento.
+      </div>
+      <textarea class="ia-ta" id="ia-m2t3" placeholder="Escribe tu análisis aquí (200–350 palabras)..."></textarea>
+      <button class="ia-btn" onclick="enviarIA('ia-m2t3','ia-m2t3-res','Analiza este texto como un tutor de empleabilidad. Evalúa: 1) Si el análisis del mercado laboral es concreto y situado (no abstracto), 2) Si distingue correctamente entre factores estructurales y agencia individual, 3) Si las acciones propuestas son específicas y realizables. Da retroalimentación constructiva en español, con máximo 4 párrafos cortos.')">
+        <span>Obtener retroalimentación de IA</span> <span style="font-size:.8rem;">→</span>
+      </button>
+      <div id="ia-m2t3-res" class="ia-res" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div class="nt">
+    <button class="nt-btn" onclick="ir('m2t2')">← Tema anterior</button>
+    <button class="nt-btn pri" onclick="ir('m2ev')">Evaluación del módulo →</button>
+  </div>
+</div>
+
+<!-- ─── M2 · EVALUACIÓN ─── -->
+<div id="v-m2ev" style="display:none">
+  <div class="bc"><span onclick="ir('sm2')" style="cursor:pointer">Módulo 2</span><span class="bc-sep">›</span>Evaluación</div>
+  <div class="mod-bar"><div class="mod-bar-fill" style="width:100%"></div></div>
+
+  <div style="background:var(--white);border:1px solid var(--rule);padding:1.4rem 1.6rem;margin-bottom:1rem;">
+    <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.4rem;">Evaluación · Módulo 2</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;">Contexto laboral en México</h2>
+    <p style="font-size:.84rem;color:var(--soft);line-height:1.65;">5 preguntas · Necesitas 4/5 para avanzar al módulo 3. Puedes revisar el contenido antes de responder.</p>
+  </div>
+
+  <p class="q-intro">Responde cada pregunta. Las respuestas se revelan una a la vez.</p>
+
+  <!-- EQ6 -->
+  <div class="qi">
+    <div class="q-txt">1. Según la ENOE, la tasa de informalidad laboral en México ronda el 55%. ¿Qué implica esto para los programas de orientación vocacional?</div>
+    <div class="q-opts" id="eq6-opts">
+      <label class="qopt" onclick="selQ(this,'eq6')"><input type="radio" name="eq6"> Que deben enfocarse exclusivamente en el sector formal, que es donde está el futuro</label>
+      <label class="qopt" onclick="selQ(this,'eq6')"><input type="radio" name="eq6"> Que deben incluir estrategias para navegar el sector informal, que es la realidad mayoritaria</label>
+      <label class="qopt" onclick="selQ(this,'eq6')"><input type="radio" name="eq6"> Que la informalidad es temporal y desaparecerá con más educación</label>
+      <label class="qopt" onclick="selQ(this,'eq6')"><input type="radio" name="eq6"> Que los jóvenes mexicanos prefieren el trabajo informal por su flexibilidad</label>
+    </div>
+    <div class="q-fb ok" id="eq6-ok">✓ Correcto. Si más de la mitad de los trabajadores están en la informalidad, ignorarla no es neutralidad — es desconexión de la realidad. Los programas de orientación que solo preparan para el empleo formal dejan sin herramientas a la mayoría de sus participantes.</div>
+    <div class="q-fb no" id="eq6-no">La informalidad en México no es marginal ni transitoria — es estructural y mayoritaria. Tokman (2004) distingue entre informalidad de subsistencia y estructural. Cualquier orientación laboral que la ignore está preparando a los jóvenes para un mercado idealizado, no real.</div>
+    <button class="q-send" id="eq6-btn" onclick="revelarQ('eq6',1)" disabled>Verificar respuesta</button>
+  </div>
+
+  <!-- EQ7 -->
+  <div class="qi">
+    <div class="q-txt">2. La precariedad laboral según Castel (1997) se define como:</div>
+    <div class="q-opts" id="eq7-opts">
+      <label class="qopt" onclick="selQ(this,'eq7')"><input type="radio" name="eq7"> Ganar menos del salario mínimo</label>
+      <label class="qopt" onclick="selQ(this,'eq7')"><input type="radio" name="eq7"> No tener un contrato formal con una empresa</label>
+      <label class="qopt" onclick="selQ(this,'eq7')"><input type="radio" name="eq7"> Una zona de inestabilidad crónica que impide construir proyectos de vida a largo plazo</label>
+      <label class="qopt" onclick="selQ(this,'eq7')"><input type="radio" name="eq7"> Trabajar en el sector informal de la economía</label>
+    </div>
+    <div class="q-fb ok" id="eq7-ok">✓ Correcto. Castel amplía el concepto más allá de los ingresos o el tipo de contrato. La precariedad es una condición de vulnerabilidad que afecta la posibilidad de construir una vida — relaciones, vivienda, proyectos — porque la inestabilidad del trabajo se extiende a todo lo demás.</div>
+    <div class="q-fb no" id="eq7-no">Castel no define precariedad solo por el salario o el tipo de contrato. La precariedad es una condición más amplia: la imposibilidad de construir proyectos de vida estables porque el trabajo mismo es inestable. Puede ocurrir incluso en empleos con contrato pero con alta rotación o inseguridad.</div>
+    <button class="q-send" id="eq7-btn" onclick="revelarQ('eq7',2)" disabled>Verificar respuesta</button>
+  </div>
+
+  <!-- EQ8 -->
+  <div class="qi">
+    <div class="q-txt">3. Salas Páez (2003) propone que el mercado de trabajo en México está segmentado. ¿Qué consecuencia práctica tiene esto para la búsqueda de empleo?</div>
+    <div class="q-opts" id="eq8-opts">
+      <label class="qopt" onclick="selQ(this,'eq8')"><input type="radio" name="eq8"> Que todas las empresas pagan lo mismo por las mismas habilidades</label>
+      <label class="qopt" onclick="selQ(this,'eq8')"><input type="radio" name="eq8"> Que la estrategia de búsqueda debe adaptarse al segmento al que se aspira, porque cada uno tiene reglas distintas</label>
+      <label class="qopt" onclick="selQ(this,'eq8')"><input type="radio" name="eq8"> Que es imposible moverse de un segmento a otro una vez que se ingresa</label>
+      <label class="qopt" onclick="selQ(this,'eq8')"><input type="radio" name="eq8"> Que el único segmento con futuro es el sector primario superior</label>
+    </div>
+    <div class="q-fb ok" id="eq8-ok">✓ Exacto. La segmentación implica que las reglas del juego varían según el segmento. Cómo se busca trabajo en una trasnacional es radicalmente distinto a cómo se busca en una microempresa informal. Una sola estrategia de búsqueda no funciona para todos los segmentos.</div>
+    <div class="q-fb no" id="eq8-no">La segmentación del mercado significa exactamente que las reglas son distintas en cada segmento. Los requisitos, los canales de acceso, las formas de negociación y los salarios difieren radicalmente. Adaptar la estrategia al segmento objetivo es una consecuencia directa de entender la segmentación.</div>
+    <button class="q-send" id="eq8-btn" onclick="revelarQ('eq8',1)" disabled>Verificar respuesta</button>
+  </div>
+
+  <!-- EQ9 -->
+  <div class="qi">
+    <div class="q-txt">4. Un joven lleva seis meses buscando empleo en una ciudad con pocos empleos formales y alta competencia. Un orientador le dice "el problema es que no tienes actitud". Desde la Metodología de Práctica Social, ¿qué falta en este diagnóstico?</div>
+    <div class="q-opts" id="eq9-opts">
+      <label class="qopt" onclick="selQ(this,'eq9')"><input type="radio" name="eq9"> Falta saber cuántas horas al día busca trabajo el joven</label>
+      <label class="qopt" onclick="selQ(this,'eq9')"><input type="radio" name="eq9"> El análisis de la estructura del mercado — hay pocos empleos disponibles independientemente de la actitud</label>
+      <label class="qopt" onclick="selQ(this,'eq9')"><input type="radio" name="eq9"> El orientador tiene razón — la actitud lo determina todo</label>
+      <label class="qopt" onclick="selQ(this,'eq9')"><input type="radio" name="eq9"> Falta saber qué estudió el joven</label>
+    </div>
+    <div class="q-fb ok" id="eq9-ok">✓ Correcto. La Metodología de Práctica Social requiere analizar la estructura antes de juzgar la agencia. Si el mercado tiene pocas vacantes, la actitud del joven no puede compensar esa escasez estructural. El diagnóstico del orientador es incompleto — e injusto.</div>
+    <div class="q-fb no" id="eq9-no">La Práctica Social propone que la empleabilidad resulta de la interacción entre estructura, recursos y agencia. Reducir el problema a la "actitud" (agencia) sin analizar la estructura del mercado es un diagnóstico parcial que termina culpabilizando al individuo por condiciones que no controla.</div>
+    <button class="q-send" id="eq9-btn" onclick="revelarQ('eq9',1)" disabled>Verificar respuesta</button>
+  </div>
+
+  <!-- EQ10 -->
+  <div class="qi">
+    <div class="q-txt">5. Según Tokman (2004), la principal desventaja de los trabajadores informales en el mercado laboral no es solo la falta de habilidades técnicas — es también:</div>
+    <div class="q-opts" id="eq10-opts">
+      <label class="qopt" onclick="selQ(this,'eq10')"><input type="radio" name="eq10"> La falta de disciplina y organización personal</label>
+      <label class="qopt" onclick="selQ(this,'eq10')"><input type="radio" name="eq10"> La falta de información sobre cómo funciona el mercado y sus reglas no escritas</label>
+      <label class="qopt" onclick="selQ(this,'eq10')"><input type="radio" name="eq10"> Su preferencia cultural por el trabajo independiente</label>
+      <label class="qopt" onclick="selQ(this,'eq10')"><input type="radio" name="eq10"> La baja productividad intrínseca del sector informal</label>
+    </div>
+    <div class="q-fb ok" id="eq10-ok">✓ Perfecto. Tokman identifica la asimetría de información como una de las principales barreras estructurales. Quien no sabe cómo funciona el mercado — qué canales usar, cómo presentarse, cuánto vale su trabajo — toma decisiones con información incompleta y obtiene peores resultados, independientemente de sus capacidades reales.</div>
+    <div class="q-fb no" id="eq10-no">Tokman subraya la asimetría de información como desventaja clave. Las reglas del mercado formal — cómo hacer un CV, cómo negociar, qué canales usar — no son universalmente conocidas. Quienes las conocen tienen ventaja no porque sean más capaces sino porque tienen más información sobre las reglas del juego.</div>
+    <button class="q-send" id="eq10-btn" onclick="revelarQ('eq10',1)" disabled>Verificar respuesta</button>
+  </div>
+
+  <div id="eval-m2-result" style="display:none;"></div>
+  <button class="splash-btn" style="margin-top:1rem;" onclick="calificarM2()">Ver resultado del módulo</button>
+
+  <div class="nt" style="margin-top:1.5rem;">
+    <button class="nt-btn" onclick="ir('m2t3')">← Último tema</button>
+    <button class="nt-btn pri" onclick="ir('sm3')" id="btn-ir-m3" style="display:none;">Continuar al módulo 3 →</button>
+  </div>
+</div>
+
 
 <!-- ═══════════ MÓDULO 3 ═══════════ -->
 <div id="v-sm3" style="display:none">
@@ -1199,9 +1715,9 @@ function actualizarSidebar(activo) {
   for (let m=2;m<=6;m++) {
     const necesita = m-1;
     const desbloqueado = modsOK.includes(necesita);
-    const items = document.getElementById('iM'+m);
-    const hdr = document.getElementById('hM'+m);
-    const num = document.getElementById('nM'+m);
+    const items = document.getElementById('si-m'+m);
+    const hdr = document.getElementById('sm-m'+m);
+    const num = document.getElementById('sn-m'+m);
     if (items) items.style.display = desbloqueado ? 'block' : 'none';
     if (hdr) {
       hdr.classList.toggle('locked', !desbloqueado);
@@ -1417,12 +1933,28 @@ const LABERINTOS = {
      ok:2, fbOk:'✓ Exacto. La mediación no puede ni debe aplicarse cuando hay violación de derechos. La protección legal es obligatoria en este caso.', fbNo:'Cuando hay violación de derechos, la mediación no es la herramienta correcta. La vía legal o el departamento de Recursos Humanos son los canales adecuados.'},
   ],
   'maze-m2t1': [
-    {q:'¿Cuál es la razón principal por la que el reencuadre cognitivo ("estoy emocionado") es más efectivo que intentar calmarse?',
-     opts:['Porque engaña al cerebro haciéndolo creer que no hay amenaza','Porque redirige la misma activación fisiológica en lugar de intentar suprimirla','Porque elimina el cortisol instantáneamente','Porque desactiva la amígdala'],
-     ok:1, fbOk:'✓ Correcto. La ansiedad y la excitación tienen la misma base fisiológica. Redirigir la etiqueta es más eficiente que cambiar el estado.', fbNo:'El reencuadre no engaña al cerebro ni elimina el cortisol. Redirige la misma activación: ansiedad y excitación son estados de alta activación idénticos fisiológicamente.'},
-    {q:'El efecto spotlight (Gilovich et al., 1999) establece que:',
-     opts:['La audiencia nota más errores de los que el orador percibe','El orador tiende a sobrestimar cuánto nota la audiencia sus errores','El efecto solo aplica a oradores inexpertos','Desaparece con suficiente preparación'],
-     ok:1, fbOk:'✓ Perfecto. Estimamos que el doble de personas notó nuestros errores de las que realmente lo hicieron.', fbNo:'El efecto spotlight funciona al revés: el orador sobrestima cuánto nota la audiencia, no al contrario.'},
+    {q:'La ENOE reporta que la tasa de desocupación abierta en México ronda el 2.7%. Un orientador vocacional concluye: "¡El mercado laboral mexicano está en excelente estado!" ¿Qué información crítica está ignorando?',
+     opts:['El tamaño de la PEA (Población Económicamente Activa)','La tasa de informalidad laboral del ~55% y la subocupación del ~7%, que revelan la calidad real del empleo','El número exacto de empresas que reportan al IMSS','El salario mínimo vigente'],
+     ok:1, fbOk:'✓ Correcto. La tasa de desocupación mide quién no tiene empleo — pero no dice nada sobre la calidad de los empleos existentes. Un 55% de informalidad y un 7% de subocupación revelan que muchos de los "empleados" están en condiciones muy precarias. Loría Díaz (2009) advierte que las estadísticas del empleo son instrumentos de política tanto como de medición.', fbNo:'El problema con solo ver la tasa de desocupación es que oculta la calidad del empleo. En México, más de la mitad de los trabajadores están en la informalidad — sin seguridad social, sin contrato, sin prestaciones. Esa realidad no aparece en la tasa de desocupación abierta.'},
+    {q:'Salas Páez (2003) propone que el mercado de trabajo en México está segmentado. Una joven egresada universitaria comienza a buscar trabajo enviando su CV exactamente igual a microempresas informales, medianas empresas y trasnacionales. ¿Qué error estratégico está cometiendo?',
+     opts:['Usar el mismo CV para todos los segmentos, ignorando que cada segmento valora y accede de forma distinta','Buscar demasiados empleos a la vez','No haber hecho prácticas profesionales antes de egresar','Enviar su CV por correo en lugar de en persona'],
+     ok:0, fbOk:'✓ Exacto. La segmentación implica que las reglas del juego son distintas en cada nivel. Lo que funciona para acceder a una trasnacional (perfil digital, entrevista en inglés, referencias formales) es irrelevante para una microempresa local (contacto directo, recomendación personal). Usar la misma estrategia para todos los segmentos es una de las causas más comunes de búsquedas fallidas.', fbNo:'El error es estratégico: un mismo CV y un mismo canal no funcionan igual en todos los segmentos del mercado. Cada segmento tiene sus propios criterios de selección, sus propios canales de acceso y sus propias prioridades. La segmentación exige estrategias diferenciadas.'},
+  ],
+  'maze-m2t2': [
+    {q:'Un orientador le dice a un joven que lleva ocho meses buscando empleo sin resultado: "El problema es que no tienes suficiente iniciativa". Desde la perspectiva de Castel (1997) sobre precariedad laboral, ¿qué elemento crucial falta en este análisis?',
+     opts:['No se sabe si el joven estudió o no','Se ignoran las condiciones estructurales del mercado laboral — en particular si hay suficientes vacantes disponibles para la cantidad de buscadores','El orientador debería pedir el CV antes de opinar','El joven necesita más certificaciones'],
+     ok:1, fbOk:'✓ Correcto. Castel plantea que la precariedad no es solo un problema individual — es el resultado de condiciones estructurales que la producen. Si hay pocas vacantes para muchos buscadores, la "iniciativa" individual tiene límites reales que ningún consejo personal puede superar. El diagnóstico del orientador culpabiliza al individuo por una condición estructural.', fbNo:'El análisis del orientador es unidimensional. Castel distingue entre vulnerabilidad individual y condiciones estructurales. Si el mercado no genera suficientes empleos dignos, atribuir el problema únicamente a la actitud del joven es tanto incorrecto como potencialmente dañino.'},
+    {q:'Según Tokman (2004), la "informalidad estructural" se diferencia de la "informalidad de subsistencia" en que:',
+     opts:['La informalidad de subsistencia paga mejores salarios','La informalidad estructural es deliberada — segmentos de la economía que operan fuera de la regulación para reducir costos, no por falta de opciones','La informalidad estructural es más común en zonas rurales','Son exactamente lo mismo — Tokman usa los términos de forma intercambiable'],
+     ok:1, fbOk:'✓ Perfecto. La distinción de Tokman es crucial para el diseño de políticas y programas. La informalidad de subsistencia es refugio ante la escasez de empleo formal — el trabajador estaría en el sector formal si pudiera. La informalidad estructural es una decisión empresarial para evitar costos regulatorios. Ambas coexisten en México pero requieren respuestas completamente distintas.', fbNo:'La distinción importa: la informalidad de subsistencia aparece cuando la economía formal no tiene capacidad de absorber a todos los trabajadores. La estructural es una elección activa de ciertos sectores productivos para operar fuera de la regulación. Tokman insiste en que mezclarlas lleva a políticas que no resuelven el problema.'},
+  ],
+  'maze-m2t3': [
+    {q:'Una joven quiere trabajar en comunicación digital en su ciudad. Antes de enviar cualquier solicitud, revisa vacantes en portales de empleo, consulta la ENOE regional y habla con tres comunicólogos activos. Desde la Metodología de Práctica Social, ¿qué dimensión está trabajando principalmente?',
+     opts:['Agencia — está tomando acciones','Recursos — está acumulando habilidades','Estructura — está analizando el contexto del mercado antes de actuar','Ninguna — todavía no ha enviado un CV'],
+     ok:2, fbOk:'✓ Correcto. Antes de actuar (agencia), está leyendo la estructura del mercado: cómo está organizado, qué piden, qué pagan, dónde están las vacantes reales. La Metodología de Práctica Social propone que el análisis del contexto es el primer paso antes de cualquier acción estratégica. Las acciones posteriores serán mucho más efectivas porque parten de información real.', fbNo:'La joven está trabajando la dimensión de estructura: analizando el mercado antes de actuar. Esto no es inacción — es la diferencia entre actuar con información y actuar a ciegas. Tokman (2004) identificó la asimetría de información como una de las principales desventajas de los trabajadores informales y jóvenes.'},
+    {q:'Un joven que trabaja en una tortillería informal lleva dos años acumulando experiencia en administración básica, manejo de inventarios y atención a clientes — pero nunca lo ha documentado. Según el marco de Empleabilidad = Estructura × Recursos × Agencia, ¿cuál es su situación más probable?',
+     opts:['Tiene recursos reales que no están siendo comunicados como tales — su agencia debe incluir nombrar y visibilizar lo que sabe','No tiene recursos porque su trabajo es informal','La estructura del mercado informal no produce recursos válidos','Su único recurso es conseguir un título universitario'],
+     ok:0, fbOk:'✓ Exacto. Los recursos no son solo títulos o certificados — son habilidades, conocimiento y experiencia. El problema frecuente de los trabajadores informales no es que no tengan recursos, sino que no saben cómo nombrarlos, comunicarlos y presentarlos de manera que el mercado formal los reconozca. Su agencia debe incluir precisamente eso: traducir su experiencia real a un lenguaje que distintos segmentos del mercado puedan valorar.', fbNo:'La informalidad no impide acumular recursos — los crea, aunque de forma distinta a la economía formal. El problema es que muchos trabajadores informales no saben cómo traducir y comunicar esos recursos. La agencia inteligente incluye nombrar lo que uno sabe, no solo saber hacerlo.'},
   ],
 };
 
