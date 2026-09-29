@@ -288,6 +288,59 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
 .pdf-no-support{display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1.25rem;text-align:center;padding:2rem;}
 .pdf-no-support p{font-size:.9rem;color:#aaa;line-height:1.6;max-width:360px;}
 
+
+/* ══ OFICIOS ══ */
+#page-oficios{background:var(--paper);padding:4rem 1.5rem;}
+.of-intro{max-width:1040px;margin:0 auto 2rem;display:flex;justify-content:space-between;align-items:flex-end;gap:1.5rem;flex-wrap:wrap;}
+.of-count{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--p);}
+.of-filtros{max-width:1040px;margin:0 auto 1.6rem;display:flex;gap:.5rem;flex-wrap:wrap;}
+.of-filtro{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .9rem;border:1px solid var(--rule);background:#fff;color:var(--soft);cursor:pointer;transition:all .2s;}
+.of-filtro:hover{border-color:var(--p);color:var(--p);}
+.of-filtro.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+.of-grid{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
+.of-card{background:#fff;border:1px solid var(--rule);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:box-shadow .2s,transform .2s;}
+.of-card:hover,.of-card:focus-visible{box-shadow:0 8px 28px rgba(109,40,217,.12);transform:translateY(-3px);outline:none;}
+.of-cover{position:relative;aspect-ratio:16/9;overflow:hidden;}
+.of-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s ease;}
+.of-card:hover .of-cover img{transform:scale(1.04);}
+.of-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(19,17,28,.65));}
+.of-catno{position:absolute;left:1rem;bottom:.8rem;z-index:2;font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.1em;color:#fff;}
+.of-nuevo{position:absolute;top:.8rem;right:.8rem;z-index:2;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;background:var(--o);color:#fff;padding:.22rem .6rem;}
+.of-play{position:absolute;z-index:2;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(109,40,217,.85);opacity:0;transform:scale(.85);transition:opacity .25s,transform .25s;}
+.of-play::before{content:"";position:absolute;left:21px;top:16px;border-left:15px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent;}
+.of-card:hover .of-play{opacity:1;transform:scale(1);}
+.of-body{padding:1.2rem;flex:1;display:flex;flex-direction:column;gap:.35rem;}
+.of-kicker{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--p);display:block;}
+.of-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);line-height:1.25;}
+.of-loc{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:#999;}
+.of-desc{font-size:.84rem;color:#666;line-height:1.6;flex:1;margin-top:.3rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.of-foot{display:flex;justify-content:space-between;align-items:center;gap:.6rem;border-top:1px solid var(--rule);padding-top:.8rem;margin-top:.6rem;}
+.of-ver{font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--o);}
+.of-fecha{font-family:'DM Mono',monospace;font-size:.6rem;color:#bbb;}
+.of-vacio{max-width:1040px;margin:0 auto;border:1px dashed var(--rule);background:#fff;padding:3rem 1.5rem;text-align:center;}
+.of-vacio h3{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin:.5rem 0;}
+.of-vacio p{font-size:.88rem;color:var(--soft);font-weight:300;}
+.of-cta{max-width:1040px;margin:3rem auto 0;background:var(--dk);padding:2rem 2.2rem;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+.of-cta h3{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--dkt);}
+.of-cta p{font-size:.84rem;color:#a1a1aa;font-weight:300;margin-top:.3rem;max-width:520px;line-height:1.6;}
+.of-cta a{flex-shrink:0;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--p);padding:.8rem 1.3rem;text-decoration:none;transition:background .2s;}
+.of-cta a:hover{background:var(--pm);}
+/* Detalle */
+.of-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(19,17,28,.88);backdrop-filter:blur(6px);overflow-y:auto;padding:3rem 1rem;}
+.of-modal.open{display:block;}
+.of-det{position:relative;max-width:820px;margin:0 auto;background:var(--paper);border:1px solid #2d2541;}
+.of-close{position:absolute;top:.8rem;right:.8rem;z-index:3;width:34px;height:34px;border:1px solid var(--rule);background:#fff;color:var(--ink);font-size:1rem;cursor:pointer;}
+.of-close:hover{border-color:var(--p);color:var(--p);}
+.of-det-head{padding:1.8rem 1.8rem 1.2rem;}
+.of-det-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.3rem);font-weight:900;line-height:1.1;margin:.4rem 3rem .4rem 0;color:var(--ink);}
+.of-video{aspect-ratio:16/9;background:#000;}
+.of-video iframe,.of-video video{width:100%;height:100%;display:block;border:0;}
+.of-video-vacio{height:100%;display:flex;align-items:center;justify-content:center;color:#888;font-family:'DM Mono',monospace;font-size:.7rem;}
+.of-det-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem 2rem;padding:1.8rem;}
+.of-campo.full{grid-column:1/-1;}
+.of-campo p{font-size:.9rem;line-height:1.75;color:var(--ink);font-weight:300;margin-top:.4rem;}
+.of-det-foot{padding:1rem 1.8rem;border-top:1px solid var(--rule);font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;color:#999;}
+@media(max-width:600px){.of-det-grid{grid-template-columns:1fr;}.of-det-head,.of-det-grid{padding:1.3rem;}.of-modal{padding:0;}.of-det{border:none;min-height:100%;}}
 </style>
 </head>
 <body>
@@ -301,6 +354,7 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
       <li><a href="#" onclick="showPage('servicios');return false;" id="nav-servicios">Servicios</a></li>
       <li><a href="#" onclick="showPage('publicaciones');return false;" id="nav-publicaciones">Publicaciones</a></li>
       <li><a href="#" onclick="showPage('portafolio');return false;" id="nav-portafolio">Portafolio</a></li>
+      <li><a href="#" onclick="showPage('oficios');return false;" id="nav-oficios">Oficios</a></li>
       <li><a href="#" onclick="showPage('contacto');return false;" id="nav-contacto">Contacto</a></li>
       <li><a href="cursos.html" id="nav-formacion" style="color:var(--p);font-weight:700;">Formación</a></li>
       <li><a href="observatorio.html" id="nav-observatorio" style="color:var(--pm);font-weight:700;">Observatorio ↗</a></li>
@@ -845,10 +899,45 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
   </div>
 </div>
 
+<!-- ══ PÁGINA: OFICIOS ══ -->
+<div id="page-oficios" class="page">
+  <div class="of-intro reveal">
+    <div>
+      <span class="eyebrow" style="margin-bottom:.6rem;">04 — Oficios</span>
+      <h2 class="sec-h2" style="margin-top:.4rem;">Oficios con rostro</h2>
+      <p style="font-size:.9rem;color:var(--soft);line-height:1.7;max-width:560px;font-weight:300;margin-top:.65rem;">Cortometrajes sobre oficios mexicanos vigentes: la historia del oficio, la técnica, los materiales y la persona que lo sostiene. Cada nuevo documental aparece aquí en cuanto se publica.</p>
+    </div>
+    <span class="of-count" id="of-count"></span>
+  </div>
+  <div class="of-filtros" id="of-filtros"></div>
+  <div id="of-loading" style="text-align:center;padding:2rem 0;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);">Cargando oficios…</div>
+  <div class="of-grid" id="of-grid"></div>
+  <div class="of-vacio" id="of-vacio" style="display:none;">
+    <span class="eyebrow">Próximamente</span>
+    <h3>El primer documental está en camino</h3>
+    <p>Muy pronto se publicará aquí el primer oficio.</p>
+  </div>
+  <div class="of-cta reveal">
+    <div>
+      <h3>¿Conoces un oficio que merezca ser documentado?</h3>
+      <p>Cuéntame quién lo ejerce, dónde y por qué su historia importa. Reviso cada propuesta para próximos cortometrajes.</p>
+    </div>
+    <a href="mailto:d.salgado.lpz@gmail.com?subject=Propuesta%20de%20oficio&body=Oficio%3A%0APersona%20que%20lo%20ejerce%3A%0ACiudad%20%2F%20regi%C3%B3n%3A%0APor%20qu%C3%A9%20documentarlo%3A%0AContacto%3A">Proponer un oficio</a>
+  </div>
+</div>
+
+<!-- Modal: detalle de oficio -->
+<div class="of-modal" id="ofModal" role="dialog" aria-modal="true" aria-label="Documental">
+  <div class="of-det">
+    <button class="of-close" onclick="cerrarOficio()" aria-label="Cerrar">✕</button>
+    <div id="ofModalBody"></div>
+  </div>
+</div>
+
 <!-- ══ PÁGINA: CONTACTO + COTIZADOR ══ -->
 <div id="page-contacto" class="page">
   <div class="contacto-hero reveal">
-    <span class="eyebrow" style="display:block;text-align:center;margin-bottom:.8rem;">04 — Contacto</span>
+    <span class="eyebrow" style="display:block;text-align:center;margin-bottom:.8rem;">05 — Contacto</span>
     <h2 class="con-h2">¿Tienes un<br>proyecto<br><em>en mente?</em></h2>
     <p class="con-sub">Escríbeme para explorar cómo podemos trabajar juntos. Respondo en menos de 48 horas.</p>
     <div class="con-actions">
@@ -924,6 +1013,7 @@ footer{background:var(--ink);color:#555;padding:1.2rem 1.5rem;text-align:center;
 
 <footer>© 2025 David Salgado — Investigación en mercados laborales y futuro del trabajo · <a href="administrador.html" style="color:inherit;opacity:.55;text-decoration:none;">Administrador</a></footer>
 
+<script src="oficios.js"></script>
 <script>
 // PAGE SYSTEM
 function showPage(id){
@@ -933,6 +1023,7 @@ function showPage(id){
   if(page){page.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
   const navLink=document.getElementById('nav-'+id);
   if(navLink)navLink.classList.add('active');
+  if(id==='oficios'&&window.cargarOficios)cargarOficios();
   // trigger reveals
   setTimeout(()=>{
     page.querySelectorAll('.reveal').forEach(el=>{
@@ -942,8 +1033,8 @@ function showPage(id){
 }
 // Deep-link support (e.g. index.html#servicios from another page)
 (function(){
-  const validIds=['inicio','servicios','publicaciones','portafolio','contacto'];
-  const hash=(location.hash||'').replace('#','');
+  const validIds=['inicio','servicios','publicaciones','portafolio','oficios','contacto'];
+  const hash=(location.hash||'').replace('#','').split('/')[0];
   if(validIds.includes(hash))showPage(hash);
 })();
 // SCROLL REVEAL

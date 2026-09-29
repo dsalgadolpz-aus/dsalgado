@@ -226,6 +226,39 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
   .panel-nav-links{display:none;}
   .stats-row{grid-template-columns:1fr 1fr;}
 }
+
+/* ── OFICIOS ── */
+.of-adm-mini{font-size:.8rem;color:var(--soft);}
+.of-gh{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;background:var(--white);border:1px solid var(--rule);padding:.8rem 1rem;margin-bottom:1.2rem;}
+.of-ftabs{display:flex;gap:0;border-bottom:1px solid var(--rule);margin:1.2rem 0 1rem;flex-wrap:wrap;align-items:flex-end;}
+.of-ftab{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.55rem .9rem;cursor:pointer;color:var(--soft);border-bottom:2px solid transparent;margin-bottom:-1px;}
+.of-ftab:hover{color:var(--ink);}
+.of-ftab.active{color:var(--p);border-bottom-color:var(--p);}
+.of-buscar{margin-left:auto;margin-bottom:.35rem;border:1px solid var(--rule);padding:.45rem .7rem;font-family:'Lato',sans-serif;font-size:.8rem;background:var(--white);min-width:200px;}
+.of-buscar:focus{outline:none;border-color:var(--p);}
+.of-adm-item{background:var(--white);border:1px solid var(--rule);padding:.8rem;margin-bottom:.6rem;display:grid;grid-template-columns:128px 1fr auto;gap:1rem;align-items:center;}
+.of-adm-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;}
+.of-adm-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.of-adm-thumb span{position:absolute;left:.4rem;bottom:.3rem;font-family:'DM Mono',monospace;font-size:.56rem;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+.of-adm-info strong{font-family:'Playfair Display',serif;font-size:.98rem;color:var(--ink);display:block;}
+.of-adm-info>span{font-size:.78rem;color:var(--soft);}
+.of-adm-meta{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin-top:.45rem;}
+.of-adm-fecha{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--soft);}
+.of-adm-acts{display:flex;gap:.35rem;flex-wrap:wrap;justify-content:flex-end;max-width:260px;}
+.of-mini-btn{padding:.35rem .6rem !important;font-size:.55rem !important;}
+@media(max-width:760px){.of-adm-item{grid-template-columns:96px 1fr;}.of-adm-acts{grid-column:1/-1;justify-content:flex-start;max-width:none;}.of-buscar{margin-left:0;width:100%;}}
+.modal.modal-lg{max-width:760px;}
+.of-bloque{border-top:1px solid var(--rule);padding-top:1rem;margin-top:1.1rem;}
+.of-bloque:first-child{border-top:none;padding-top:0;margin-top:0;}
+.of-bloque-t{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--p);margin-bottom:.7rem;}
+.of-radio{display:flex;gap:1.2rem;flex-wrap:wrap;font-size:.84rem;margin-bottom:.7rem;}
+.of-radio label{display:flex;gap:.4rem;align-items:center;cursor:pointer;}
+.of-hint{font-size:.74rem;color:var(--soft);margin-top:.35rem;line-height:1.5;}
+.of-prev-frame{aspect-ratio:16/9;background:#000;margin-top:.7rem;}
+.of-prev-frame iframe,.of-prev-frame video{width:100%;height:100%;border:0;display:block;}
+.of-tonos{display:flex;gap:.45rem;flex-wrap:wrap;}
+.of-tono{width:38px;height:26px;border:2px solid transparent;cursor:pointer;padding:0;}
+.of-tono.active{border-color:var(--ink);outline:1px solid #fff;outline-offset:-4px;}
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -290,6 +323,7 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
     <ul class="panel-nav-links">
       <li><span class="pnl active" onclick="showSection('publicaciones')">Publicaciones</span></li>
       <li><span class="pnl" onclick="showSection('portafolio')">Portafolio</span></li>
+      <li><span class="pnl" onclick="showSection('oficios')">Oficios</span></li>
       <li><span class="pnl" onclick="showSection('formacion')">Formación</span></li>
       <li><span class="pnl" onclick="showSection('observatorio')">Observatorio</span></li>
       <li><span class="pnl" onclick="showSection('configuracion')">Configuración</span></li>
@@ -505,6 +539,40 @@ Sofía, Ramos Cruz, sofia@correo.com, Tec de Monterrey"></textarea>
   </div>
 </div>
 
+<!-- ══ OFICIOS ════════════════════════════════════════════════ -->
+<div class="section" id="s-oficios">
+  <div class="section-header">
+    <h2>Oficios</h2>
+    <p>Cortometrajes de la pestaña "Oficios" del sitio. Solo aparecen en público los oficios con estado <strong>Publicado</strong> cuya fecha ya llegó; los programados salen solos en su fecha. Los cambios tardan 1-2 minutos en reflejarse.</p>
+  </div>
+
+  <div class="of-gh" id="of-gh-estado"></div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num" id="of-st-publicado">—</div><div class="stat-lbl">Publicados</div></div>
+    <div class="stat"><div class="stat-num" id="of-st-programado">—</div><div class="stat-lbl">Programados</div></div>
+    <div class="stat"><div class="stat-num" id="of-st-borrador">—</div><div class="stat-lbl">Borradores</div></div>
+    <div class="stat"><div class="stat-num" id="of-st-archivado">—</div><div class="stat-lbl">Archivados</div></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-pri of-req-gh" onclick="ofAdm.nuevo()">+ Nuevo oficio</button>
+    <button class="btn btn-sec" onclick="cargarOficiosAdmin()">↺ Actualizar</button>
+    <a class="btn btn-sec" href="index.html#oficios" target="_blank">Ver pestaña pública →</a>
+  </div>
+
+  <div class="of-ftabs">
+    <span class="of-ftab active" data-f="todos" onclick="ofAdm.filtrar('todos')">Todos</span>
+    <span class="of-ftab" data-f="publicado" onclick="ofAdm.filtrar('publicado')">Publicados</span>
+    <span class="of-ftab" data-f="programado" onclick="ofAdm.filtrar('programado')">Programados</span>
+    <span class="of-ftab" data-f="borrador" onclick="ofAdm.filtrar('borrador')">Borradores</span>
+    <span class="of-ftab" data-f="archivado" onclick="ofAdm.filtrar('archivado')">Archivados</span>
+    <input class="of-buscar" type="search" placeholder="Buscar oficio, persona, lugar…" oninput="ofAdm.buscar(this.value)"/>
+  </div>
+
+  <div id="of-lista"><p class="of-adm-mini">Cargando oficios…</p></div>
+</div>
+
 <!-- ══ OBSERVATORIO ═══════════════════════════════════════════ -->
 <div class="section" id="s-observatorio">
   <div class="section-header">
@@ -634,6 +702,105 @@ Sofía, Ramos Cruz, sofia@correo.com, Tec de Monterrey"></textarea>
   </div>
 </div>
 
+<!-- Modal: oficio -->
+<div class="modal-bg" id="modal-of">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <h3 id="modal-of-title">Nuevo oficio</h3>
+      <button class="modal-close" onclick="cerrarModal('modal-of')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="of-bloque">
+        <div class="of-bloque-t">01 · Ficha</div>
+        <div class="form-grid">
+          <div class="field"><label>Oficio *</label><input type="text" id="of-oficio" placeholder="Ej. Talabartero"/></div>
+          <div class="field"><label>Categoría</label><input type="text" id="of-categoria" list="of-cat-list" placeholder="Ej. Cuero"/><datalist id="of-cat-list"></datalist></div>
+          <div class="field"><label>Persona que lo ejerce</label><input type="text" id="of-persona" placeholder="Nombre"/></div>
+          <div class="field"><label>Ubicación</label><input type="text" id="of-ubicacion" placeholder="Ciudad, Estado"/></div>
+        </div>
+        <div class="form-grid g1">
+          <div class="field"><label>Resumen para la tarjeta <span id="of-resumen-n" style="float:right;">0 / 180</span></label><textarea id="of-resumen" maxlength="180" style="min-height:60px;" oninput="ofAdm.contarResumen()" placeholder="Una o dos líneas que inviten a ver el documental."></textarea></div>
+          <div class="field"><label>Historia del oficio</label><textarea id="of-historia" placeholder="Origen, contexto, vigencia…"></textarea></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>Técnica</label><textarea id="of-tecnica" style="min-height:80px;"></textarea></div>
+          <div class="field"><label>Materiales</label><textarea id="of-materiales" style="min-height:80px;"></textarea></div>
+        </div>
+        <div class="form-grid g1">
+          <div class="field"><label>Quién lo ejerce (semblanza)</label><textarea id="of-bio" style="min-height:80px;"></textarea></div>
+        </div>
+      </div>
+
+      <div class="of-bloque">
+        <div class="of-bloque-t">02 · Video</div>
+        <div class="of-radio">
+          <label><input type="radio" name="of-vsrc" value="enlace" checked onchange="ofAdm.cambiarFuenteVideo()"/> Enlace (YouTube, Vimeo, Drive)</label>
+          <label><input type="radio" name="of-vsrc" value="archivo" onchange="ofAdm.cambiarFuenteVideo()"/> Subir archivo</label>
+        </div>
+        <div id="of-vsrc-enlace" class="field">
+          <label>URL del video</label>
+          <input type="url" id="of-video-url" placeholder="https://youtu.be/…  ·  https://vimeo.com/…  ·  https://drive.google.com/file/d/…"/>
+          <p class="of-hint">Recomendado. En YouTube puedes subirlo como "No listado". En Drive, compártelo como "Cualquier persona con el enlace".</p>
+        </div>
+        <div id="of-vsrc-archivo" class="field" style="display:none;">
+          <label>Archivo de video (MP4 / WebM, máx. 25 MB)</label>
+          <input type="file" id="of-video-file" accept="video/mp4,video/webm,video/quicktime"/>
+          <p class="of-hint" id="of-video-actual"></p>
+          <p class="of-hint">Se guarda en el repositorio (carpeta oficios/videos). Para videos largos o pesados usa un enlace.</p>
+        </div>
+        <div class="form-grid g3" style="margin-top:.7rem;">
+          <div class="field"><label>Duración</label><input type="text" id="of-duracion" placeholder="Ej. 6 min"/></div>
+        </div>
+        <button class="btn btn-sec" type="button" onclick="ofAdm.probarVideo()">▶ Probar video</button>
+        <div id="of-preview"></div>
+      </div>
+
+      <div class="of-bloque">
+        <div class="of-bloque-t">03 · Portada</div>
+        <p class="of-hint" style="margin:0 0 .7rem;">Opcional. Si no subes imagen y el video es de YouTube, se usa su miniatura; si no, el color elegido.</p>
+        <div class="form-grid">
+          <div class="field"><label>Subir imagen (máx. 5 MB)</label><input type="file" id="of-portada-file" accept="image/*"/><p class="of-hint" id="of-portada-actual"></p></div>
+          <div class="field"><label>o URL de imagen</label><input type="url" id="of-portada-url" placeholder="https://…"/></div>
+        </div>
+        <label class="of-hint" style="display:flex;gap:.4rem;align-items:center;margin-bottom:.8rem;"><input type="checkbox" id="of-quitar-portada"/> Quitar portada actual</label>
+        <div class="field"><label>Color de respaldo</label>
+          <div class="of-tonos">
+            <button type="button" class="of-tono" data-t="t1" style="background:linear-gradient(135deg,#18181B 55%,#3B0764)" onclick="ofAdm.setTono('t1')"></button>
+            <button type="button" class="of-tono" data-t="t2" style="background:linear-gradient(135deg,#3730A3,#6D28D9)" onclick="ofAdm.setTono('t2')"></button>
+            <button type="button" class="of-tono" data-t="t3" style="background:linear-gradient(135deg,#7C2D12,#C45F00)" onclick="ofAdm.setTono('t3')"></button>
+            <button type="button" class="of-tono" data-t="t4" style="background:linear-gradient(135deg,#1E3A5F,#4C1D95)" onclick="ofAdm.setTono('t4')"></button>
+            <button type="button" class="of-tono" data-t="t5" style="background:linear-gradient(135deg,#14532D,#3F6212)" onclick="ofAdm.setTono('t5')"></button>
+            <button type="button" class="of-tono" data-t="t6" style="background:linear-gradient(135deg,#581C87,#9D174D)" onclick="ofAdm.setTono('t6')"></button>
+          </div>
+          <input type="hidden" id="of-tono" value="t1"/>
+        </div>
+      </div>
+
+      <div class="of-bloque">
+        <div class="of-bloque-t">04 · Publicación</div>
+        <div class="form-grid">
+          <div class="field"><label>Estado</label>
+            <select id="of-estado" onchange="ofAdm.ayudaFecha()">
+              <option value="borrador">Borrador (no visible)</option>
+              <option value="publicado">Publicado / Programado</option>
+              <option value="archivado">Archivado (oculto)</option>
+            </select>
+          </div>
+          <div class="field"><label>Fecha y hora de publicación</label><input type="datetime-local" id="of-fecha" onchange="ofAdm.ayudaFecha()"/></div>
+        </div>
+        <p class="of-hint" id="of-fecha-ayuda"></p>
+      </div>
+
+      <div class="log" id="of-log"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sec" onclick="cerrarModal('modal-of')">Cancelar</button>
+      <button class="btn btn-pri of-req-gh" id="of-guardar" onclick="ofAdm.guardar()">Guardar oficio</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: ver participante -->
 <div class="modal-bg" id="modal-part">
   <div class="modal">
@@ -653,6 +820,9 @@ Sofía, Ramos Cruz, sofia@correo.com, Tec de Monterrey"></textarea>
 
 <!-- Footer -->
 
+<script src="admin.js"></script>
+<script src="oficios.js"></script>
+<script src="admin-oficios.js"></script>
 <script>
 // ══════════════════════════════════════════════════════════════
 // CONFIGURACIÓN
@@ -786,6 +956,7 @@ function showSection(id) {
   if (id === 'formacion') cargarStats();
   if (id === 'publicaciones') cargarPublicaciones();
   if (id === 'portafolio') cargarPortafolio();
+  if (id === 'oficios') cargarOficiosAdmin();
 }
 
 // ── TABS FORMACIÓN ────────────────────────────────────────────
