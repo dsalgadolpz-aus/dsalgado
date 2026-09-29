@@ -4017,8 +4017,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (new URLSearchParams(location.search).get('admin') === '1') {
     USER = { nombre: 'David', email: 'd.salgado.lpz@gmail.com', rol: 'admin', valida: true };
     localStorage.setItem('hpi_user', JSON.stringify(USER));
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('panelMain').style.display = 'block';
     iniciarCurso();
     return;
   }
