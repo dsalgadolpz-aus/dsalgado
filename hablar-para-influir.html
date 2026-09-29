@@ -3221,16 +3221,10 @@ function entrar() {
         }
       })
       .catch(() => {
-        // Sin conexión al GAS → modo offline con token local
-        USER = { nombre: 'Participante', token: tok, curso: 'Hablar para Influir' };
-        localStorage.setItem('hpi_user', JSON.stringify(USER));
-        iniciarCurso();
+        mostrarErr('No se pudo conectar al servidor. Verifica tu conexión e intenta de nuevo.');
       });
   } else {
-    // Modo demo sin GAS configurado
-    USER = { nombre: 'Demo', token: tok };
-    localStorage.setItem('hpi_user', JSON.stringify(USER));
-    iniciarCurso();
+    mostrarErr('Este curso requiere una clave de acceso válida. Contacta a Sintropía Social para obtener la tuya.');
   }
 }
 
@@ -4021,7 +4015,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   iniciarLaberintos();
-  if (USER) iniciarCurso();
+  // Sesiones sin validación del GAS se descartan (seguridad)
+  if (USER && !USER.valida && USER.rol !== 'admin') {
+    localStorage.removeItem('hpi_user');
+    USER = null;
+  }
+  if (USER && (USER.valida || USER.rol === 'admin')) iniciarCurso();
   document.getElementById('tokenInput')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') entrar();
   });

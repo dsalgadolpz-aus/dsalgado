@@ -1623,16 +1623,10 @@ function entrar() {
         }
       })
       .catch(() => {
-        // Sin conexión al GAS → modo offline con token local
-        USER = { nombre: 'Participante', token: tok, curso: 'Empleabilidad Social' };
-        localStorage.setItem('hpi_user', JSON.stringify(USER));
-        iniciarCurso();
+        mostrarErr('No se pudo conectar al servidor. Verifica tu conexión e intenta de nuevo.');
       });
   } else {
-    // Modo demo sin GAS configurado
-    USER = { nombre: 'Demo', token: tok };
-    localStorage.setItem('hpi_user', JSON.stringify(USER));
-    iniciarCurso();
+    mostrarErr('Este curso requiere una clave de acceso válida. Contacta a Sintropía Social para obtener la tuya.');
   }
 }
 
@@ -2425,13 +2419,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (new URLSearchParams(location.search).get('admin') === '1') {
     USER = { nombre: 'David', email: 'd.salgado.lpz@gmail.com', rol: 'admin', valida: true };
     localStorage.setItem('hpi_user', JSON.stringify(USER));
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('panelMain').style.display = 'block';
     iniciarCurso();
     return;
   }
   iniciarLaberintos();
-  if (USER) iniciarCurso();
+  // Sesiones sin validación del GAS se descartan (seguridad)
+  if (USER && !USER.valida && USER.rol !== 'admin') {
+    localStorage.removeItem('hpi_user');
+    USER = null;
+  }
+  if (USER && (USER.valida || USER.rol === 'admin')) iniciarCurso();
   document.getElementById('tokenInput')?.addEventListener('keydown', e => {
     if (e.key === 'Enter') entrar();
   });
