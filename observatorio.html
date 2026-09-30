@@ -565,36 +565,23 @@ function upS() {
 }
 
 async function fetchNotasIA(query, conAnalisis) {
-  const p = `Eres un asistente especializado en estudios del trabajo en México y América Latina. Genera 2 notas relevantes y recientes sobre: "${query}"
-Responde SOLO con JSON válido, sin texto adicional, sin markdown:
-[{"titulo":"título","pais":"México","fuente":"OIT","indicador":"Empleo formal","fecha":"2025-04-01","ref":"https://ilo.org","resumen":"3-4 oraciones con hallazgos principales concretos"}]
-Opciones pais: México, Argentina, Brasil, Colombia, Chile, Perú, América Latina, Internacional
-Opciones fuente: OIT, CEPAL, BID, Banco Mundial, INEGI, OCDE, FMI, STPS, IMSS, Otra
-Opciones indicador: Empleo formal, Desempleo, Salario mínimo, Informalidad, Trabajo digno, Brecha salarial, Trabajo infantil, Sindicatos, Precarización, Productividad, Automatización, Migración laboral`;
-  const txt = await callGemini(p, 1200) || '[]';
-  const arr = JSON.parse(txt.replace(/```json|```/g,'').trim());
-  const result = [];
-  for (const x of arr) {
-    const analisis = conAnalisis ? await llmAnalisis(x.titulo, x.resumen, x.indicador, x.pais, x.fuente) : '';
-    result.push({id: Date.now().toString()+Math.random().toString(36).slice(2), ...x, analisis, auto:true, fechaR: new Date().toISOString()});
-  }
-  return result;
+  // Usa el backend GAS — la key de Gemini vive solo en Apps Script,
+  // ningún visitante necesita configurar nada.
+  const data = await llamarBackend('buscarNotas', { query: query });
+  const arr  = data.notas || [];
+  return arr.map(x => ({
+    id: Date.now().toString() + Math.random().toString(36).slice(2),
+    ...x,
+    auto: true,
+    fechaR: new Date().toISOString()
+  }));
 }
 
 async function llmAnalisis(titulo, resumen, indicador, pais, fuente) {
-  const p = `Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. Tu análisis tiene estas marcas:
-— Partes siempre desde los trabajadores, nunca desde los mercados
-— Usas la pregunta como motor argumentativo
-— Mezclas teoría densa (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano
-— Vas de lo estructural a lo íntimo (el cuerpo, el desgaste, la persona que se convierte en cifra)
-— Preguntas siempre quién queda fuera de la muestra
-— Sostienes contradicciones sin resolverlas
-— Cierras abriendo incógnitas, no dando recetas
-
-Analiza: Título: ${titulo} | País: ${pais} | Fuente: ${fuente} | Indicador: ${indicador} | Resumen: ${resumen}
-Escribe 4 párrafos con tu voz. Separa párrafos con salto de línea.`;
+  // Usa el backend GAS para el análisis IA (sin key local requerida).
   try {
-    return await callGemini(p, 1000) || 'No se pudo generar el análisis.';
+    const data = await llamarBackend('analizarPlantilla', { titulo, resumen, fuente, pais, indicador });
+    return data.analisis || 'No se pudo generar el análisis.';
   } catch(e) { return e.message || 'Error al generar análisis.'; }
 }
 
