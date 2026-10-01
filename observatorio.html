@@ -191,8 +191,10 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
       <li><a href="index.html#servicios">Servicios</a></li>
       <li><a href="index.html#publicaciones">Publicaciones</a></li>
       <li><a href="index.html#portafolio">Portafolio</a></li>
+      <li><a href="index.html#oficios">Oficios</a></li>
       <li><a href="index.html#contacto">Contacto</a></li>
-      <li><a href="observatorio.html" class="here">Observatorio</a></li>
+      <li><a href="cursos.html" style="color:var(--pm);font-weight:700;">Formación</a></li>
+      <li><a href="observatorio.html" class="here">Observatorio ↗</a></li>
       <li><a href="administrador.html" style="opacity:.5;">Admin</a></li>
     </ul>
   </div>
@@ -564,17 +566,103 @@ function upS() {
   document.getElementById('stF').textContent = new Set(notas.map(n => n.fuente)).size;
 }
 
+// ── Análisis determinístico sin IA — voz de David Salgado ──
+function analizarDeterministico(query, indicador, pais) {
+  const ind = (indicador||'').toLowerCase();
+  const qs  = (query||'').toLowerCase();
+
+  const marcos = {
+    salario: [
+      'El salario no es simplemente un precio: es la forma histórica en que el capitalismo convierte la fuerza de trabajo en mercancía, y las luchas salariales son siempre luchas por la definición del valor humano.',
+      'Cuando hablamos de salarios en México y América Latina, estamos hablando de una disputa estructural entre productividad y distribución que el mercado, por sí solo, nunca ha resuelto y nunca resolverá.',
+      'La pregunta no es si el salario es justo en abstracto, sino quién decide lo que es justo, bajo qué condiciones de poder y con qué consecuencias para la vida concreta de los trabajadores.',
+      'La brecha salarial no es un error del sistema: es su funcionamiento normal. El mercado laboral genera desigualdad como condición de su propia reproducción.'
+    ],
+    desempleo: [
+      'El desempleo es siempre una producción social, no una falla individual. Las personas no pierden el trabajo porque no se esforzaron lo suficiente; lo pierden porque el sistema necesita una reserva de fuerza de trabajo disponible y barata.',
+      'Marx llamó "ejército industrial de reserva" a lo que hoy llamamos desempleo: no es una patología del mercado, sino su mecanismo de regulación. Eso no lo hace menos devastador para quienes lo viven.',
+      'En México, el desempleo abierto convive con una informalidad masiva que hace invisibles otras formas de exclusión laboral. Los datos oficiales suelen subestimar la magnitud real del problema.',
+      'La automatización promete eficiencia y genera desplazamiento. La pregunta que nadie responde con seriedad es: ¿quién absorbe ese desplazamiento, y en qué condiciones?'
+    ],
+    informalidad: [
+      'La informalidad no es una excepción latinoamericana: es la forma dominante en que se organiza el trabajo en la región. Tratarla como anomalía es no entenderla.',
+      'De la Garza Toledo y otros investigadores llevan décadas mostrando que la informalidad no es un problema de "atraso": es la respuesta racional de millones de trabajadores a un mercado formal que los excluye o los precariza.',
+      'Formalizar el trabajo sin cambiar las condiciones estructurales que producen informalidad es pintar la fachada: el edificio sigue cayéndose por dentro.',
+      'La informalidad tiene costos invisibles: ausencia de seguridad social, imposibilidad de planear el futuro, vulnerabilidad ante enfermedades y crisis. Esos costos los pagan los trabajadores, no el mercado.'
+    ],
+    precari: [
+      'Sennett describió la corrosión del carácter que produce la inestabilidad laboral: cuando no hay proyecto de vida posible a largo plazo, la identidad se fragmenta y la acción colectiva se debilita.',
+      'La precarización no es solo económica: es subjetiva. Produce trabajadores que se sienten responsables de su propia precariedad, que interiorizan la incertidumbre como rasgo personal y no como condición estructural.',
+      'El trabajo por proyecto, el contrato temporal, la disponibilidad permanente sin salario permanente: son formas de transferir el riesgo del capital al trabajador, bajo el disfraz retórico de la "flexibilidad".',
+      'La precariedad tiene género: las mujeres la viven de forma más aguda, más constante y con menos reconocimiento. El mercado laboral es un espacio profundamente desigual en términos de clase, género y origen.'
+    ],
+    digital: [
+      'Las plataformas digitales son la última frontera de la precarización: presentan la subordinación como autonomía, el control algorítmico como libertad y la ausencia de derechos como ventaja competitiva.',
+      'Uber, Rappi, Amazon Flex: distintos nombres para la misma lógica. El algoritmo asigna, controla y evalúa. El trabajador ejecuta, asume el riesgo y paga los costos. El beneficio fluye hacia arriba.',
+      'La economía de plataformas no inventó la precarización: la digitalizó. Lo que cambió no es la relación de poder, sino la infraestructura tecnológica que la hace posible y la retórica que la legitima.',
+      'Cuando un repartidor de aplicación tiene un accidente, el algoritmo no responde: responde el trabajador con su cuerpo, su tiempo y su bolsillo. Eso no es "ser tu propio jefe"; es externalizar el riesgo.'
+    ],
+    migracion: [
+      'La migración laboral es siempre una respuesta a algo: a la violencia, a la pobreza, a la falta de oportunidades. El migrante no elige libremente; elige dentro de los márgenes que otros han trazado.',
+      'Los trabajadores migrantes sostienen economías enteras —en los países de origen a través de remesas, en los de destino a través de trabajo no reconocido— y reciben a cambio discriminación y exclusión.',
+      'Las remesas no son política de desarrollo: son el síntoma de un sistema que expulsa a sus trabajadores más jóvenes y más capaces, y luego cuenta el dinero que mandan como éxito económico.',
+      'La movilidad laboral tiene cara de mujer cada vez más: las mujeres migrantes enfrentan doble discriminación, realizan los trabajos menos visibles y tienen menor acceso a protección legal y social.'
+    ],
+    genero: [
+      'La división sexual del trabajo no es natural: es una construcción histórica que asigna a las mujeres los trabajos menos valorados, peor pagados y más invisibles.',
+      'El trabajo de cuidados sostiene la reproducción social y el funcionamiento del mercado laboral — pero no cuenta en el PIB, no genera derechos laborales y recae desproporcionadamente sobre las mujeres.',
+      'La brecha salarial de género no es un accidente: es el resultado de siglos de devaluación sistemática del trabajo femenino, naturalizada como diferencia biológica para no reconocerla como injusticia estructural.',
+      'Hablar de igualdad en el mercado laboral sin hablar de corresponsabilidad doméstica, sin hablar de derechos reproductivos, sin hablar de violencia, es hablar de partes sin hablar del todo.'
+    ]
+  };
+
+  // Seleccionar marco
+  let parrafos = marcos['informalidad']; // default
+  for (const [key, ps] of Object.entries(marcos)) {
+    if (ind.includes(key) || qs.includes(key)) { parrafos = ps; break; }
+  }
+  if (qs.includes('salario') || ind.includes('salario')) parrafos = marcos['salario'];
+  if (qs.includes('desempleo') || ind.includes('desempleo')) parrafos = marcos['desempleo'];
+  if (qs.includes('digital') || qs.includes('plataforma') || ind.includes('digital')) parrafos = marcos['digital'];
+  if (qs.includes('migra') || ind.includes('migra')) parrafos = marcos['migracion'];
+  if (qs.includes('género') || qs.includes('genero') || qs.includes('mujer') || ind.includes('género')) parrafos = marcos['genero'];
+
+  // Seleccionar 3-4 párrafos distintos pseudo-aleatoriamente (por longitud del query)
+  const seed = query.length % 4;
+  const seleccion = [parrafos[seed % parrafos.length], parrafos[(seed+1) % parrafos.length], parrafos[(seed+2) % parrafos.length]];
+
+  const cierre = `La pregunta que este material abre no es técnica sino política: ¿quién tiene el poder de definir lo que el trabajo vale, en qué condiciones se ejerce y qué futuro hace posible? Esa pregunta no la responde el mercado. La responden —o deberían responderla— las personas, las organizaciones y las instituciones que deciden no naturalizar lo que es, en realidad, una elección.`;
+
+  return seleccion.join('\n\n') + '\n\n' + cierre;
+}
+
 async function fetchNotasIA(query, conAnalisis) {
-  // Usa el backend GAS — la key de Gemini vive solo en Apps Script,
-  // ningún visitante necesita configurar nada.
-  const data = await llamarBackend('buscarNotas', { query: query });
-  const arr  = data.notas || [];
-  return arr.map(x => ({
-    id: Date.now().toString() + Math.random().toString(36).slice(2),
-    ...x,
-    auto: true,
-    fechaR: new Date().toISOString()
-  }));
+  // Intenta el backend GAS primero; si no está configurado, genera análisis local
+  try {
+    const data = await llamarBackend('buscarNotas', { query: query });
+    const arr  = data.notas || [];
+    return arr.map(x => ({
+      id: Date.now().toString() + Math.random().toString(36).slice(2),
+      ...x,
+      auto: true,
+      fechaR: new Date().toISOString()
+    }));
+  } catch(e) {
+    // Fallback determinístico: genera una nota analítica sin IA
+    const analisis = analizarDeterministico(query, query, 'México y América Latina');
+    return [{
+      id: Date.now().toString() + Math.random().toString(36).slice(2),
+      titulo: 'Análisis sobre: ' + query,
+      pais: 'México / América Latina',
+      fuente: 'Práctica Social — David Salgado',
+      indicador: 'Análisis Social',
+      fecha: new Date().toISOString().split('T')[0],
+      resumen: 'Lectura analítica desde la sociología del trabajo y la economía política del trabajo en México y América Latina.',
+      analisis: analisis,
+      auto: true,
+      fechaR: new Date().toISOString()
+    }];
+  }
 }
 
 async function llmAnalisis(titulo, resumen, indicador, pais, fuente) {
@@ -591,15 +679,118 @@ async function llmAnalisis(titulo, resumen, indicador, pais, fuente) {
 // últimas notas.
 function makeResumenObservatorio(top) {
   const fuentes = [...new Set(top.map(n => n.fuente))];
-  const paises = [...new Set(top.map(n => n.pais))];
+  const paises  = [...new Set(top.map(n => n.pais))];
   const indicadores = [...new Set(top.map(n => n.indicador))];
+  const nTotal  = top.length;
+
+  // ── Indicadores y patrones ──
+  const contInd = {};
+  top.forEach(n => { contInd[n.indicador] = (contInd[n.indicador]||0)+1; });
+  const indOrden = Object.entries(contInd).sort((a,b)=>b[1]-a[1]);
+  const indPpal = indOrden[0] ? indOrden[0][0] : indicadores[0];
+
+  const contPais = {};
+  top.forEach(n => { contPais[n.pais] = (contPais[n.pais]||0)+1; });
+  const paisPpal = Object.entries(contPais).sort((a,b)=>b[1]-a[1])[0]?.[0] || paises[0];
+
+  // ── Ganchos temáticos (según indicador dominante) ──
+  const ganchos = {
+    'Salario': 'La disputa por el salario sigue siendo la superficie donde se expresan relaciones de poder más profundas: entre capital y trabajo, entre formalidad e informalidad, entre promesa institucional y realidad cotidiana.',
+    'Desempleo': 'El desempleo no es una falla técnica del mercado: es el resultado visible de una estructura que produce exclusión de forma sistemática, y que descarga sobre los cuerpos de los trabajadores el costo de sus propias contradicciones.',
+    'Informalidad': 'La informalidad laboral en América Latina no es una anomalía ni un residuo del pasado: es la norma que organiza la vida de millones de trabajadores, y su persistencia revela los límites de un modelo de desarrollo que prometió mucho y distribuyó poco.',
+    'Empleo': 'El empleo es la forma dominante en que el capitalismo contemporáneo organiza la reproducción social — pero esa forma está en disputa, y los datos de estas semanas lo muestran con claridad.',
+    'Precarización': 'La precarización no es solo una condición económica: es un proceso que erosiona identidades, debilita la acción colectiva y transforma la incertidumbre en norma subjetiva de la experiencia laboral.',
+    'Trabajo Digital': 'Las plataformas digitales presentan la precarización bajo el lenguaje de la autonomía y la flexibilidad — ocultando así relaciones de subordinación que siguen siendo estructuralmente asimétricas.',
+    'Migración': 'La movilidad laboral es siempre una respuesta a condiciones estructurales que expulsan: el migrante no elige libremente, sino dentro de márgenes que otros han trazado.',
+    'Género': 'La división sexual del trabajo no es natural ni inevitable — es una construcción histórica que asigna, desvaloriza y hace invisibles tareas fundamentales para la reproducción de la vida.',
+    'default': 'El trabajo es siempre más que una relación económica: es el espacio donde se define quiénes somos, qué valemos y en qué condiciones reproducimos nuestra existencia colectiva.'
+  };
+  const gancho = ganchos[indPpal] || ganchos['default'];
+
+  // ── Construcción del texto ──
   let t = '';
-  t += `Esta síntesis reúne las ${top.length} nota(s) más recientes registradas en el Observatorio del Trabajo, con información proveniente de ${fuentes.join(', ')}, sobre ${paises.join(', ')}. Los indicadores en juego son: ${indicadores.join(', ')}.\n\n`;
+  t += `Esta síntesis reúne las ${nTotal} nota(s) más recientes registradas en el Observatorio del Trabajo — México y América Latina. `;
+  t += `Las fuentes consultadas son: ${fuentes.join(', ')}. `;
+  t += `Los países o regiones en foco: ${paises.join(', ')}. `;
+  t += `Los indicadores que articulan la lectura: ${indicadores.join(', ')}.\n\n`;
+
+  t += gancho + '\n\n';
+
+  t += `Las notas de este período apuntan en una dirección compartida: no son hechos aislados, sino síntomas de una misma dinámica estructural que toma formas distintas en contextos distintos.\n\n`;
+
   top.forEach((n, i) => {
-    t += `${i + 1}. ${fmtF(n.fecha)} — ${n.titulo} (${n.pais}, ${n.fuente}). ${n.resumen}\n\n`;
+    t += `${i + 1}. ${fmtF(n.fecha)} | ${n.pais} | ${n.fuente}\n`;
+    t += `   ${n.titulo}\n`;
+    t += `   ${n.resumen}\n\n`;
   });
-  t += `Leídas en conjunto, estas notas trazan un mapa parcial —nunca completo— de cómo se está reconfigurando el trabajo en la región en este momento.`;
+
+  // ── Lectura transversal ──
+  if (paises.length > 1) {
+    t += `La comparación entre ${paises.slice(0,-1).join(', ')} y ${paises[paises.length-1]} no es un ejercicio académico: pone en evidencia que las condiciones laborales no son accidentes nacionales, sino expresiones regionales de una misma lógica de acumulación. `;
+  }
+  if (indOrden.length > 1) {
+    t += `La coexistencia de los indicadores ${indOrden.map(x=>x[0]).join(' y ')} no es una coincidencia: son dimensiones complementarias de la misma fractura. `;
+  }
+  t += `\n\nLeídas en conjunto, estas notas trazan un mapa parcial —nunca completo— de cómo se está reconfigurando el trabajo en la región. El mapa no habla solo; exige interpretación, posición y pregunta.`;
+
   return t;
+}
+
+// ── Genera hashtags temáticos a partir de las notas ──
+function generarHashtags(notas) {
+  const mapa = {
+    'Salario':'#SalarioJusto #EconomíaLaboral',
+    'Desempleo':'#Desempleo #MercadoLaboral',
+    'Informalidad':'#InformalidadLaboral #TrabajoInformal',
+    'Empleo':'#Empleo #MercadoLaboral',
+    'Precarización':'#PrecarizaciónLaboral #TrabajoDigno',
+    'Trabajo Digital':'#EconomíaGig #TrabajoDigital #PlataformasDigitales',
+    'Migración':'#MigraciónLaboral #MovilidadLaboral',
+    'Género':'#BrechaSalarial #TrabajoDeGenero',
+  };
+  const tags = new Set(['#ObservatorioDelTrabajo','#SociologíaDelTrabajo','#PráticaSocial','#FuturoDelTrabajo']);
+  (notas||[]).forEach(n => {
+    const t = mapa[n.indicador];
+    if (t) t.split(' ').forEach(h => tags.add(h));
+    if (/México|Mexico/i.test(n.pais||'')) tags.add('#MéxicoLaboral');
+    if (/América Latina|AL/i.test(n.pais||'')) tags.add('#AméricaLatina');
+  });
+  return [...tags].slice(0,8).join(' ');
+}
+
+// ── Barra de compartir para buscador/resumen ──
+function renderShareBar(titulo, texto, hashtags) {
+  const url    = location.origin + location.pathname;
+  const copia  = titulo + '\n\n' + texto.slice(0,400) + (texto.length>400?'...':'') + '\n\n' + hashtags + '\n' + url;
+  const enc    = encodeURIComponent;
+  return `<div class="nota-share-row" style="margin-top:1rem;">
+    <span style="font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-right:.3rem;">Compartir:</span>
+    <button class="share-nota-btn" onclick="compartirTexto('linkedin','${enc(titulo)}','${enc(copia)}','${enc(url)}')">LinkedIn</button>
+    <button class="share-nota-btn" onclick="compartirTexto('twitter','${enc(titulo)}','${enc(copia)}','${enc(url)}')">X</button>
+    <button class="share-nota-btn" onclick="compartirTexto('facebook','${enc(titulo)}','${enc(copia)}','${enc(url)}')">Facebook</button>
+    <button class="share-nota-btn share-copy-btn" onclick="copiarTexto(decodeURIComponent('${enc(copia)}'))">Copiar</button>
+  </div>
+  <div style="font-family:'DM Mono',monospace;font-size:.65rem;color:#888;margin-top:.5rem;letter-spacing:.02em;">${hashtags}</div>`;
+}
+
+function compartirTexto(red, tituloEnc, textoEnc, urlEnc) {
+  if (red === 'linkedin') {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + urlEnc + '&summary=' + textoEnc, '_blank', 'width=600,height=560');
+  } else if (red === 'twitter') {
+    window.open('https://twitter.com/intent/tweet?text=' + textoEnc, '_blank', 'width=600,height=400');
+  } else if (red === 'facebook') {
+    window.open('https://www.facebook.com/sharer/sharer.php?u=' + urlEnc, '_blank', 'width=600,height=400');
+  }
+}
+
+function copiarTexto(texto) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texto).then(function() {
+      mostrarToastObs('Texto copiado al portapapeles');
+    });
+  } else {
+    prompt('Copia este texto:', texto);
+  }
 }
 
 // Paso 1: resumen + interpretación en el estilo de David (determinístico,
@@ -651,13 +842,19 @@ async function renderSemanal() {
     const botonIA = admin ? (d.interpretacion
       ? `<button class="btn btn-sm" onclick="generarInterpretacionResumen(${idx})">Regenerar interpretación IA</button>`
       : `<button class="btn btn-sm btn-amber" onclick="generarInterpretacionResumen(${idx})">Generar interpretación IA ↗</button>`) : '';
+    // Hashtags y compartir
+    const hashtags = generarHashtags(d.notasUsadas || []);
+    const tituloShare = 'Resumen semanal — Observatorio del Trabajo · David Salgado';
+    const textoShare  = d.interpretacion || d.resumenTexto || '';
+    const shareBar    = renderShareBar(tituloShare, textoShare, hashtags);
     html += `<div class="semanal-card">
       <div class="semanal-titulo">Resumen generado el ${fecha}</div>
       <div class="semanal-fecha">${d.notas} nota(s) más recientes del historial</div>
       <div class="semanal-label">Síntesis de lectura</div>
       <div class="semanal-analisis">${resumenHTML}</div>
       ${interpHTML ? `<div class="semanal-label">Interpretación académica — Práctica Social</div><div class="semanal-analisis">${interpHTML}</div>` : ''}
-      <div class="nota-acciones" style="margin-top:1rem;">${botonIA}<button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
+      ${shareBar}
+      <div class="nota-acciones" style="margin-top:.75rem;">${botonIA}<button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
     </div>`;
   });
   wrap.innerHTML = html;
@@ -888,18 +1085,35 @@ async function buscarPublico() {
     let h='';
     local.forEach(n => {
       const analisisHTML = n.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — Práctica Social</div><div class="analisis-texto">${n.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
-      h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(n.fecha)}</span><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div><div class="nota-titulo">${n.titulo}</div>${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref}</a></div>`:''}<div class="nota-resumen">${n.resumen}</div>${analisisHTML}</div>`;
+      const hashtags = generarHashtags([n]);
+      const shareBar = n.analisis ? renderShareBar(n.titulo, n.analisis, hashtags) : '';
+      h+=`<div class="nota">
+        <div class="nota-meta"><span class="badge badge-fecha">${fmtF(n.fecha)}</span><span class="badge badge-pais">${n.pais}</span><span class="badge badge-fuente">${n.fuente}</span><span class="badge badge-indicador">${n.indicador}</span></div>
+        <div class="nota-titulo">${n.titulo}</div>
+        ${n.ref?`<div class="nota-ref"><a href="${n.ref}" target="_blank">${n.ref}</a></div>`:''}
+        <div class="nota-resumen">${n.resumen}</div>
+        ${analisisHTML}
+        ${shareBar}
+      </div>`;
     });
     document.getElementById('pubR').innerHTML=h;
   } else {
-    document.getElementById('pubS').innerHTML='<span class="loading"></span>Sin resultados locales. Generando con IA...';
+    document.getElementById('pubS').innerHTML='<span class="loading"></span>Sin resultados locales. Generando análisis...';
     try {
       const res = await fetchNotasIA(q, true);
       document.getElementById('pubS').textContent='Análisis generado sobre "'+q+'".';
       let h='';
       res.forEach(x => {
         const analisisHTML = x.analisis ? `<div class="analisis"><div class="analisis-label">Análisis social — Práctica Social</div><div class="analisis-texto">${x.analisis.split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('')}</div></div>` : '';
-        h+=`<div class="nota"><div class="nota-meta"><span class="badge badge-fecha">${fmtF(x.fecha)}</span><span class="badge badge-pais">${x.pais}</span><span class="badge badge-fuente">${x.fuente}</span><span class="badge badge-indicador">${x.indicador}</span></div><div class="nota-titulo">${x.titulo}</div><div class="nota-resumen">${x.resumen}</div>${analisisHTML}</div>`;
+        const hashtags = generarHashtags([x]);
+        const shareBar = x.analisis ? renderShareBar(x.titulo, x.analisis, hashtags) : '';
+        h+=`<div class="nota">
+          <div class="nota-meta"><span class="badge badge-fecha">${fmtF(x.fecha)}</span><span class="badge badge-pais">${x.pais}</span><span class="badge badge-fuente">${x.fuente}</span><span class="badge badge-indicador">${x.indicador}</span></div>
+          <div class="nota-titulo">${x.titulo}</div>
+          <div class="nota-resumen">${x.resumen}</div>
+          ${analisisHTML}
+          ${shareBar}
+        </div>`;
       });
       document.getElementById('pubR').innerHTML=h;
     } catch(e) { document.getElementById('pubS').textContent='Error al generar. Intenta de nuevo.'; }
