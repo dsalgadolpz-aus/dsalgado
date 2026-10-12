@@ -225,13 +225,9 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
     <button class="nav-item on" onclick="goTab('historial',this)" id="navHistorial"><span class="ni">▤</span>Historial</button>
     <button class="nav-item" onclick="goTab('semanal',this)"><span class="ni">◷</span>Resumen semanal</button>
     <button class="nav-item" onclick="goTab('buscar',this)"><span class="ni">⌕</span>Buscar con IA</button>
-    <div class="nav-label" id="navGestionarLabel" style="margin-top:1rem;">Gestionar</div>
-    <button class="nav-item" onclick="goTab('agregar',this)" id="navAgregar"><span class="ni">+</span>Nueva nota</button>
   </nav>
   <div class="sb-footer">
     <div class="sync-info" id="syncInfo">Sincroniza con Google Sheet automáticamente.</div>
-    <button class="sync-btn" onclick="loadFromSheet()">⟳ Buscar notas ahora</button>
-    <button class="cfg-btn" onclick="configurarGeminiKey()" id="btnGeminiCfg" hidden>⚙ Configurar IA (Gemini)</button>
     <button class="cfg-btn" onclick="configurarAdmin()" id="adminCfgBtn" hidden>Acceso administrador</button>
   </div>
 </aside>
@@ -316,44 +312,12 @@ body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);font
     </div>
   </div>
 
-  <!-- AGREGAR -->
-  <div id="tab-agregar" class="panel">
-    <div class="page-hdr">
-      <div class="page-title">Nueva nota</div>
-      <div class="page-sub">Registro manual de estudios, informes y artículos</div>
-    </div>
-    <div class="form-wrap">
-      <div class="form-card">
-        <div class="form-section">Datos de la nota</div>
-        <div class="form-grid">
-          <div class="form-group"><label>Fecha *</label><input type="date" id="nFe"></div>
-          <div class="form-group"><label>País *</label>
-            <select id="nPa"><option value="">Seleccionar...</option><option>México</option><option>Argentina</option><option>Brasil</option><option>Colombia</option><option>Chile</option><option>Perú</option><option>América Latina</option><option>Internacional</option></select>
-          </div>
-          <div class="form-group"><label>Fuente *</label>
-            <select id="nFu"><option value="">Seleccionar...</option><option>OIT</option><option>CEPAL</option><option>BID</option><option>Banco Mundial</option><option>INEGI</option><option>OCDE</option><option>FMI</option><option>STPS</option><option>IMSS</option><option>Otra</option></select>
-          </div>
-          <div class="form-group"><label>Indicador *</label>
-            <select id="nIn"><option value="">Seleccionar...</option><option>Empleo formal</option><option>Desempleo</option><option>Salario mínimo</option><option>Informalidad</option><option>Trabajo digno</option><option>Brecha salarial</option><option>Trabajo infantil</option><option>Sindicatos</option><option>Precarización</option><option>Productividad</option><option>Automatización</option><option>Migración laboral</option></select>
-          </div>
-        </div>
-        <div class="form-group" style="margin-bottom:.85rem;"><label>Título / Nota de referencia *</label><input type="text" id="nTi" placeholder="Ej: Informe empleo formal Q1 2025 — OIT"></div>
-        <div class="form-group" style="margin-bottom:.85rem;"><label>URL o referencia</label><input type="text" id="nRe" placeholder="https://..."></div>
-        <div class="form-group"><label>Resumen *</label><textarea id="nRs" rows="5" placeholder="Describe los hallazgos principales de la nota..."></textarea></div>
-        <div class="form-actions">
-          <button class="btn btn-ink" onclick="gN()">Guardar nota</button>
-          <button class="btn btn-amber" onclick="gNA()">Guardar + análisis social ↗</button>
-        </div>
-        <div class="form-msg" id="fMsg"></div>
-      </div>
-    </div>
-  </div>
-
 
 </main>
 </div>
 
-<script src="admin.js">
+<script src="admin.js"></script>
+<script>
 // ── Compartir análisis de nota individual ────────────────────
 function compartirNota(id, red) {
   // Buscar en el array notas (puede estar cargado o no)
@@ -439,65 +403,6 @@ window.storage = {
     try { localStorage.setItem(key, value); } catch(e) {}
   }
 };
-
-// ── Gemini (gratuito) — la clave se guarda solo en este navegador,
-// nunca en el código publicado del sitio. Cada visitante necesitaría
-// configurar la suya propia para usar los botones de IA. ──
-const MODEL = 'gemini-3.6-flash';
-function getGeminiKey() { try { return localStorage.getItem('gemini_api_key') || ''; } catch(e) { return ''; } }
-function configurarGeminiKey() {
-  const actual = getGeminiKey();
-  const nueva = prompt('Pega tu API key de Gemini (gratis en aistudio.google.com/apikey).\nSe guarda solo en este navegador, nunca en el sitio publicado:', actual);
-  if (nueva !== null) {
-    try { localStorage.setItem('gemini_api_key', nueva.trim()); } catch(e) {}
-    alert(nueva.trim() ? 'Clave guardada en este navegador.' : 'Clave eliminada.');
-  }
-}
-function _esErrorTemporalGemini(msg) {
-  return /overloaded|high demand|unavailable|503|try again/i.test(msg || '');
-}
-
-async function _llamarGeminiUnaVez(promptText, maxTokens, key) {
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(key)}`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: promptText }] }],
-      generationConfig: {
-        // Se deja un margen amplio: los modelos "flash" recientes razonan
-        // internamente antes de responder, y ese razonamiento consume el
-        // mismo presupuesto de tokens de salida.
-        maxOutputTokens: Math.max((maxTokens || 1200) * 3, 2000)
-      }
-    })
-  });
-  const data = await r.json();
-  if (data.error) throw new Error(data.error.message || 'Error de Gemini');
-  const candidato = data.candidates?.[0];
-  const partes = candidato?.content?.parts || [];
-  const texto = partes.map(p => p.text || '').join('\n').trim();
-  if (!texto && candidato?.finishReason && candidato.finishReason !== 'STOP') {
-    throw new Error('Gemini no completó la respuesta (motivo: ' + candidato.finishReason + '). Intenta de nuevo.');
-  }
-  return texto;
-}
-
-async function callGemini(promptText, maxTokens) {
-  const key = getGeminiKey();
-  if (!key) throw new Error('Configura tu API key de Gemini primero (⚙ Configurar IA, abajo en la barra lateral).');
-  try {
-    return await _llamarGeminiUnaVez(promptText, maxTokens, key);
-  } catch (e) {
-    // El modelo a veces está saturado por demanda alta — se reintenta
-    // automáticamente una vez, con una breve pausa, antes de rendirse.
-    if (_esErrorTemporalGemini(e.message)) {
-      await new Promise(res => setTimeout(res, 2000));
-      try { return await _llamarGeminiUnaVez(promptText, maxTokens, key); }
-      catch (e2) { throw new Error('Gemini está saturado por demanda alta en este momento. Intenta de nuevo en unos segundos.'); }
-    }
-    throw e;
-  }
-}
 
 let notas = [];
 let nF = [];
@@ -810,24 +715,6 @@ async function generarResumenSemanal() {
   renderSemanal();
 }
 
-// Paso 2 (bajo un botón aparte, opcional): interpretación académica con
-// IA sobre ese mismo resumen — solo se llama a Gemini si el admin lo pide.
-async function generarInterpretacionResumen(idx) {
-  if (!getGeminiKey()) { alert('Primero configura tu API key de Gemini (⚙ Configurar IA, abajo en la barra lateral).'); return; }
-  let historial = [];
-  try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
-  const registro = historial[idx]; if (!registro) return;
-  const notasTxt = (registro.notasUsadas || []).map(n => `- ${n.titulo} (${n.pais}, ${n.fuente}): ${n.resumen}`).join('\n');
-  const p = `Eres David Salgado López, investigador de la ENAH, especializado en economía política del trabajo en México y América Latina. Tu análisis parte siempre desde los trabajadores (nunca desde los mercados), mezcla teoría densa (Geertz, De la Garza, Sennett, Marx, Arendt) con lenguaje cotidiano, sostiene contradicciones sin resolverlas y cierra abriendo preguntas, no dando recetas.\nCon esa voz, escribe una interpretación académica robusta de 1 a 2 párrafos sobre el patrón que emerge de estas notas recientes del observatorio:\n${notasTxt}\nNo describas cada nota por separado: interpreta qué dicen juntas.`;
-  try {
-    registro.interpretacion = await callGemini(p, 700) || '';
-    await window.storage.set('obs_resumenes', JSON.stringify(historial));
-    renderSemanal();
-  } catch (e) {
-    alert('No se pudo generar la interpretación: ' + e.message);
-  }
-}
-
 async function renderSemanal() {
   const wrap = document.getElementById('semanalWrap');
   let historial = [];
@@ -839,9 +726,6 @@ async function renderSemanal() {
     const fecha = new Date(d.fecha).toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     const resumenHTML = (d.resumenTexto || '').split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
     const interpHTML = d.interpretacion ? d.interpretacion.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('') : '';
-    const botonIA = admin ? (d.interpretacion
-      ? `<button class="btn btn-sm" onclick="generarInterpretacionResumen(${idx})">Regenerar interpretación IA</button>`
-      : `<button class="btn btn-sm btn-amber" onclick="generarInterpretacionResumen(${idx})">Generar interpretación IA ↗</button>`) : '';
     // Hashtags y compartir
     const hashtags = generarHashtags(d.notasUsadas || []);
     const tituloShare = 'Resumen semanal — Observatorio del Trabajo · David Salgado';
@@ -854,7 +738,7 @@ async function renderSemanal() {
       <div class="semanal-analisis">${resumenHTML}</div>
       ${interpHTML ? `<div class="semanal-label">Interpretación académica — Práctica Social</div><div class="semanal-analisis">${interpHTML}</div>` : ''}
       ${shareBar}
-      <div class="nota-acciones" style="margin-top:.75rem;">${botonIA}<button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
+      <div class="nota-acciones" style="margin-top:.75rem;"><button class="btn btn-sm" onclick="descargarResumen(${idx})">⬇ Descargar</button></div>
     </div>`;
   });
   wrap.innerHTML = html;
@@ -1053,28 +937,6 @@ async function genA(id) {
 
 function delN(id) { if (!isAdmin()) return; if (!confirm('¿Eliminar esta nota?')) return; notas=notas.filter(n=>n.id!==id); save(); upS(); apF(); }
 
-function getForm() { return {titulo:document.getElementById('nTi').value.trim(),pais:document.getElementById('nPa').value,fuente:document.getElementById('nFu').value,indicador:document.getElementById('nIn').value,fecha:document.getElementById('nFe').value,ref:document.getElementById('nRe').value.trim(),resumen:document.getElementById('nRs').value.trim()}; }
-function valForm(d) { if (!d.titulo||!d.pais||!d.fuente||!d.indicador||!d.fecha||!d.resumen){document.getElementById('fMsg').innerHTML='<span style="color:var(--red)">Completa todos los campos obligatorios (*).</span>';return false;}return true; }
-function clrForm() { ['nTi','nRe','nRs'].forEach(id=>document.getElementById(id).value=''); ['nPa','nFu','nIn'].forEach(id=>document.getElementById(id).value=''); document.getElementById('nFe').value=new Date().toISOString().split('T')[0]; }
-
-function gN() {
-  const d=getForm(); if (!valForm(d)) return;
-  notas.unshift({id:Date.now().toString(),...d,analisis:'',auto:false,fechaR:new Date().toISOString()});
-  save(); upS(); apF();
-  document.getElementById('fMsg').innerHTML='<span style="color:var(--green)">Nota guardada correctamente.</span>';
-  setTimeout(()=>{document.getElementById('fMsg').innerHTML='';clrForm();},2000);
-}
-
-async function gNA() {
-  const d=getForm(); if (!valForm(d)) return;
-  document.getElementById('fMsg').innerHTML='<span class="loading"></span><span style="color:var(--amber)">Generando análisis social...</span>';
-  const analisis = await llmAnalisis(d.titulo,d.resumen,d.indicador,d.pais,d.fuente);
-  notas.unshift({id:Date.now().toString(),...d,analisis,auto:false,fechaR:new Date().toISOString()});
-  save(); upS(); apF();
-  document.getElementById('fMsg').innerHTML='<span style="color:var(--green)">Nota guardada con análisis.</span>';
-  setTimeout(()=>{document.getElementById('fMsg').innerHTML='';clrForm();},2500);
-}
-
 async function buscarPublico() {
   const q=document.getElementById('pubQ').value.trim(); if (!q) return;
   document.getElementById('pubS').innerHTML='<span class="loading"></span>Buscando...';
@@ -1146,7 +1008,6 @@ function shareObservatorio(red) {
 }
 
 function goTab(t,el) {
-  if (t === 'agregar' && !isAdmin()) { configurarAdmin(); return; }
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
   document.getElementById('tab-'+t).classList.add('on'); el.classList.add('on');
@@ -1159,24 +1020,12 @@ function goTab(t,el) {
 // explorar — nunca crear, editar ni eliminar notas. ──
 function refrescarUIAdmin() {
   const admin = isAdmin();
-  ['navAgregar','navGestionarLabel','btnGeminiCfg'].forEach(id => { const el=document.getElementById(id); if (el) el.hidden = !admin; });
   const btnResumen = document.getElementById('btnResumenSemanal'); if (btnResumen) btnResumen.hidden = !admin;
   const cfgBtn = document.getElementById('adminCfgBtn');
   if (cfgBtn) { cfgBtn.hidden = !admin; cfgBtn.textContent = admin ? 'Administrador activo — cerrar sesión' : 'Acceso administrador'; }
-  if (!admin) {
-    const agregarPanel = document.getElementById('tab-agregar');
-    if (agregarPanel && agregarPanel.classList.contains('on')) goTabForce('historial', document.getElementById('navHistorial'));
-  }
   apF();
 }
-function goTabForce(t, el) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
-  document.getElementById('tab-'+t).classList.add('on'); el.classList.add('on');
-}
 onAdminChange(refrescarUIAdmin);
-
-document.getElementById('nFe').value = new Date().toISOString().split('T')[0];
 
 // ── SEED DATA from Google Sheet (last 5 entries) ──
 const SEED_NOTAS = []; // sin datos de ejemplo — solo se usa si el Sheet no responde
