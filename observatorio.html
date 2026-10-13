@@ -7,6 +7,8 @@
 <link rel="icon" type="image/png" href="favicon.png"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="assets/logo-pdf-b64.js"></script>
 <style>
 :root{
   --p:#6D28D9;--pm:#7C3AED;--pbg:#F5F3FF;--plt:#EDE9FE;
@@ -404,6 +406,115 @@ window.storage = {
   }
 };
 
+// ── Limpieza defensiva de texto: algunas notas traen HTML crudo del RSS
+// original (p. ej. "<p>...</p>") en el campo resumen — se quita siempre
+// antes de mostrarlo en texto plano (descargas, PDF). ──
+function stripHtml_(s) {
+  return String(s || '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/[ \t]+/g, ' ').replace(/\n[ \t]*\n+/g, '\n\n').trim();
+}
+
+// ── Generador de PDF — identidad Sintropía Social (manual v0.2): morado
+// #6B21F5 / naranja #FF6B1A, Times New Roman para el cuerpo (documentos
+// académicos/profesionales), sin iconos ni emoji. Se usa para todas las
+// descargas del Observatorio (Resumen semanal, Comparte una noticia). ──
+const PDF_MORADO  = [107, 33, 245];
+const PDF_NARANJA = [255, 107, 26];
+const PDF_INK     = [24, 24, 27];
+const PDF_SOFT    = [113, 113, 122];
+
+function _pdfAccentRule(doc, x, y, width) {
+  const dash = 3.2, gap = 1.1;
+  let cx = x, i = 0;
+  while (cx < x + width) {
+    doc.setFillColor.apply(doc, i % 2 === 0 ? PDF_MORADO : PDF_NARANJA);
+    const w = Math.min(dash, x + width - cx);
+    doc.rect(cx, y, w, 0.9, 'F');
+    cx += dash + gap; i++;
+  }
+}
+
+function _pdfFooter(doc, pageW, pageH, pageNum, totalPages) {
+  const marginX = 18;
+  doc.setDrawColor.apply(doc, PDF_SOFT); doc.setLineWidth(0.2);
+  doc.line(marginX, pageH - 20, pageW - marginX, pageH - 20);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor.apply(doc, PDF_NARANJA);
+  doc.text('¿Necesitas que trabajemos algo en conjunto? Contáctame: d.salgado.lpz@gmail.com', marginX, pageH - 14);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor.apply(doc, PDF_SOFT);
+  doc.text('Observatorio del Trabajo — Sintropía Social · David Salgado López', marginX, pageH - 9);
+  doc.text(String(pageNum) + ' / ' + String(totalPages), pageW - marginX, pageH - 9, { align: 'right' });
+}
+
+// opts: { archivo, titulo, subtitulo, secciones: [{label, texto}] }
+function generarPDFObservatorio(opts) {
+  if (!window.jspdf) { alert('No se pudo cargar el generador de PDF. Revisa tu conexión e intenta de nuevo.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  doc.setProperties({ title: opts.titulo, author: 'David Salgado López — Sintropía Social', subject: 'Observatorio del Trabajo' });
+
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const marginX = 18;
+  const contentW = pageW - marginX * 2;
+  const bottomLimit = pageH - 26;
+  let y = 20;
+
+  function saltoDePaginaSiHaceFalta(alturaNecesaria) {
+    if (y + alturaNecesaria > bottomLimit) { doc.addPage(); y = 20; }
+  }
+
+  // ── Encabezado: logo + nombre del observatorio ──
+  if (typeof SINTROPIA_LOGO_B64 !== 'undefined') {
+    try { doc.addImage(SINTROPIA_LOGO_B64, 'PNG', marginX, y, 28, 15.5); } catch (e) {}
+  }
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.setTextColor.apply(doc, PDF_INK);
+  doc.text('Observatorio del Trabajo', marginX + 34, y + 6);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor.apply(doc, PDF_SOFT);
+  doc.text('David Salgado López · Sintropía Social · México / América Latina', marginX + 34, y + 11.5);
+  y += 19;
+  _pdfAccentRule(doc, marginX, y, contentW);
+  y += 8;
+
+  // ── Título del documento ──
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor.apply(doc, PDF_MORADO);
+  const tituloLineas = doc.splitTextToSize(stripHtml_(opts.titulo || ''), contentW);
+  doc.text(tituloLineas, marginX, y); y += tituloLineas.length * 5.6 + 1;
+  if (opts.subtitulo) {
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor.apply(doc, PDF_SOFT);
+    const subLineas = doc.splitTextToSize(opts.subtitulo, contentW);
+    doc.text(subLineas, marginX, y); y += subLineas.length * 4.2 + 3;
+  }
+  y += 4;
+
+  // ── Secciones (síntesis, interpretación, etc.) ──
+  (opts.secciones || []).forEach(function (sec) {
+    if (!sec.texto || !stripHtml_(sec.texto)) return;
+    saltoDePaginaSiHaceFalta(14);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor.apply(doc, PDF_MORADO);
+    doc.text(String(sec.label || '').toUpperCase(), marginX, y); y += 6;
+    doc.setFont('times', 'normal'); doc.setFontSize(10.5); doc.setTextColor.apply(doc, PDF_INK);
+    const parrafos = stripHtml_(sec.texto).split(/\n+/).filter(function (p) { return p.trim(); });
+    parrafos.forEach(function (p) {
+      const lineas = doc.splitTextToSize(p.trim(), contentW);
+      lineas.forEach(function (linea) {
+        saltoDePaginaSiHaceFalta(5.6);
+        doc.text(linea, marginX, y);
+        y += 5.6;
+      });
+      y += 3;
+    });
+    y += 3;
+  });
+
+  const totalPaginas = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPaginas; p++) { doc.setPage(p); _pdfFooter(doc, pageW, pageH, p, totalPaginas); }
+
+  doc.save(opts.archivo);
+}
+
 let notas = [];
 let nF = [];
 
@@ -476,48 +587,52 @@ function analizarDeterministico(query, indicador, pais) {
   const ind = (indicador||'').toLowerCase();
   const qs  = (query||'').toLowerCase();
 
+  // Cada marco cita entre 2 y 3 autores distintos (de un repertorio de 11:
+  // Geertz, De la Garza Toledo, Sennett, Augé, Serna, Lévi-Strauss, Turner,
+  // Bourdieu, Mauss, Baraldi, Beccaria) para que la reflexión no recaiga
+  // siempre en el mismo nombre.
   const marcos = {
     salario: [
       'El salario no es simplemente un precio: es la forma histórica en que el capitalismo convierte la fuerza de trabajo en mercancía, y las luchas salariales son siempre luchas por la definición del valor humano.',
-      'Cuando hablamos de salarios en México y América Latina, estamos hablando de una disputa estructural entre productividad y distribución que el mercado, por sí solo, nunca ha resuelto y nunca resolverá.',
+      'Bourdieu mostraría que fijar un salario nunca es solo un cálculo económico: es un acto de violencia simbólica que hace pasar por "natural" lo que en realidad es una relación de fuerza entre quien tiene el capital y quien solo tiene su trabajo.',
       'La pregunta no es si el salario es justo en abstracto, sino quién decide lo que es justo, bajo qué condiciones de poder y con qué consecuencias para la vida concreta de los trabajadores.',
-      'La brecha salarial no es un error del sistema: es su funcionamiento normal. El mercado laboral genera desigualdad como condición de su propia reproducción.'
+      'Serna recordaría que estas discusiones no se libran en abstracto, sino en instituciones concretas —sindicatos, secretarías del trabajo, tribunales— cuya correlación de fuerzas termina decidiendo qué significa, en la práctica, un salario "justo".'
     ],
     desempleo: [
       'El desempleo es siempre una producción social, no una falla individual. Las personas no pierden el trabajo porque no se esforzaron lo suficiente; lo pierden porque el sistema necesita una reserva de fuerza de trabajo disponible y barata.',
       'Marx llamó "ejército industrial de reserva" a lo que hoy llamamos desempleo: no es una patología del mercado, sino su mecanismo de regulación. Eso no lo hace menos devastador para quienes lo viven.',
-      'En México, el desempleo abierto convive con una informalidad masiva que hace invisibles otras formas de exclusión laboral. Los datos oficiales suelen subestimar la magnitud real del problema.',
+      'Turner hablaría de un estado liminal: el desempleo no es solo ausencia de ingreso, es quedar suspendido entre una identidad laboral que ya no se tiene y otra que todavía no llega, sin ritual social que marque ese tránsito.',
       'La automatización promete eficiencia y genera desplazamiento. La pregunta que nadie responde con seriedad es: ¿quién absorbe ese desplazamiento, y en qué condiciones?'
     ],
     informalidad: [
       'La informalidad no es una excepción latinoamericana: es la forma dominante en que se organiza el trabajo en la región. Tratarla como anomalía es no entenderla.',
       'De la Garza Toledo y otros investigadores llevan décadas mostrando que la informalidad no es un problema de "atraso": es la respuesta racional de millones de trabajadores a un mercado formal que los excluye o los precariza.',
-      'Formalizar el trabajo sin cambiar las condiciones estructurales que producen informalidad es pintar la fachada: el edificio sigue cayéndose por dentro.',
+      'La informalidad sostiene, en los hechos, una economía del don que Marcel Mauss describió hace un siglo: redes de ayuda mutua, préstamo y reciprocidad que el mercado formal no reconoce ni retribuye, pero sin las cuales millones de hogares no sobrevivirían.',
       'La informalidad tiene costos invisibles: ausencia de seguridad social, imposibilidad de planear el futuro, vulnerabilidad ante enfermedades y crisis. Esos costos los pagan los trabajadores, no el mercado.'
     ],
     precari: [
       'Sennett describió la corrosión del carácter que produce la inestabilidad laboral: cuando no hay proyecto de vida posible a largo plazo, la identidad se fragmenta y la acción colectiva se debilita.',
       'La precarización no es solo económica: es subjetiva. Produce trabajadores que se sienten responsables de su propia precariedad, que interiorizan la incertidumbre como rasgo personal y no como condición estructural.',
-      'El trabajo por proyecto, el contrato temporal, la disponibilidad permanente sin salario permanente: son formas de transferir el riesgo del capital al trabajador, bajo el disfraz retórico de la "flexibilidad".',
+      'El trabajo por proyecto, el contrato temporal, la disponibilidad permanente sin salario permanente: Beccaria exigiría preguntar si existe siquiera proporcionalidad entre el riesgo que asume el trabajador y la protección que recibe a cambio, bajo el disfraz retórico de la "flexibilidad".',
       'La precariedad tiene género: las mujeres la viven de forma más aguda, más constante y con menos reconocimiento. El mercado laboral es un espacio profundamente desigual en términos de clase, género y origen.'
     ],
     digital: [
       'Las plataformas digitales son la última frontera de la precarización: presentan la subordinación como autonomía, el control algorítmico como libertad y la ausencia de derechos como ventaja competitiva.',
-      'Uber, Rappi, Amazon Flex: distintos nombres para la misma lógica. El algoritmo asigna, controla y evalúa. El trabajador ejecuta, asume el riesgo y paga los costos. El beneficio fluye hacia arriba.',
-      'La economía de plataformas no inventó la precarización: la digitalizó. Lo que cambió no es la relación de poder, sino la infraestructura tecnológica que la hace posible y la retórica que la legitima.',
-      'Cuando un repartidor de aplicación tiene un accidente, el algoritmo no responde: responde el trabajador con su cuerpo, su tiempo y su bolsillo. Eso no es "ser tu propio jefe"; es externalizar el riesgo.'
+      'Marc Augé llamó "no lugares" a los espacios de tránsito sin historia ni relación: la app de reparto construye algo parecido para el trabajo mismo — una ocupación sin oficina, sin colegas, sin memoria institucional, solo pantalla y ruta.',
+      'Baraldi, desde la teoría de la comunicación, diría que el algoritmo no "decide" en sentido humano: procesa información y genera instrucciones que el trabajador debe traducir en acción, sin que exista ya un interlocutor al cual reclamar.',
+      'Cuando un repartidor de aplicación tiene un accidente, o cuando la plataforma lo "desactiva" sin audiencia ni apelación —la proporcionalidad que ya exigía Beccaria para cualquier sanción—, el algoritmo no responde: responde el trabajador con su cuerpo, su tiempo y su bolsillo. Eso no es "ser tu propio jefe"; es externalizar el riesgo.'
     ],
     migracion: [
       'La migración laboral es siempre una respuesta a algo: a la violencia, a la pobreza, a la falta de oportunidades. El migrante no elige libremente; elige dentro de los márgenes que otros han trazado.',
-      'Los trabajadores migrantes sostienen economías enteras —en los países de origen a través de remesas, en los de destino a través de trabajo no reconocido— y reciben a cambio discriminación y exclusión.',
-      'Las remesas no son política de desarrollo: son el síntoma de un sistema que expulsa a sus trabajadores más jóvenes y más capaces, y luego cuenta el dinero que mandan como éxito económico.',
+      'Lévi-Strauss mostró que toda sociedad se sostiene en circuitos de intercambio; la migración laboral es uno de esos circuitos, solo que aquí lo que circula no es solo dinero, sino cuerpos, ausencias y vínculos familiares reconfigurados a la distancia.',
+      'Las remesas no son política de desarrollo: son, en términos de Marcel Mauss, el don que se vuelve obligación — el síntoma de un sistema que expulsa a sus trabajadores más jóvenes y más capaces, y luego cuenta el dinero que mandan como éxito económico.',
       'La movilidad laboral tiene cara de mujer cada vez más: las mujeres migrantes enfrentan doble discriminación, realizan los trabajos menos visibles y tienen menor acceso a protección legal y social.'
     ],
     genero: [
       'La división sexual del trabajo no es natural: es una construcción histórica que asigna a las mujeres los trabajos menos valorados, peor pagados y más invisibles.',
-      'El trabajo de cuidados sostiene la reproducción social y el funcionamiento del mercado laboral — pero no cuenta en el PIB, no genera derechos laborales y recae desproporcionadamente sobre las mujeres.',
+      'Geertz insistiría en que no basta con medir la brecha salarial: hay que leer, en espesor, qué significa para una mujer concreta cargar simultáneamente el trabajo remunerado y el trabajo de cuidado que nadie contabiliza.',
       'La brecha salarial de género no es un accidente: es el resultado de siglos de devaluación sistemática del trabajo femenino, naturalizada como diferencia biológica para no reconocerla como injusticia estructural.',
-      'Hablar de igualdad en el mercado laboral sin hablar de corresponsabilidad doméstica, sin hablar de derechos reproductivos, sin hablar de violencia, es hablar de partes sin hablar del todo.'
+      'Bourdieu llamó "dominación masculina" a este mismo orden: una jerarquía que se presenta como evidencia natural precisamente porque dejó de reconocerse como construcción histórica y se volvió habitus, cuerpo, costumbre. Hablar de igualdad sin hablar de corresponsabilidad doméstica, sin hablar de derechos reproductivos, sin hablar de violencia, es hablar de partes sin hablar del todo.'
     ]
   };
 
@@ -532,13 +647,12 @@ function analizarDeterministico(query, indicador, pais) {
   if (qs.includes('migra') || ind.includes('migra')) parrafos = marcos['migracion'];
   if (qs.includes('género') || qs.includes('genero') || qs.includes('mujer') || ind.includes('género')) parrafos = marcos['genero'];
 
-  // Seleccionar 3-4 párrafos distintos pseudo-aleatoriamente (por longitud del query)
-  const seed = query.length % 4;
-  const seleccion = [parrafos[seed % parrafos.length], parrafos[(seed+1) % parrafos.length], parrafos[(seed+2) % parrafos.length]];
-
+  // Se usan los 4 párrafos del marco completo (no un subconjunto al azar):
+  // así cada reflexión cita siempre a los 2-3 autores de ese marco, nunca
+  // solo a uno, y el total con el cierre nunca pasa de 5 párrafos.
   const cierre = `La pregunta que este material abre no es técnica sino política: ¿quién tiene el poder de definir lo que el trabajo vale, en qué condiciones se ejerce y qué futuro hace posible? Esa pregunta no la responde el mercado. La responden —o deberían responderla— las personas, las organizaciones y las instituciones que deciden no naturalizar lo que es, en realidad, una elección.`;
 
-  return seleccion.join('\n\n') + '\n\n' + cierre;
+  return parrafos.join('\n\n') + '\n\n' + cierre;
 }
 
 async function fetchNotasIA(query, conAnalisis) {
@@ -814,27 +928,32 @@ async function guardarNoticiaCompartida() {
 function descargarNoticiaCompartida() {
   if (!notaCompartidaActual) return;
   const n = notaCompartidaActual;
-  const txt = `NOTICIA ANALIZADA — OBSERVATORIO DEL TRABAJO\n${'─'.repeat(50)}\n\n${n.titulo}\nPaís: ${n.pais} · Fuente: ${n.fuente} · Indicador: ${n.indicador}\nLink: ${n.url}\n\nRESUMEN\n\n${n.resumenFactual || ''}\n\nINTERPRETACIÓN ACADÉMICA\n\n${n.interpretacion || ''}\n`;
-  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'noticia-observatorio-' + Date.now() + '.txt';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const metaPartes = [n.pais, n.fuente, n.indicador].filter(Boolean);
+  const subtitulo = metaPartes.join(' · ') + (n.url ? '\n' + n.url : '');
+  generarPDFObservatorio({
+    archivo: 'noticia-observatorio-' + Date.now() + '.pdf',
+    titulo: n.titulo || 'Noticia analizada',
+    subtitulo: subtitulo,
+    secciones: [
+      { label: 'Resumen', texto: n.resumenFactual || '' },
+      { label: 'Interpretación académica — Práctica Social', texto: n.interpretacion || '' }
+    ]
+  });
 }
 
 async function descargarResumen(idx) {
   let historial = [];
   try { const r = await window.storage.get('obs_resumenes'); if (r && r.value) historial = JSON.parse(r.value); } catch (e) {}
   const d = historial[idx]; if (!d) return;
-  let txt = `RESUMEN DEL OBSERVATORIO DEL TRABAJO\nDavid Salgado López — Sintropía Social\nGenerado: ${new Date(d.fecha).toLocaleString('es-MX')}\n${'─'.repeat(50)}\n\nSÍNTESIS DE LECTURA\n\n${d.resumenTexto}\n`;
-  if (d.interpretacion) txt += `\nINTERPRETACIÓN ACADÉMICA\n\n${d.interpretacion}\n`;
-  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'resumen-observatorio-' + d.fecha.slice(0, 10) + '.txt';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  generarPDFObservatorio({
+    archivo: 'resumen-observatorio-' + d.fecha.slice(0, 10) + '.pdf',
+    titulo: 'Resumen semanal',
+    subtitulo: 'Generado el ' + new Date(d.fecha).toLocaleString('es-MX') + ' · ' + d.notas + ' nota(s) más recientes del historial',
+    secciones: [
+      { label: 'Síntesis de lectura', texto: d.resumenTexto || '' },
+      { label: 'Interpretación académica — Práctica Social', texto: d.interpretacion || '' }
+    ]
+  });
 }
 
 async function generarResumenManual() {
