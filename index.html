@@ -1031,12 +1031,7 @@ function showPage(id){
     });
   },100);
 }
-// Deep-link support (e.g. index.html#servicios from another page)
-(function(){
-  const validIds=['inicio','servicios','publicaciones','portafolio','oficios','contacto'];
-  const hash=(location.hash||'').replace('#','').split('/')[0];
-  if(validIds.includes(hash))showPage(hash);
-})();
+// Deep-link support — se ejecuta después del wrapper (ver abajo, en el segundo script)
 // SCROLL REVEAL
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:.07});
 document.querySelectorAll('#page-inicio .reveal').forEach(el=>obs.observe(el));
@@ -1202,11 +1197,12 @@ window.showPage = function(id) {
   if (id === 'publicaciones') { loadMinilibros(); cargarMapaPublicacionesUnaVez(); }
 };
 
-// Also load if starting on publications
-if (document.getElementById('page-publicaciones')?.classList.contains('active')) {
-  loadMinilibros();
-  cargarMapaPublicacionesUnaVez();
-}
+// Deep-link support — aquí porque showPage ya es el wrapper completo
+(function(){
+  const validIds=['inicio','servicios','publicaciones','portafolio','oficios','contacto'];
+  const hash=(location.hash||'').replace('#','').split('/')[0];
+  if(validIds.includes(hash)) showPage(hash);
+})();
 </script>
 
 <script src="assets/d3.min.js"></script>
