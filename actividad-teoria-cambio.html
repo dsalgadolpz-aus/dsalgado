@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tabla de Teoría de Cambio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#6D28D9;--pm:#7C3AED;--plt:#EDE9FE;--pbg:#F5F3FF;
+  --o:#C45F00;--obg:#FEF3E2;
+  --ink:#18181B;--soft:#52525B;--rule:#E4E4E7;
+  --paper:#FAFAF8;--white:#fff;--dk:#13111C;
+}
+body.sintropia{--p:#6B21F5;--pm:#7C3AED;--o:#FF6B1A;}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+h1,h2,h3{font-family:'Playfair Display',serif;}
+
+/* ── HEADER ── */
+.hdr{background:var(--dk);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:3px solid var(--p);}
+.hdr-logo{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;font-weight:900;}
+.hdr-logo span{color:var(--o);}
+.hdr-sub{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-top:.15rem;}
+.hdr-badge{margin-left:auto;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--o);border:1px solid var(--o);padding:.2rem .6rem;}
+.hdr-step{margin-left:.7rem;font-family:'DM Mono',monospace;font-size:.62rem;color:#a78bfa;padding:.2rem .7rem;border:1px solid #3d2b6b;border-radius:2px;}
+
+/* ── PHASES ── */
+#phaseA, #phaseB{min-height:calc(100vh - 60px);}
+
+/* ══ FASE A: ROMPECABEZAS ══ */
+#phaseA{background:var(--paper);display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 1rem;}
+.puzzle-intro{text-align:center;max-width:600px;margin-bottom:1.8rem;}
+.puzzle-intro h2{font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:.5rem;}
+.puzzle-intro p{font-size:.88rem;color:var(--soft);line-height:1.6;}
+
+/* tabla destino */
+.tc-table-wrap{width:100%;max-width:900px;overflow-x:auto;margin-bottom:1.5rem;}
+.tc-table{width:100%;border-collapse:collapse;min-width:720px;}
+.tc-table th{background:var(--dk);color:#fff;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.6rem .7rem;text-align:left;white-space:nowrap;}
+.tc-table td{border:2px dashed var(--rule);height:70px;vertical-align:middle;padding:.3rem;position:relative;transition:background .15s;}
+.tc-table td.occupied{border-style:solid;border-color:var(--p);}
+.tc-table td.wrong{border-color:#e53e3e!important;background:#fff5f5!important;}
+.tc-table td.correct{border-color:#2E7D32!important;background:#f1f8e9!important;}
+.tc-table td:hover{background:var(--pbg);}
+.drop-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.6rem;color:#ccc;letter-spacing:.05em;pointer-events:none;}
+
+/* bloques draggable del rompecabezas */
+.pieces-pool{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;max-width:900px;margin-bottom:1.2rem;}
+.piece{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border-radius:4px;cursor:grab;user-select:none;font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;border:2px solid transparent;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:transform .1s,box-shadow .1s;white-space:nowrap;}
+.piece:active{cursor:grabbing;transform:scale(1.04);box-shadow:0 6px 18px rgba(0,0,0,.18);}
+.piece.type-a{background:#EDE9FE;color:#4C1D95;border-color:#C4B5FD;}
+.piece.type-b{background:#FEF3E2;color:#78350F;border-color:#FCD34D;}
+.piece.type-c{background:#E0F2FE;color:#0C4A6E;border-color:#7DD3FC;}
+.piece.type-d{background:#F0FDF4;color:#14532D;border-color:#86EFAC;}
+.piece-icon{font-size:1rem;line-height:1;}
+.piece.placed{opacity:.35;pointer-events:none;transform:none;}
+
+/* feedback bar */
+.fb-bar{max-width:900px;width:100%;padding:.8rem 1.2rem;border-radius:4px;font-size:.82rem;line-height:1.5;margin-bottom:.8rem;display:none;}
+.fb-bar.show{display:block;}
+.fb-bar.info{background:#EEF2FF;border-left:3px solid var(--p);color:var(--p);}
+.fb-bar.ok{background:#F0FDF4;border-left:3px solid #2E7D32;color:#2E7D32;}
+.fb-bar.warn{background:#FFF7ED;border-left:3px solid var(--o);color:var(--o);}
+
+.puzzle-btns{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem;}
+.btn-check{padding:.65rem 1.6rem;background:var(--p);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:background .15s;}
+.btn-check:hover{background:var(--pm);}
+.btn-reset{padding:.65rem 1.2rem;background:#fff;color:var(--soft);border:1px solid var(--rule);font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;}
+
+/* ── MODAL AGREGAR COLUMNA ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.overlay.show{opacity:1;pointer-events:all;}
+.modal{background:#fff;width:min(480px,94vw);border-radius:4px;overflow:hidden;}
+.modal-hdr{background:var(--dk);color:#fff;padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
+.modal-hdr h3{font-family:'Playfair Display',serif;font-size:1.05rem;}
+.modal-close{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;line-height:1;}
+.modal-body{padding:1.4rem;}
+.modal-footer{padding:.9rem 1.4rem;border-top:1px solid var(--rule);display:flex;gap:.7rem;justify-content:flex-end;}
+
+/* ══ FASE B: LLENADO ══ */
+#phaseB{display:none;padding:1rem;}
+.fill-layout{display:grid;grid-template-columns:1fr 300px;gap:1rem;max-width:1200px;margin:0 auto;}
+.fill-title{font-size:1.4rem;font-weight:900;color:var(--ink);margin-bottom:.3rem;}
+.fill-sub{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:1.2rem;}
+
+/* tabla fill */
+.fill-table{width:100%;border-collapse:collapse;margin-bottom:1rem;}
+.fill-table thead th{background:var(--dk);color:#fff;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.55rem .6rem;text-align:left;}
+.fill-table tbody tr{border-bottom:1px solid var(--rule);}
+.fill-table tbody tr:last-child{border-bottom:none;}
+.fill-table td{padding:.4rem .5rem;vertical-align:top;}
+.cell-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);min-width:110px;}
+.cell-ta{width:100%;}
+.cell-ta textarea{width:100%;border:1px solid var(--rule);border-radius:3px;padding:.4rem .6rem;font-family:'Lato',sans-serif;font-size:.8rem;line-height:1.4;color:var(--ink);min-height:52px;resize:vertical;outline:none;transition:border-color .15s;}
+.cell-ta textarea:focus{border-color:var(--p);}
+.row-header{background:var(--dk);color:#fff!important;}
+.row-header td{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .6rem;font-weight:700;}
+
+/* sidebar fill */
+.fill-sb{background:#fff;border:1px solid var(--rule);border-radius:4px;overflow:hidden;position:sticky;top:1rem;}
+.fill-sb-sec{padding:1rem;border-bottom:1px solid var(--rule);}
+.fill-sb-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:.6rem;}
+.btn-main{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem .8rem;border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;transition:all .15s;width:100%;margin-bottom:.4rem;}
+.btn-dl{background:var(--dk);color:#fff;}
+.btn-dl:hover{background:var(--p);}
+.btn-help{background:var(--obg);color:var(--o);border:1px solid var(--o);}
+.btn-help:hover{background:var(--o);color:#fff;}
+.btn-email{background:var(--pbg);color:var(--p);border:1px solid var(--p);}
+.btn-email:hover{background:var(--p);color:#fff;}
+
+.form-row{margin-bottom:.85rem;}
+.form-row label{display:block;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.3rem;}
+.form-row input[type=text],.form-row input[type=email],.form-row textarea{width:100%;border:1px solid var(--rule);border-radius:3px;padding:.5rem .65rem;font-family:'Lato',sans-serif;font-size:.82rem;color:var(--ink);outline:none;transition:border-color .15s;}
+.form-row input:focus,.form-row textarea:focus{border-color:var(--p);}
+.form-row textarea{min-height:70px;resize:vertical;}
+.check-row{display:flex;align-items:flex-start;gap:.6rem;font-size:.78rem;color:var(--soft);line-height:1.4;}
+.check-row input{margin-top:3px;accent-color:var(--p);}
+.help-bubble{background:var(--pbg);border-left:3px solid var(--p);padding:.7rem .9rem;border-radius:0 3px 3px 0;font-size:.8rem;line-height:1.6;color:var(--ink);min-height:70px;margin-top:.7rem;}
+.help-bubble em{color:var(--p);font-style:normal;font-weight:700;}
+.btn-send{padding:.55rem 1.2rem;background:var(--p);border:none;color:#fff;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;}
+.btn-send:hover{background:var(--pm);}
+.btn-cancel{padding:.55rem 1rem;background:#fff;border:1px solid var(--rule);color:var(--soft);font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;cursor:pointer;border-radius:3px;}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem;}
+.dl-btn{padding:.65rem .4rem;border:1px solid var(--rule);background:#fff;color:var(--ink);font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .15s;text-align:center;}
+.dl-btn:hover{border-color:var(--p);color:var(--p);background:var(--pbg);}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--dk);color:#fff;padding:.6rem 1.4rem;border-radius:3px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.08em;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
+.toast.show{opacity:1;}
+
+/* BG decorativo David */
+body:not(.sintropia) #phaseB::before{
+  content:'';position:fixed;right:-60px;top:60px;width:300px;height:300px;
+  background:radial-gradient(circle, rgba(109,40,217,.04) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+}
+body.sintropia #phaseB::before{
+  content:'';position:fixed;right:-60px;top:60px;width:300px;height:300px;
+  background:radial-gradient(circle, rgba(107,33,245,.05) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+@media(max-width:800px){
+  .fill-layout{grid-template-columns:1fr;}
+  .fill-sb{position:static;}
+  .pieces-pool{gap:.4rem;}
+  .piece{font-size:.72rem;padding:.4rem .6rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr" id="mainHdr">
+  <div>
+    <div class="hdr-logo" id="logoTxt">David <span>Salgado</span></div>
+    <div class="hdr-sub" id="logoSub">Teoría de Cambio · Tabla interactiva</div>
+  </div>
+  <div id="stepBadge" class="hdr-step">Paso 1 / 2 — Ordena los elementos</div>
+  <div class="hdr-badge" id="modBadge">Módulo 1 · Actividad</div>
+</header>
+
+<!-- ══════════════ FASE A: ROMPECABEZAS ══════════════ -->
+<div id="phaseA">
+  <div class="puzzle-intro">
+    <h2>¿Cuál es la lógica?</h2>
+    <p>Arrastra cada bloque a su columna correcta en la tabla de Teoría de Cambio, siguiendo la secuencia lógica de izquierda a derecha. Cuando termines, haz clic en <strong>Verificar</strong>.</p>
+  </div>
+
+  <!-- POOL DE PIEZAS -->
+  <div class="pieces-pool" id="piecesPool"></div>
+
+  <!-- FEEDBACK -->
+  <div class="fb-bar info show" id="fbBar">Arrastra los bloques a la columna que les corresponda.</div>
+
+  <!-- TABLA DESTINO -->
+  <div class="tc-table-wrap">
+    <table class="tc-table" id="tcTable">
+      <thead>
+        <tr id="tcHead"></tr>
+      </thead>
+      <tbody id="tcBody"></tbody>
+    </table>
+  </div>
+
+  <!-- BOTONES -->
+  <div class="puzzle-btns">
+    <button class="btn-check" onclick="checkPuzzle()">Verificar colocación</button>
+    <button class="btn-reset" onclick="resetPuzzle()">Reiniciar</button>
+  </div>
+</div>
+
+<!-- ══════════════ FASE B: LLENADO ══════════════ -->
+<div id="phaseB">
+  <div class="fill-layout">
+    <!-- TABLA DE LLENADO -->
+    <div>
+      <div class="fill-title">Tu Teoría de Cambio</div>
+      <div class="fill-sub">Completa cada campo. Puedes volver atrás en cualquier momento.</div>
+      <table class="fill-table" id="fillTable"></table>
+      <div style="text-align:right;margin-top:.5rem;">
+        <button onclick="showPhaseA()" style="background:none;border:none;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:var(--soft);cursor:pointer;text-decoration:underline;">← Regresar al rompecabezas</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="fill-sb">
+      <div class="fill-sb-sec">
+        <div class="fill-sb-lbl">Acciones</div>
+        <button class="btn-main btn-dl" onclick="showDlModal()">↓ Descargar</button>
+        <button class="btn-main btn-help" onclick="showHelpModal()">? Pedir ayuda</button>
+        <button class="btn-main btn-email" onclick="showEmailModal()">✉ Enviar por correo</button>
+      </div>
+      <div class="fill-sb-sec">
+        <div class="fill-sb-lbl">Referencia rápida</div>
+        <div style="font-size:.75rem;color:var(--soft);line-height:1.6;">
+          <p><strong>Problema →</strong> situación negativa existente.</p>
+          <p><strong>Causas →</strong> ¿por qué ocurre?</p>
+          <p><strong>Actividades →</strong> lo que hará el proyecto.</p>
+          <p><strong>Productos →</strong> bienes y servicios generados.</p>
+          <p><strong>Resultados →</strong> cambios en la población.</p>
+          <p><strong>Fin →</strong> impacto de largo plazo.</p>
+          <p><strong>Supuestos →</strong> condiciones externas.</p>
+          <p><strong>Indicadores →</strong> cómo medirás cada nivel.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- MODAL: AGREGAR COLUMNA -->
+<div class="overlay" id="addColOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>¿Deseas agregar otra columna?</h3>
+      <button class="modal-close" onclick="closeModal('addColOverlay')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.85rem;color:var(--soft);line-height:1.6;">¡Completaste todos los elementos! Puedes agregar otra columna temática si tu Teoría de Cambio lo necesita (ej. una nueva línea de acción o componente adicional).</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('addColOverlay');goToFill()">No, continuar</button>
+      <button class="btn-send" onclick="addExtraCol()">Sí, agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DESCARGA -->
+<div class="overlay" id="dlOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Descargar tabla</h3>
+      <button class="modal-close" onclick="closeModal('dlOverlay')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.82rem;color:var(--soft);margin-bottom:1rem;">La imagen del documento solo está disponible en <strong>PDF / PNG</strong>.</p>
+      <div class="dl-grid">
+        <button class="dl-btn" onclick="download('pdf')">📄 PDF</button>
+        <button class="dl-btn" onclick="download('png')">🖼 PNG</button>
+        <button class="dl-btn" onclick="download('docx')">📝 Word</button>
+        <button class="dl-btn" onclick="download('xlsx')">📊 Excel</button>
+        <button class="dl-btn" onclick="download('csv')">📋 CSV</button>
+        <button class="dl-btn" onclick="download('sheets')">🟢 Sheets*</button>
+      </div>
+      <p style="font-size:.72rem;color:#aaa;margin-top:.7rem;">*Sheets: descarga CSV e importa en Drive.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('dlOverlay')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: AYUDA -->
+<div class="overlay" id="helpOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Pedir orientación</h3>
+      <button class="modal-close" onclick="closeModal('helpOverlay')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>¿Con qué necesitas ayuda?</label>
+        <textarea id="helpQuery" placeholder="Ej: No sé qué poner como supuesto en el nivel de resultados…"></textarea>
+      </div>
+      <div class="help-bubble" id="helpBubble"><span style="color:#ccc;font-style:italic;">La orientación aparecerá aquí…</span></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('helpOverlay')">Cerrar</button>
+      <button class="btn-send" onclick="askHelp()">Obtener orientación →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CORREO -->
+<div class="overlay" id="emailOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Enviar por correo</h3>
+      <button class="modal-close" onclick="closeModal('emailOverlay')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row"><label>Nombre completo</label><input type="text" id="emailName" placeholder="Tu nombre"></div>
+      <div class="form-row"><label>Correo</label><input type="email" id="emailAddr" placeholder="tu@correo.com"></div>
+      <div class="form-row"><label>Notas adicionales (opcional)</label><textarea id="emailNotes" style="min-height:55px;" placeholder="Contexto o preguntas sobre tu tabla…"></textarea></div>
+      <div class="check-row">
+        <input type="checkbox" id="emailConsent">
+        <label for="emailConsent" id="consentLabel">Acepto recibir información de <span id="brandSender">David Salgado</span> sobre Teoría de Cambio, diseño de proyectos y metodología social.</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('emailOverlay')">Cancelar</button>
+      <button class="btn-send" onclick="sendEmail()">Enviar →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── BRAND ──
+const BRAND = new URLSearchParams(location.search).get('marca')||'david';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycby7gH1pJzfZgmYo6ScEkFHoYAbQqOneQDGnb3BJV0pP_Av0lz5WX3SwxKCwZhmnesF9hQ/exec';
+
+function initBrand(){
+  if(BRAND==='sintropia'){
+    document.body.classList.add('sintropia');
+    document.getElementById('logoTxt').innerHTML='Sintropía <span>Social</span>';
+    document.getElementById('brandSender').textContent='Sintropía Social';
+    document.getElementById('consentLabel').innerHTML='Acepto recibir información de <strong>Sintropía Social</strong> sobre Teoría de Cambio, empleabilidad social y desarrollo organizacional.';
+  }
+}
+initBrand();
+
+// ── DEFINICIÓN DE LA TABLA ──
+// Columnas: cada columna tiene id, label y los elementos que acepta (por nivel)
+// Orden correcto izquierda → derecha según Marco Lógico / TdC:
+// Problema (necesidad) → Causas (contexto) → Población objetivo →
+// Actividades → Productos → Resultados → Objetivo específico → Fin (propósito)
+// + Indicadores, Supuestos, Medios de verificación por nivel (filas)
+
+const COLUMNS = [
+  {id:'problema',   label:'Problema\n(necesidad)',    color:'#E8F5E9', th:'#2E7D32'},
+  {id:'causas',     label:'Causas\n(contexto)',        color:'#FFF3E0', th:'#E65100'},
+  {id:'poblacion',  label:'Población\nobjetivo',       color:'#E3F2FD', th:'#1565C0'},
+  {id:'actividades',label:'Actividades',               color:'#FCE4EC', th:'#C62828'},
+  {id:'productos',  label:'Productos',                 color:'#F3E5F5', th:'#6A1B9A'},
+  {id:'resultados', label:'Resultados',                color:'#E8EAF6', th:'#283593'},
+  {id:'obj_esp',    label:'Objetivo\nespecífico',      color:'#E0F7FA', th:'#00695C'},
+  {id:'fin',        label:'Fin\n(propósito)',           color:'#FFF8E1', th:'#F57F17'},
+];
+
+const ROWS_FILL = [
+  {id:'desc',   label:'Descripción'},
+  {id:'ind',    label:'Indicadores'},
+  {id:'medios', label:'Medios de\nverificación'},
+  {id:'sup',    label:'Supuestos'},
+];
+
+// Piezas del rompecabezas (mapeadas a columnas)
+const PIECES = [
+  {id:'p_problema',    colId:'problema',    label:'Problema (necesidad)',   icon:'👥', type:'type-c'},
+  {id:'p_causas',      colId:'causas',      label:'Causas (contexto)',      icon:'⚠️', type:'type-b'},
+  {id:'p_poblacion',   colId:'poblacion',   label:'Población objetivo',    icon:'💡', type:'type-c'},
+  {id:'p_actividades', colId:'actividades', label:'Actividades',            icon:'⚙️', type:'type-a'},
+  {id:'p_productos',   colId:'productos',   label:'Productos',              icon:'📋', type:'type-b'},
+  {id:'p_resultados',  colId:'resultados',  label:'Resultados',             icon:'→',  type:'type-b'},
+  {id:'p_obj_esp',     colId:'obj_esp',     label:'Objetivo específico',   icon:'✅', type:'type-a'},
+  {id:'p_fin',         colId:'fin',         label:'Fin (propósito)',        icon:'⭐', type:'type-b'},
+  {id:'p_ind_act',     colId:'actividades', label:'Indicadores de\nproducto', icon:'🎯', type:'type-a'},
+  {id:'p_ind_res',     colId:'resultados',  label:'Indicadores de\nresultados',icon:'📈',type:'type-c'},
+  {id:'p_ind_obj',     colId:'obj_esp',     label:'Indicadores de\nobjetivo', icon:'📊', type:'type-b'},
+  {id:'p_sup_act',     colId:'actividades', label:'Supuestos de\nproducto',  icon:'🤝', type:'type-d'},
+  {id:'p_sup_res',     colId:'resultados',  label:'Supuestos de\nresultados',icon:'🤝', type:'type-d'},
+  {id:'p_obj_lp',      colId:'fin',         label:'Objetivo de\nlargo plazo',icon:'🎯', type:'type-a'},
+  {id:'p_ind_imp',     colId:'fin',         label:'Indicadores\nde impacto', icon:'📈', type:'type-a'},
+  {id:'p_sup_imp',     colId:'fin',         label:'Supuestos\nde impacto',   icon:'👥', type:'type-a'},
+  {id:'p_med_ver1',    colId:'resultados',  label:'Medios de\nverificación', icon:'📄', type:'type-c'},
+  {id:'p_med_ver2',    colId:'actividades', label:'Medios de\nverificación', icon:'📄', type:'type-c'},
+];
+
+// Estado del puzzle
+let placedMap = {}; // colId -> [pieceIds colocadas]
+let extraCols = 0;
+
+// ── RENDERIZAR PUZZLE ──
+function buildPuzzle(){
+  placedMap = {};
+  COLUMNS.forEach(c=> placedMap[c.id]=[]);
+
+  // Cabecera
+  const head = document.getElementById('tcHead');
+  head.innerHTML = '';
+  COLUMNS.forEach(c=>{
+    const th = document.createElement('th');
+    th.style.background = c.th;
+    th.textContent = c.label.replace('\n',' ');
+    th.dataset.colId = c.id;
+    head.appendChild(th);
+  });
+
+  // Cuerpo (una sola fila de drop zones)
+  const body = document.getElementById('tcBody');
+  body.innerHTML = '';
+  const tr = document.createElement('tr');
+  COLUMNS.forEach(c=>{
+    const td = document.createElement('td');
+    td.dataset.colId = c.id;
+    td.style.background = c.color;
+    td.innerHTML = `<div class="drop-hint">Arrastra aquí</div><div class="drop-zone-inner" id="dz_${c.id}"></div>`;
+    setupDropZone(td, c.id);
+    tr.appendChild(td);
+  });
+  body.appendChild(tr);
+
+  // Pool de piezas (aleatorio)
+  const pool = document.getElementById('piecesPool');
+  pool.innerHTML='';
+  const shuffled = [...PIECES].sort(()=>Math.random()-.5);
+  shuffled.forEach(p=>{
+    const el = document.createElement('div');
+    el.className = 'piece '+p.type;
+    el.id = 'piece_'+p.id;
+    el.draggable = true;
+    el.dataset.pieceId = p.id;
+    el.innerHTML = `<span class="piece-icon">${p.icon}</span>${p.label.replace('\n','<br>')}`;
+    setupDragPiece(el, p.id);
+    pool.appendChild(el);
+  });
+}
+
+let dragPieceId = null;
+function setupDragPiece(el, pieceId){
+  el.addEventListener('dragstart', e=>{
+    dragPieceId = pieceId;
+    e.dataTransfer.effectAllowed='move';
+  });
+  // Touch drag
+  let touchStartX, touchStartY, clone;
+  el.addEventListener('touchstart', e=>{
+    dragPieceId = pieceId;
+    const t = e.touches[0];
+    touchStartX=t.clientX; touchStartY=t.clientY;
+    clone=el.cloneNode(true);
+    clone.style.cssText=`position:fixed;opacity:.8;pointer-events:none;z-index:999;width:${el.offsetWidth}px;top:${t.clientY-20}px;left:${t.clientX-60}px;`;
+    document.body.appendChild(clone);
+  },{passive:true});
+  el.addEventListener('touchmove', e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    if(clone){clone.style.top=(t.clientY-20)+'px';clone.style.left=(t.clientX-60)+'px';}
+    // find drop target
+    const els = document.elementsFromPoint(t.clientX,t.clientY);
+    document.querySelectorAll('.tc-table td').forEach(td=>td.classList.remove('drag-over'));
+    const td = els.find(x=>x.tagName==='TD'&&x.dataset.colId);
+    if(td) td.classList.add('drag-over');
+  },{passive:false});
+  el.addEventListener('touchend', e=>{
+    if(clone){clone.remove();clone=null;}
+    const t=e.changedTouches[0];
+    const els=document.elementsFromPoint(t.clientX,t.clientY);
+    const td=els.find(x=>x.tagName==='TD'&&x.dataset.colId);
+    if(td) dropPiece(td.dataset.colId);
+    document.querySelectorAll('.tc-table td').forEach(x=>x.classList.remove('drag-over'));
+    dragPieceId=null;
+  },{passive:true});
+}
+
+function setupDropZone(td, colId){
+  td.addEventListener('dragover', e=>{e.preventDefault();e.dataTransfer.dropEffect='move';td.classList.add('drag-over');});
+  td.addEventListener('dragleave', ()=>td.classList.remove('drag-over'));
+  td.addEventListener('drop', e=>{e.preventDefault();td.classList.remove('drag-over');dropPiece(colId);});
+}
+
+function dropPiece(colId){
+  if(!dragPieceId) return;
+  const pieceEl = document.getElementById('piece_'+dragPieceId);
+  if(!pieceEl||pieceEl.classList.contains('placed')) return;
+
+  // Crear mini-etiqueta en la celda
+  const dz = document.getElementById('dz_'+colId);
+  const tag = document.createElement('div');
+  tag.style.cssText='display:inline-flex;align-items:center;gap:.3rem;background:#fff;border:1px solid #ccc;border-radius:3px;padding:.2rem .5rem;margin:.15rem;font-size:.7rem;cursor:pointer;';
+  const piece = PIECES.find(p=>p.id===dragPieceId);
+  tag.innerHTML = `${piece.icon} ${piece.label.replace('\n',' ')} <span style="color:#e53e3e;font-weight:700;margin-left:.2rem;" title="Quitar">×</span>`;
+  tag.querySelector('span').addEventListener('click',()=>{
+    tag.remove();
+    placedMap[colId] = placedMap[colId].filter(id=>id!==dragPieceId);
+    pieceEl.classList.remove('placed');
+    const cell = document.querySelector(`td[data-col-id="${colId}"]`)||document.querySelector(`td[data-col-id="${colId}"]`)||document.querySelector(`.tc-table td[data-col-id="${colId}"]`);
+    if(cell) cell.classList.remove('occupied','correct','wrong');
+    updateDropHint(colId);
+  });
+
+  // Buscar la celda td con dataset colId
+  const allTds = document.querySelectorAll('.tc-table td');
+  let targetTd=null;
+  allTds.forEach(td=>{if(td.dataset.colId===colId) targetTd=td;});
+  if(targetTd) targetTd.classList.add('occupied');
+
+  dz.appendChild(tag);
+  placedMap[colId].push(dragPieceId);
+  pieceEl.classList.add('placed');
+  updateDropHint(colId);
+  dragPieceId=null;
+}
+
+function updateDropHint(colId){
+  const dz=document.getElementById('dz_'+colId);
+  const td=dz?.closest('td');
+  if(!td) return;
+  const hint=td.querySelector('.drop-hint');
+  if(!hint) return;
+  hint.style.display = placedMap[colId]&&placedMap[colId].length>0?'none':'flex';
+}
+
+// ── VERIFICAR ──
+function checkPuzzle(){
+  let correct=0, wrong=0, empty=0;
+  COLUMNS.forEach(c=>{
+    const td=document.querySelector(`.tc-table td[data-col-id="${c.id}"]`);
+    const placed=placedMap[c.id]||[];
+    if(placed.length===0){empty++;if(td){td.classList.remove('correct','wrong');} return;}
+    // Piezas correctas para esta columna
+    const correctPieces=PIECES.filter(p=>p.colId===c.id).map(p=>p.id);
+    const allCorrect=placed.every(id=>correctPieces.includes(id));
+    if(allCorrect&&placed.length>0){correct++;if(td){td.classList.remove('wrong');td.classList.add('correct');}}
+    else{wrong++;if(td){td.classList.remove('correct');td.classList.add('wrong');}}
+  });
+
+  const fb=document.getElementById('fbBar');
+  fb.className='fb-bar show';
+
+  const total=COLUMNS.length;
+  if(wrong===0&&empty===0){
+    fb.className='fb-bar ok show';
+    fb.innerHTML=`✓ ¡Perfecto! Todos los elementos están en su lugar. <strong>Ahora puedes comenzar a llenar tu Teoría de Cambio.</strong>`;
+    setTimeout(()=>{ document.getElementById('addColOverlay').classList.add('show'); },800);
+  } else if(wrong>0&&correct>0){
+    fb.className='fb-bar warn show';
+    fb.innerHTML=`Tienes <strong>${correct} columnas correctas</strong> y <strong>${wrong} con elementos que no corresponden</strong>. No importa cuántas veces lo intentes — revisa las marcadas en rojo y vuelve a colocar los bloques.`;
+  } else if(wrong>0){
+    fb.className='fb-bar warn show';
+    fb.innerHTML=`Hay <strong>${wrong} columnas con elementos incorrectos</strong>. Mira cuáles están en rojo e intenta de nuevo.`;
+  } else {
+    fb.className='fb-bar info show';
+    fb.innerHTML=`Tienes ${correct} columnas con piezas y ${empty} vacías. Recuerda colocar al menos un bloque en cada columna.`;
+  }
+}
+
+function resetPuzzle(){
+  placedMap={};
+  COLUMNS.forEach(c=>{
+    placedMap[c.id]=[];
+    const dz=document.getElementById('dz_'+c.id);
+    if(dz) dz.innerHTML='';
+    const td=document.querySelector(`.tc-table td[data-col-id="${c.id}"]`);
+    if(td){td.classList.remove('occupied','correct','wrong');}
+    updateDropHint(c.id);
+  });
+  document.querySelectorAll('.piece').forEach(el=>el.classList.remove('placed'));
+  const fb=document.getElementById('fbBar');
+  fb.className='fb-bar info show';
+  fb.textContent='Arrastra los bloques a la columna que les corresponda.';
+}
+
+function addExtraCol(){
+  extraCols++;
+  const newCol={id:'extra_'+extraCols, label:`Componente ${extraCols}`, color:'#FAFAFA', th:'#555'};
+  COLUMNS.push(newCol);
+  placedMap[newCol.id]=[];
+  const head=document.getElementById('tcHead');
+  const th=document.createElement('th');
+  th.style.background=newCol.th; th.textContent=newCol.label; th.dataset.colId=newCol.id;
+  head.appendChild(th);
+  const tr=document.querySelector('#tcBody tr');
+  const td=document.createElement('td');
+  td.dataset.colId=newCol.id; td.style.background=newCol.color;
+  td.innerHTML=`<div class="drop-hint">Arrastra aquí</div><div class="drop-zone-inner" id="dz_${newCol.id}"></div>`;
+  setupDropZone(td,newCol.id);
+  tr.appendChild(td);
+  closeModal('addColOverlay');
+  toast('Columna agregada. Continúa verificando cuando estés listo.');
+}
+
+function goToFill(){
+  closeModal('addColOverlay');
+  showPhaseB();
+}
+
+function showPhaseA(){
+  document.getElementById('phaseA').style.display='flex';
+  document.getElementById('phaseB').style.display='none';
+  document.getElementById('stepBadge').textContent='Paso 1 / 2 — Ordena los elementos';
+}
+
+function showPhaseB(){
+  document.getElementById('phaseA').style.display='none';
+  document.getElementById('phaseB').style.display='block';
+  document.getElementById('stepBadge').textContent='Paso 2 / 2 — Llena tu Teoría de Cambio';
+  buildFillTable();
+}
+
+// ── TABLA DE LLENADO ──
+function buildFillTable(){
+  const ft=document.getElementById('fillTable');
+  ft.innerHTML='';
+  // Cabecera
+  const thead=document.createElement('thead');
+  const htr=document.createElement('tr');
+  const th0=document.createElement('th'); th0.textContent=''; th0.style.width='100px'; htr.appendChild(th0);
+  COLUMNS.forEach(c=>{
+    const th=document.createElement('th');
+    th.textContent=c.label.replace('\n',' ');
+    th.style.background=c.th||'var(--dk)';
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr); ft.appendChild(thead);
+
+  const tbody=document.createElement('tbody');
+  ROWS_FILL.forEach(row=>{
+    const tr=document.createElement('tr');
+    const td0=document.createElement('td');
+    td0.className='cell-label';
+    td0.textContent=row.label.replace('\n',' ');
+    tr.appendChild(td0);
+    COLUMNS.forEach(c=>{
+      const td=document.createElement('td');
+      td.className='cell-ta';
+      td.style.background=c.color||'#fff';
+      const ta=document.createElement('textarea');
+      ta.placeholder=getPlaceholder(c.id,row.id);
+      ta.id=`fill_${c.id}_${row.id}`;
+      td.appendChild(ta);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  ft.appendChild(tbody);
+}
+
+function getPlaceholder(colId, rowId){
+  const map={
+    problema:{desc:'Situación negativa existente…',ind:'¿Cómo se mide este problema?',medios:'Fuentes: informes, encuestas…',sup:'Condiciones del entorno que deben sostenerse…'},
+    causas:{desc:'Factores que generan el problema…',ind:'Indicadores de las causas…',medios:'Estudios, datos secundarios…',sup:'Supuestos sobre el contexto…'},
+    poblacion:{desc:'¿A quién va dirigido el proyecto?',ind:'Número, perfil, cobertura esperada…',medios:'Registros, padrones, listas…',sup:'Supuestos de acceso y participación…'},
+    actividades:{desc:'¿Qué hará el proyecto?',ind:'Número de actividades realizadas…',medios:'Bitácoras, listas de asistencia…',sup:'Supuestos para la ejecución…'},
+    productos:{desc:'Bienes o servicios que se entregarán…',ind:'Cantidad de productos generados…',medios:'Informes de entrega, registros…',sup:'Supuestos de calidad y oportunidad…'},
+    resultados:{desc:'Cambios observables en la población…',ind:'% de participantes que logran X…',medios:'Encuestas, pruebas, entrevistas…',sup:'Supuestos para que los resultados ocurran…'},
+    obj_esp:{desc:'Objetivo de corto/mediano plazo…',ind:'Indicadores de logro del objetivo…',medios:'Evaluaciones, registros…',sup:'Supuestos de sostenibilidad…'},
+    fin:{desc:'Impacto de largo plazo al que contribuye…',ind:'Indicadores de impacto…',medios:'Estadísticas nacionales, estudios…',sup:'Supuestos macro (política, economía)…'},
+  };
+  if(colId.startsWith('extra_')) return rowId==='desc'?'Escribe aquí…':'';
+  return (map[colId]&&map[colId][rowId])||'';
+}
+
+// ── RECOLECTAR DATOS ──
+function collectFillData(){
+  const data={};
+  COLUMNS.forEach(c=>{
+    data[c.id]={};
+    ROWS_FILL.forEach(r=>{
+      const ta=document.getElementById(`fill_${c.id}_${r.id}`);
+      data[c.id][r.id]=ta?ta.value.trim():'';
+    });
+  });
+  return data;
+}
+
+function getTextContent(){
+  const data=collectFillData();
+  const brand=BRAND==='sintropia'?'Sintropía Social':'David Salgado';
+  let txt=`TABLA DE TEORÍA DE CAMBIO\n${brand}\n${new Date().toLocaleDateString('es-MX')}\n\n`;
+  COLUMNS.forEach(c=>{
+    txt+=`\n── ${c.label.replace('\n',' ').toUpperCase()} ──\n`;
+    ROWS_FILL.forEach(r=>{
+      const val=data[c.id][r.id];
+      if(val) txt+=`${r.label.replace('\n',' ')}: ${val}\n`;
+    });
+  });
+  return txt;
+}
+
+// ── AYUDA IA ──
+const HELP_TIPS=[
+  {k:['supuesto','condición','externa'],r:'Un <em>supuesto</em> es una condición externa que debe cumplirse para que la lógica de la intervención funcione, pero que el proyecto no controla directamente. Ejemplos: "Las instituciones educativas mantienen su apertura al proyecto", "El contexto político es estable durante la implementación". Deben ser plausibles pero no garantizados.'},
+  {k:['indicador','medir','medición'],r:'Un buen indicador cumple criterios SMART: específico, medible, alcanzable, relevante y con límite de tiempo. Para resultados cualitativos, usa porcentajes de cambio en escalas Likert o proporciones de personas que reportan una mejora. Para productos, suele bastar con contar (número de talleres impartidos, personas capacitadas).'},
+  {k:['resultado','cambio','efecto'],r:'Los <em>resultados</em> son cambios concretos en conocimientos, actitudes o comportamientos de la población objetivo. Se distinguen de los productos (que son entregas del proyecto). Pregúntate: ¿qué sabrá, podrá hacer o hará de forma diferente la población después de participar en este proyecto?'},
+  {k:['fin','impacto','propósito','largo plazo'],r:'El <em>fin</em> o propósito es el nivel de impacto al que el proyecto contribuye, pero que no depende solo de él. Suele formularse como una mejora social más amplia (ej. "Contribuir a la reducción de la desocupación juvenil en la región"). No es responsabilidad directa del proyecto, sino su horizonte de sentido.'},
+  {k:['actividad','acción','implementar'],r:'Las <em>actividades</em> son las acciones concretas que ejecuta el equipo. Son distintas de los productos (que son los resultados tangibles de esas actividades). Ejemplo: la actividad es "impartir taller de competencias digitales"; el producto es "80 personas capacitadas con certificación básica".'},
+  {k:['población','beneficiaria','objetivo','participante'],r:'La población objetivo debe definirse con precisión: quiénes son, dónde están, cuántos son, cuáles son sus características relevantes para el proyecto. Una definición vaga ("jóvenes vulnerables") dificulta la medición y la focalización. Usa variables verificables (edad, localidad, situación laboral, nivel educativo).'},
+  {k:['problema','central','necesidad'],r:'El problema central se formula como una situación negativa existente, no como ausencia de solución. Incorrecto: "Falta de programas de empleo juvenil". Correcto: "Alta tasa de desocupación de personas jóvenes de 18 a 29 años en contexto urbano marginal, con brechas de competencias para el mercado de trabajo formal".'},
+  {k:['teoría de cambio','lógica','marco'],r:'La Teoría de Cambio explica cómo y por qué una serie de actividades llevará a un resultado deseado. Su valor no está en predecir el futuro, sino en hacer explícita la lógica de la intervención para que pueda discutirse, cuestionarse y mejorarse. (Rogers, 2014; Weiss, 1995)'},
+  {k:['no sé','duda','orientación','ayuda'],r:'Está bien no tener todo claro. Empieza por el nivel que mejor conoces (generalmente las actividades o el problema central) y ve construyendo hacia arriba (resultados, fin) y hacia abajo (causas). La Teoría de Cambio se construye colectivamente y se refina con evidencia.'},
+];
+
+function findTip(query){
+  const q=query.toLowerCase();
+  for(const t of HELP_TIPS){if(t.k.some(k=>q.includes(k))) return t.r;}
+  return 'La Teoría de Cambio tiene una lógica de cadena: las actividades generan productos, los productos producen resultados, los resultados logran el objetivo específico y el objetivo contribuye al fin. Cada nivel necesita indicadores que permitan saber si se está avanzando. ¿Tienes alguna duda sobre un nivel en particular?';
+}
+
+function askHelp(){
+  const q=document.getElementById('helpQuery').value.trim();
+  if(!q){toast('Escribe tu pregunta primero');return;}
+  const bubble=document.getElementById('helpBubble');
+  bubble.innerHTML='<span style="color:var(--p)">Analizando…</span>';
+  setTimeout(()=>{bubble.innerHTML=findTip(q);},700);
+}
+
+// ── MODALES ──
+function showDlModal(){document.getElementById('dlOverlay').classList.add('show');}
+function showHelpModal(){document.getElementById('helpOverlay').classList.add('show');}
+function showEmailModal(){document.getElementById('emailOverlay').classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+
+// ── DESCARGA ──
+function download(fmt){
+  if(fmt==='pdf'){window.print();closeModal('dlOverlay');return;}
+  if(fmt==='png'){toast('PNG: usa Ctrl+P → "Guardar como PDF" → luego convierte a imagen.');closeModal('dlOverlay');return;}
+  const txt=getTextContent();
+  if(fmt==='csv'){
+    const data=collectFillData();
+    const rows=[['Componente','Descripción','Indicadores','Medios de verificación','Supuestos']];
+    COLUMNS.forEach(c=>{
+      rows.push([c.label.replace('\n',' '),data[c.id].desc,data[c.id].ind,data[c.id].medios,data[c.id].sup]);
+    });
+    const csv=rows.map(r=>r.map(x=>'"'+(x||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+    blob('teoria-cambio.csv','text/csv',csv);
+  } else if(fmt==='xlsx'){
+    const data=collectFillData();
+    const rows=[['Componente','Descripción','Indicadores','Medios de verificación','Supuestos']];
+    COLUMNS.forEach(c=>{rows.push([c.label.replace('\n',' '),data[c.id].desc,data[c.id].ind,data[c.id].medios,data[c.id].sup]);});
+    const tsv=rows.map(r=>r.join('\t')).join('\n');
+    blob('teoria-cambio.xls','application/vnd.ms-excel','﻿'+tsv);
+  } else {
+    blob('teoria-cambio.txt','text/plain',txt);
+    if(fmt==='sheets') toast('Importa el archivo en Google Sheets vía Archivo > Importar.');
+    else toast('Archivo de texto descargado. Pega en Word para formatear.');
+  }
+  closeModal('dlOverlay');
+}
+
+function blob(name,type,content){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name; a.click(); URL.revokeObjectURL(a.href);
+}
+
+// ── CORREO ──
+function sendEmail(){
+  const name=document.getElementById('emailName').value.trim();
+  const addr=document.getElementById('emailAddr').value.trim();
+  const notes=document.getElementById('emailNotes').value.trim();
+  const consent=document.getElementById('emailConsent').checked;
+  if(!name||!addr){toast('Ingresa nombre y correo');return;}
+  if(!addr.includes('@')){toast('Correo no válido');return;}
+
+  const data=collectFillData();
+  const payload={
+    action:'enviarTeoríaCambio', nombre:name, email:addr, notas:notes, consent, marca:BRAND,
+    actividad:'teoria-cambio',
+    tabla:JSON.stringify(data),
+  };
+  if(GAS_URL) fetch(GAS_URL,{method:'POST',body:JSON.stringify(payload)}).catch(()=>{});
+  toast('¡Enviado! Revisa tu correo en unos minutos.');
+  closeModal('emailOverlay');
+}
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded',buildPuzzle);
+</script>
+
+<style>
+@media print{
+  #phaseA{display:none!important;}
+  .fill-sb,.hdr-badge,.hdr-step{display:none!important;}
+  #phaseB{display:block!important;}
+  .fill-layout{display:block!important;}
+}
+.tc-table td.drag-over{background:var(--plt)!important;border-color:var(--p)!important;}
+</style>
+</body>
+</html>

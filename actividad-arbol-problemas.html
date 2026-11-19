@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Árbol de Problemas y Posibilidades</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS DE MARCA ── */
+:root{
+  --p:#6D28D9;--pm:#7C3AED;--plt:#EDE9FE;--pbg:#F5F3FF;
+  --o:#C45F00;--obg:#FEF3E2;
+  --ink:#18181B;--soft:#52525B;--rule:#E4E4E7;
+  --paper:#FAFAF8;--white:#fff;--dk:#13111C;
+  --accent1:var(--p);--accent2:var(--o);
+  --brand-name:"David Salgado";
+  --tree-trunk:#7B5B3A;--tree-branch:#5C8A3C;--tree-root:#9B7B5A;
+  --tree-leaf:#2E7D32;--tree-cause:#C0392B;--tree-effect:#1565C0;
+  --tree-center:#F9C846;
+}
+/* Sintropía override */
+body.sintropia{
+  --p:#6B21F5;--pm:#7C3AED;
+  --o:#FF6B1A;
+  --accent1:#6B21F5;--accent2:#FF6B1A;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+h1,h2,h3{font-family:'Playfair Display',serif;}
+
+/* ── HEADER ── */
+.hdr{background:var(--dk);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:3px solid var(--p);}
+.hdr-logo{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;font-weight:900;letter-spacing:-.02em;}
+.hdr-logo span{color:var(--o);}
+.hdr-sub{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-top:.15rem;}
+.hdr-badge{margin-left:auto;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--o);border:1px solid var(--o);padding:.2rem .6rem;}
+
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:1fr 280px;gap:0;min-height:calc(100vh - 60px);}
+.canvas-area{position:relative;overflow:hidden;background:linear-gradient(160deg,#f8f6ff 0%,#faf9f7 100%);}
+.sidebar{background:#fff;border-left:1px solid var(--rule);display:flex;flex-direction:column;overflow-y:auto;}
+
+/* ── ÁRBOL SVG ── */
+#tree-svg{width:100%;height:100%;min-height:600px;cursor:default;}
+.tree-label{font-family:'DM Mono',monospace;font-size:11px;fill:var(--soft);text-anchor:middle;}
+.tree-zone-label{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;}
+
+/* ── RECUADROS DRAG ── */
+.card{position:absolute;min-width:130px;max-width:220px;background:#fff;border:2px solid var(--p);border-radius:4px;padding:.5rem .7rem;font-size:.78rem;line-height:1.4;cursor:grab;user-select:none;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:box-shadow .15s;}
+.card:active{cursor:grabbing;box-shadow:0 6px 20px rgba(0,0,0,.18);}
+.card textarea{width:100%;border:none;outline:none;font-family:'Lato',sans-serif;font-size:.78rem;color:var(--ink);resize:vertical;min-height:48px;background:transparent;line-height:1.4;}
+.card-del{position:absolute;top:3px;right:5px;background:none;border:none;color:#ccc;cursor:pointer;font-size:.9rem;line-height:1;padding:0;}
+.card-del:hover{color:#e53e3e;}
+.card.cause{border-color:var(--tree-cause);}
+.card.effect{border-color:var(--tree-effect);}
+.card.central{border-color:var(--tree-center);border-width:3px;background:#fffef0;}
+.card.action{border-color:var(--tree-leaf);}
+
+/* zona highlight */
+.canvas-area.drag-over-cause .zone-cause{opacity:.3;}
+.canvas-area.drag-over-effect .zone-effect{opacity:.3;}
+
+/* ── SIDEBAR ── */
+.sb-sec{padding:1rem;border-bottom:1px solid var(--rule);}
+.sb-sec-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem;}
+.sb-sec-lbl::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--p);flex-shrink:0;}
+.sb-desc{font-size:.78rem;color:var(--soft);line-height:1.5;margin-bottom:.8rem;}
+
+.card-btn{display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem .8rem;border:1px solid var(--rule);background:#fff;cursor:pointer;font-family:'Lato',sans-serif;font-size:.78rem;color:var(--ink);border-radius:3px;transition:all .15s;margin-bottom:.4rem;}
+.card-btn:hover{border-color:var(--p);color:var(--p);background:var(--pbg);}
+.card-btn .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dot-cause{background:var(--tree-cause);}
+.dot-effect{background:var(--tree-effect);}
+.dot-central{background:var(--tree-center);}
+.dot-action{background:var(--tree-leaf);}
+
+.btn-add{display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;padding:.6rem;background:var(--pbg);border:1px dashed var(--p);color:var(--p);font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;cursor:pointer;transition:all .15s;border-radius:3px;}
+.btn-add:hover{background:var(--plt);}
+.btn-rm{display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;padding:.5rem;background:#fff;border:1px dashed #e53e3e;color:#e53e3e;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;cursor:pointer;transition:all .15s;border-radius:3px;margin-top:.3rem;}
+.btn-rm:hover{background:#fff5f5;}
+
+/* ── BOTONES INFERIORES ── */
+.action-row{padding:1rem;display:flex;flex-direction:column;gap:.5rem;margin-top:auto;}
+.btn-main{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.65rem .8rem;border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;transition:all .15s;width:100%;}
+.btn-dl{background:var(--dk);color:#fff;}
+.btn-dl:hover{background:var(--p);}
+.btn-help{background:var(--obg);color:var(--o);border:1px solid var(--o);}
+.btn-help:hover{background:var(--o);color:#fff;}
+.btn-email{background:var(--pbg);color:var(--p);border:1px solid var(--p);}
+.btn-email:hover{background:var(--p);color:#fff;}
+
+/* ── INSTRUCCIONES FLOTANTES ── */
+.hint-box{position:absolute;background:rgba(109,40,217,.9);color:#fff;padding:.5rem .85rem;border-radius:3px;font-size:.72rem;line-height:1.4;max-width:200px;pointer-events:none;z-index:10;opacity:0;transition:opacity .2s;}
+.hint-box.show{opacity:1;}
+
+/* ── MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.overlay.show{opacity:1;pointer-events:all;}
+.modal{background:#fff;width:min(520px,94vw);border-radius:4px;overflow:hidden;transform:translateY(20px);transition:transform .2s;}
+.overlay.show .modal{transform:translateY(0);}
+.modal-hdr{background:var(--dk);color:#fff;padding:1rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
+.modal-hdr h3{font-family:'Playfair Display',serif;font-size:1.05rem;}
+.modal-close{background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer;line-height:1;}
+.modal-body{padding:1.4rem;}
+.form-row{margin-bottom:1rem;}
+.form-row label{display:block;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.35rem;}
+.form-row input[type=text],.form-row input[type=email],.form-row textarea{width:100%;border:1px solid var(--rule);border-radius:3px;padding:.55rem .7rem;font-family:'Lato',sans-serif;font-size:.85rem;color:var(--ink);outline:none;transition:border-color .15s;}
+.form-row input:focus,.form-row textarea:focus{border-color:var(--p);}
+.form-row textarea{min-height:80px;resize:vertical;}
+.check-row{display:flex;align-items:flex-start;gap:.6rem;font-size:.8rem;color:var(--soft);line-height:1.4;}
+.check-row input[type=checkbox]{margin-top:3px;accent-color:var(--p);}
+.modal-footer{padding:.9rem 1.4rem;border-top:1px solid var(--rule);display:flex;gap:.7rem;justify-content:flex-end;}
+.btn-cancel{padding:.55rem 1.2rem;background:#fff;border:1px solid var(--rule);color:var(--soft);font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;cursor:pointer;border-radius:3px;}
+.btn-send{padding:.55rem 1.4rem;background:var(--p);border:none;color:#fff;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;}
+.btn-send:hover{background:var(--pm);}
+
+/* ── MODAL AYUDA ── */
+.help-bubble{background:var(--pbg);border-left:3px solid var(--p);padding:.8rem 1rem;border-radius:0 3px 3px 0;font-size:.83rem;line-height:1.6;color:var(--ink);min-height:80px;margin-top:.8rem;}
+.help-bubble em{color:var(--p);font-style:normal;font-weight:700;}
+
+/* ── MODAL DESCARGA ── */
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.5rem;}
+.dl-btn{padding:.7rem .5rem;border:1px solid var(--rule);background:#fff;color:var(--ink);font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .15s;text-align:center;}
+.dl-btn:hover{border-color:var(--p);color:var(--p);background:var(--pbg);}
+.dl-btn.active{background:var(--p);color:#fff;border-color:var(--p);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--dk);color:#fff;padding:.6rem 1.4rem;border-radius:3px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.08em;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
+.toast.show{opacity:1;}
+
+/* ── INDICACIONES EN EL ÁRBOL ── */
+.zone-hint{font-family:'Lato',sans-serif;font-size:11px;fill:rgba(0,0,0,.35);text-anchor:middle;font-style:italic;}
+
+@media(max-width:700px){
+  .app{grid-template-columns:1fr;}
+  .sidebar{border-left:none;border-top:1px solid var(--rule);max-height:300px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr" id="mainHdr">
+  <div>
+    <div class="hdr-logo" id="logoTxt">David <span>Salgado</span></div>
+    <div class="hdr-sub" id="logoSub">Teoría de Cambio · Árbol de Problemas</div>
+  </div>
+  <div class="hdr-badge" id="modBadge">Módulo 1 · Actividad</div>
+</header>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- CANVAS -->
+  <div class="canvas-area" id="canvasArea">
+    <!-- SVG del Árbol -->
+    <svg id="tree-svg" viewBox="0 0 760 620" xmlns="http://www.w3.org/2000/svg">
+      <!-- Cielo (efectos) -->
+      <rect x="0" y="0" width="760" height="240" fill="url(#skyGrad)"/>
+      <!-- Suelo (causas) -->
+      <rect x="0" y="380" width="760" height="240" fill="url(#soilGrad)"/>
+      <!-- Defs -->
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#E8F4FD"/>
+          <stop offset="100%" stop-color="#F5F3FF"/>
+        </linearGradient>
+        <linearGradient id="soilGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FEF9F0"/>
+          <stop offset="100%" stop-color="#F5EDDF"/>
+        </linearGradient>
+        <linearGradient id="trunkGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#8B6914"/>
+          <stop offset="50%" stop-color="#A07B2A"/>
+          <stop offset="100%" stop-color="#7B5B3A"/>
+        </linearGradient>
+      </defs>
+
+      <!-- LÍNEA DIVISORIA (problema central) -->
+      <line x1="60" y1="310" x2="700" y2="310" stroke="#E4E4E7" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+      <!-- TRONCO -->
+      <rect x="362" y="260" width="36" height="120" rx="4" fill="url(#trunkGrad)"/>
+      <!-- Raíces -->
+      <path d="M370 380 Q340 410 310 430" stroke="#9B7B5A" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M378 380 Q370 420 365 450" stroke="#9B7B5A" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M390 380 Q420 410 450 430" stroke="#9B7B5A" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M366 380 Q330 440 290 460" stroke="#9B7B5A" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M394 380 Q440 445 480 460" stroke="#9B7B5A" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+      <!-- COPA (efectos / ramas) -->
+      <ellipse cx="380" cy="150" rx="200" ry="130" fill="#C8E6C9" opacity=".6"/>
+      <ellipse cx="280" cy="130" rx="120" ry="90" fill="#A5D6A7" opacity=".7"/>
+      <ellipse cx="480" cy="130" rx="120" ry="90" fill="#A5D6A7" opacity=".7"/>
+      <ellipse cx="380" cy="100" rx="140" ry="80" fill="#81C784" opacity=".8"/>
+
+      <!-- Ramas principales -->
+      <path d="M380 265 Q310 230 230 190" stroke="#5C8A3C" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M380 265 Q380 220 380 170" stroke="#5C8A3C" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M380 265 Q450 230 530 190" stroke="#5C8A3C" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <!-- Ramas secundarias -->
+      <path d="M230 190 Q180 165 150 145" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M230 190 Q210 155 200 130" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M530 190 Q570 165 600 145" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M530 190 Q555 155 560 130" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M380 170 Q340 140 310 120" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M380 170 Q420 140 450 120" stroke="#5C8A3C" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+      <!-- ETIQUETAS DE ZONA -->
+      <text x="90" y="40" class="tree-zone-label" fill="#1565C0" opacity=".7">Efectos / Consecuencias</text>
+      <text x="90" y="58" class="zone-hint">Coloca aquí los recuadros de efectos del problema</text>
+      <text x="90" y="560" class="tree-zone-label" fill="#C0392B" opacity=".7">Causas / Raíces</text>
+      <text x="90" y="578" class="zone-hint">Coloca aquí los recuadros de causas del problema</text>
+
+      <!-- PROBLEMA CENTRAL (texto indicativo) -->
+      <rect x="260" y="290" width="240" height="40" rx="4" fill="#F9C846" opacity=".25" stroke="#F9C846" stroke-width="2"/>
+      <text x="380" y="306" class="zone-hint" fill="#7B6000">↑ Coloca el recuadro del</text>
+      <text x="380" y="320" class="zone-hint" fill="#7B6000">problema central aquí</text>
+
+      <!-- FLECHA indicación lateral izq -->
+      <text x="62" y="315" font-family="DM Mono" font-size="10" fill="#aaa" text-anchor="start">PROBLEMA</text>
+      <text x="62" y="327" font-family="DM Mono" font-size="10" fill="#aaa" text-anchor="start">CENTRAL</text>
+    </svg>
+
+    <!-- Contenedor para las tarjetas draggable -->
+    <div id="cardsContainer"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-sec">
+      <div class="sb-sec-lbl">Agregar recuadros</div>
+      <p class="sb-desc">Haz clic en el tipo de recuadro que quieres agregar y arrástralo al árbol.</p>
+
+      <button class="card-btn" onclick="addCard('central')">
+        <span class="dot dot-central"></span> Problema central
+      </button>
+      <button class="card-btn" onclick="addCard('effect')">
+        <span class="dot dot-effect"></span> Efecto / consecuencia
+      </button>
+      <button class="card-btn" onclick="addCard('cause')">
+        <span class="dot dot-cause"></span> Causa / raíz
+      </button>
+      <button class="card-btn" onclick="addCard('action')">
+        <span class="dot dot-action"></span> Posibilidad / acción
+      </button>
+
+      <div style="display:flex;gap:.4rem;margin-top:.6rem;">
+        <button class="btn-add" onclick="addCard('cause')" style="flex:1;">
+          + Causa
+        </button>
+        <button class="btn-add" onclick="addCard('effect')" style="flex:1;">
+          + Efecto
+        </button>
+      </div>
+    </div>
+
+    <div class="sb-sec">
+      <div class="sb-sec-lbl">Referencia visual</div>
+      <div style="font-size:.75rem;color:var(--soft);line-height:1.5;">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;"><span style="width:10px;height:10px;border-radius:50%;background:#1565C0;display:inline-block;"></span><span><strong>Efectos</strong> — arriba del tronco</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;"><span style="width:10px;height:10px;background:var(--tree-center);display:inline-block;border-radius:2px;"></span><span><strong>Problema central</strong> — tronco</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;"><span style="width:10px;height:10px;border-radius:50%;background:#C0392B;display:inline-block;"></span><span><strong>Causas</strong> — debajo del suelo</span></div>
+        <div style="display:flex;align-items:center;gap:.5rem;"><span style="width:10px;height:10px;border-radius:50%;background:#2E7D32;display:inline-block;"></span><span><strong>Posibilidades</strong> — donde decidas</span></div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-main btn-dl" onclick="showDownload()">
+        ↓ Descargar
+      </button>
+      <button class="btn-main btn-help" onclick="showHelp()">
+        ? Pedir ayuda
+      </button>
+      <button class="btn-main btn-email" onclick="showEmail()">
+        ✉ Enviar por correo
+      </button>
+    </div>
+  </aside>
+</div>
+
+<!-- MODAL: DESCARGA -->
+<div class="overlay" id="dlOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Descargar árbol</h3>
+      <button class="modal-close" onclick="closeModal('dlOverlay')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.82rem;color:var(--soft);margin-bottom:1rem;">Elige el formato. La imagen del árbol solo está disponible en <strong>PDF / PNG</strong>.</p>
+      <div class="dl-grid">
+        <button class="dl-btn" onclick="download('pdf')">📄 PDF (con imagen)</button>
+        <button class="dl-btn" onclick="download('png')">🖼 Imagen PNG</button>
+        <button class="dl-btn" onclick="download('docx')">📝 Word (.docx)</button>
+        <button class="dl-btn" onclick="download('xlsx')">📊 Excel (.xlsx)</button>
+        <button class="dl-btn" onclick="download('csv')">📋 Texto / CSV</button>
+        <button class="dl-btn" onclick="download('sheets')">🟢 Google Sheets*</button>
+      </div>
+      <p style="font-size:.72rem;color:#aaa;margin-top:.8rem;">* Google Sheets: descarga CSV e impórtalo a Drive.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('dlOverlay')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: AYUDA IA -->
+<div class="overlay" id="helpOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Pedir orientación</h3>
+      <button class="modal-close" onclick="closeModal('helpOverlay')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>¿Con qué necesitas ayuda?</label>
+        <textarea id="helpQuery" placeholder="Ej: No sé si lo que escribí es una causa o un efecto. Tengo anotado 'falta de empleo juvenil'…"></textarea>
+      </div>
+      <div class="help-bubble" id="helpBubble">
+        <span style="color:#ccc;font-style:italic;">La orientación aparecerá aquí…</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('helpOverlay')">Cerrar</button>
+      <button class="btn-send" onclick="askHelp()">Obtener orientación →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CORREO -->
+<div class="overlay" id="emailOverlay">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Enviar por correo</h3>
+      <button class="modal-close" onclick="closeModal('emailOverlay')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>Nombre completo</label>
+        <input type="text" id="emailName" placeholder="Tu nombre">
+      </div>
+      <div class="form-row">
+        <label>Correo electrónico</label>
+        <input type="email" id="emailAddr" placeholder="tu@correo.com">
+      </div>
+      <div class="form-row">
+        <label>Notas adicionales (opcional)</label>
+        <textarea id="emailNotes" placeholder="Contexto, preguntas o comentarios sobre tu árbol…" style="min-height:60px;"></textarea>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="emailConsent">
+        <label for="emailConsent" id="consentLabel">Acepto recibir información y recursos sobre Teoría de Cambio, comunicación profesional y metodología social de <span id="brandSender">David Salgado</span>.</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('emailOverlay')">Cancelar</button>
+      <button class="btn-send" onclick="sendEmail()">Enviar →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIGURACIÓN DE MARCA ──
+const BRAND = (()=>{
+  const p = new URLSearchParams(location.search);
+  const v = p.get('marca') || 'david'; // 'david' | 'sintropia'
+  return v;
+})();
+
+const GAS_URL = 'https://script.google.com/macros/s/AKfycby7gH1pJzfZgmYo6ScEkFHoYAbQqOneQDGnb3BJV0pP_Av0lz5WX3SwxKCwZhmnesF9hQ/exec';
+
+function initBrand(){
+  if(BRAND === 'sintropia'){
+    document.body.classList.add('sintropia');
+    document.getElementById('logoTxt').innerHTML = 'Sintropía <span>Social</span>';
+    document.getElementById('logoSub').textContent = 'Teoría de Cambio · Árbol de Problemas';
+    document.getElementById('modBadge').textContent = 'Actividad';
+    document.getElementById('brandSender').textContent = 'Sintropía Social';
+    document.getElementById('consentLabel').innerHTML = 'Acepto recibir información y recursos sobre Teoría de Cambio, empleabilidad social y desarrollo organizacional de <strong>Sintropía Social</strong>.';
+  }
+}
+initBrand();
+
+// ── DRAG & DROP DE TARJETAS ──
+let cardIdCounter = 0;
+const cards = {}; // id -> {el, type, x, y}
+
+function addCard(type, x, y, text){
+  const ca = document.getElementById('canvasArea');
+  const rect = ca.getBoundingClientRect();
+  const cx = x ?? (rect.width/2 - 70 + Math.random()*60-30);
+  const cy = y ?? (type==='effect'? 80 : type==='cause'? rect.height-120 : rect.height/2-20);
+
+  const id = 'c'+(++cardIdCounter);
+  const el = document.createElement('div');
+  el.className = 'card '+type;
+  el.id = id;
+  el.style.left = cx+'px';
+  el.style.top = cy+'px';
+  el.dataset.type = type;
+
+  const placeholder = {
+    central: 'Escribe aquí el problema central…',
+    effect:  'Escribe el efecto o consecuencia…',
+    cause:   'Escribe la causa o raíz del problema…',
+    action:  'Escribe una posibilidad o acción…',
+  };
+
+  el.innerHTML = `<button class="card-del" onclick="removeCard('${id}')" title="Eliminar">×</button>
+    <textarea placeholder="${placeholder[type]}">${text||''}</textarea>`;
+
+  makeDraggable(el, ca);
+  document.getElementById('cardsContainer').appendChild(el);
+  cards[id] = {el, type, x:cx, y:cy};
+  return id;
+}
+
+function removeCard(id){
+  const c = cards[id];
+  if(c){ c.el.remove(); delete cards[id]; }
+}
+
+function makeDraggable(el, container){
+  let startX, startY, startLeft, startTop;
+  el.addEventListener('mousedown', e=>{
+    if(e.target.tagName==='TEXTAREA'||e.target.tagName==='BUTTON') return;
+    e.preventDefault();
+    const rect = container.getBoundingClientRect();
+    startX = e.clientX; startY = e.clientY;
+    startLeft = parseInt(el.style.left)||0;
+    startTop  = parseInt(el.style.top)||0;
+    el.style.zIndex = 50;
+
+    function move(ev){
+      const dx = ev.clientX - startX;
+      const dy = ev.clientY - startY;
+      el.style.left = Math.max(0,Math.min(rect.width-10, startLeft+dx))+'px';
+      el.style.top  = Math.max(0,Math.min(rect.height-10, startTop+dy))+'px';
+    }
+    function up(){
+      el.style.zIndex = 10;
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+    }
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  });
+  // Touch
+  el.addEventListener('touchstart', e=>{
+    if(e.target.tagName==='TEXTAREA'||e.target.tagName==='BUTTON') return;
+    const t = e.touches[0];
+    const rect = container.getBoundingClientRect();
+    startX=t.clientX; startY=t.clientY;
+    startLeft=parseInt(el.style.left)||0; startTop=parseInt(el.style.top)||0;
+    function tmove(ev){
+      ev.preventDefault();
+      const tt=ev.touches[0];
+      el.style.left=Math.max(0,startLeft+(tt.clientX-startX))+'px';
+      el.style.top=Math.max(0,startTop+(tt.clientY-startY))+'px';
+    }
+    function tup(){ el.removeEventListener('touchmove',tmove); el.removeEventListener('touchend',tup); }
+    el.addEventListener('touchmove',tmove,{passive:false});
+    el.addEventListener('touchend',tup);
+  },{passive:true});
+}
+
+// ── RECOLECTAR DATOS ──
+function collectData(){
+  const data={central:[],effects:[],causes:[],actions:[]};
+  Object.values(cards).forEach(c=>{
+    const txt=(c.el.querySelector('textarea')||{value:''}).value.trim();
+    if(!txt) return;
+    if(c.type==='central') data.central.push(txt);
+    else if(c.type==='effect') data.effects.push(txt);
+    else if(c.type==='cause') data.causes.push(txt);
+    else if(c.type==='action') data.actions.push(txt);
+  });
+  return data;
+}
+
+// ── AYUDA IA (Makediag style) ──
+const HELP_TIPS = [
+  {k:['causa','raíz','origen'],r:'Una <em>causa</em> es el factor que genera o contribuye al problema. Pregúntate: ¿por qué ocurre esto? Las causas se colocan debajo del tronco, en las raíces. Pueden ser estructurales (desigualdad, falta de acceso) o inmediatas (escasez de recursos, poca capacitación).'},
+  {k:['efecto','consecuencia','resultado'],r:'Un <em>efecto</em> es lo que ocurre como consecuencia del problema central. Pregúntate: ¿qué pasa si esto no se resuelve? Los efectos van en la copa del árbol. Pueden ser a corto plazo (deserción escolar) o de largo alcance (pérdida de capital humano en la comunidad).'},
+  {k:['problema central','núcleo','tronco'],r:'El <em>problema central</em> es el nodo que conecta causas y efectos. Debe formularse como una situación negativa existente, no como ausencia de solución. Ejemplo incorrecto: "Falta de programas de empleo". Correcto: "Alta tasa de desocupación juvenil en contexto urbano marginal".'},
+  {k:['posibilidad','acción','solución'],r:'Las <em>posibilidades</em> son la cara propositiva: convierten cada causa en una hipótesis de acción. Si la causa es "baja cobertura educativa", la posibilidad podría ser "ampliar rutas de formación no formal con validez curricular". Se trabajan en el árbol de objetivos.'},
+  {k:['árbol','estructura','cómo'],r:'El <em>árbol de problemas</em> tiene tres niveles: raíces (causas), tronco (problema central) y copa (efectos). Empieza siempre por definir el problema central con precisión, luego identifica entre 3 y 5 causas directas y sus respectivos efectos. No agregues más de lo que puedas fundamentar.'},
+  {k:['juventud','joven','empleo','trabajo'],r:'En proyectos de empleabilidad juvenil, el árbol de problemas suele tener como causas: brechas de competencias, barreras de acceso (transporte, capital social, discriminación), precariedad del mercado local. Los efectos más documentados: exclusión económica, migración forzada, incremento de la informalidad. (Weller, 2007; CEPAL, 2020)'},
+  {k:['educación','escuela','docente'],r:'En el campo educativo, identifica si el problema es de <em>acceso</em> (cobertura, barreras físicas), de <em>calidad</em> (metodología, formación docente) o de <em>pertinencia</em> (relevancia del currículo para el contexto). Cada uno genera un árbol distinto con causas y efectos diferenciados.'},
+  {k:['no sé','duda','confundido','orientación'],r:'Está bien no tener todo claro aún. Empieza por escribir en el recuadro central lo que crees que es el problema principal, aunque sea provisional. Luego hazte dos preguntas: <em>¿por qué ocurre esto?</em> (causas) y <em>¿qué consecuencias genera?</em> (efectos). El árbol se va afinando con la reflexión.'},
+  {k:['teoría de cambio','lógica'],r:'El árbol de problemas es el diagnóstico que alimenta la Teoría de Cambio. Una vez que tienes el árbol, conviertes las causas en objetivos específicos y los efectos esperados en resultados e impactos. Es la base metodológica de cualquier marco lógico (Fals Borda, 1987; Rogers, 2014).'},
+];
+
+function findTip(query){
+  const q = query.toLowerCase();
+  for(const tip of HELP_TIPS){
+    if(tip.k.some(k=>q.includes(k))) return tip.r;
+  }
+  return 'El árbol de problemas es una herramienta del análisis situacional. Recuerda: causas debajo (raíces), problema central en el tronco, efectos arriba (copa). Si tienes dudas específicas sobre tu contexto, describe la situación que quieres analizar y te oriento mejor.';
+}
+
+function askHelp(){
+  const q = document.getElementById('helpQuery').value.trim();
+  if(!q){toast('Escribe tu pregunta primero');return;}
+  const bubble = document.getElementById('helpBubble');
+  bubble.innerHTML = '<span style="color:var(--p)">Analizando…</span>';
+  setTimeout(()=>{
+    bubble.innerHTML = findTip(q);
+  }, 600);
+}
+
+// ── MODALES ──
+function showDownload(){ document.getElementById('dlOverlay').classList.add('show'); }
+function showHelp(){ document.getElementById('helpOverlay').classList.add('show'); }
+function showEmail(){ document.getElementById('emailOverlay').classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+// ── DESCARGA ──
+function getTextContent(){
+  const d = collectData();
+  const brand = BRAND==='sintropia'?'Sintropía Social':'David Salgado';
+  let txt = `ÁRBOL DE PROBLEMAS Y POSIBILIDADES\n${brand} · Teoría de Cambio\n${new Date().toLocaleDateString('es-MX')}\n\n`;
+  if(d.central.length) txt += `PROBLEMA CENTRAL\n${d.central.join('\n')}\n\n`;
+  if(d.effects.length) txt += `EFECTOS / CONSECUENCIAS\n${d.effects.map((v,i)=>`${i+1}. ${v}`).join('\n')}\n\n`;
+  if(d.causes.length) txt += `CAUSAS / RAÍCES\n${d.causes.map((v,i)=>`${i+1}. ${v}`).join('\n')}\n\n`;
+  if(d.actions.length) txt += `POSIBILIDADES / ACCIONES\n${d.actions.map((v,i)=>`${i+1}. ${v}`).join('\n')}\n`;
+  return txt;
+}
+
+function download(fmt){
+  const d = collectData();
+  if(fmt==='png'||fmt==='pdf'){
+    // Captura visual via print
+    if(fmt==='pdf'){
+      window.print();
+    } else {
+      toast('PNG: usa Ctrl+P → "Guardar como PDF" y luego convierte. O usa la opción PDF directa.');
+    }
+    closeModal('dlOverlay');
+    return;
+  }
+  if(fmt==='csv'){
+    const rows=[['Tipo','Contenido'],
+      ...d.central.map(v=>['Problema central',v]),
+      ...d.effects.map(v=>['Efecto',v]),
+      ...d.causes.map(v=>['Causa',v]),
+      ...d.actions.map(v=>['Posibilidad/Acción',v])
+    ];
+    const csv = rows.map(r=>r.map(c=>'"'+c.replace(/"/g,'""')+'"').join(',')).join('\n');
+    blob('arbol-problemas.csv','text/csv',csv);
+  } else if(fmt==='xlsx'){
+    // Genera CSV con extensión xlsx (Excel lo abre)
+    const rows=[['Tipo','Contenido'],
+      ...d.central.map(v=>['Problema central',v]),
+      ...d.effects.map(v=>['Efecto',v]),
+      ...d.causes.map(v=>['Causa',v]),
+      ...d.actions.map(v=>['Posibilidad/Acción',v])
+    ];
+    const csv = rows.map(r=>r.join('\t')).join('\n');
+    blob('arbol-problemas.xls','application/vnd.ms-excel','﻿'+csv);
+  } else if(fmt==='docx'||fmt==='sheets'){
+    blob('arbol-problemas.txt','text/plain',getTextContent());
+    toast(fmt==='sheets'?'Descargado como texto — importa en Google Sheets vía Archivo > Importar':'Descargado como texto — pega en Word para formatear');
+  }
+  closeModal('dlOverlay');
+}
+
+function blob(name,type,content){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── ENVÍO POR CORREO ──
+function sendEmail(){
+  const name=document.getElementById('emailName').value.trim();
+  const addr=document.getElementById('emailAddr').value.trim();
+  const notes=document.getElementById('emailNotes').value.trim();
+  const consent=document.getElementById('emailConsent').checked;
+  if(!name||!addr){toast('Ingresa nombre y correo');return;}
+  if(!addr.includes('@')){toast('Correo no válido');return;}
+
+  const d=collectData();
+  const payload={
+    action:'enviarArbol',
+    nombre:name, email:addr, notas:notes, consent,
+    marca:BRAND,
+    actividad:'arbol-problemas',
+    problema_central:d.central.join(' | '),
+    efectos:d.effects.join(' | '),
+    causas:d.causes.join(' | '),
+    posibilidades:d.actions.join(' | '),
+  };
+  if(GAS_URL){
+    fetch(GAS_URL,{method:'POST',body:JSON.stringify(payload)}).catch(()=>{});
+  }
+  toast('¡Enviado! Revisa tu correo en unos minutos.');
+  closeModal('emailOverlay');
+}
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+// ── INIT: agregar tarjeta ejemplo ──
+window.addEventListener('DOMContentLoaded',()=>{
+  addCard('central',null,null,'');
+  addCard('effect',null,null,'');
+  addCard('cause',null,null,'');
+});
+</script>
+
+<style>
+@media print{
+  .sidebar,.hdr-badge{display:none!important;}
+  .app{display:block!important;}
+  .canvas-area{width:100%!important;height:90vh!important;}
+  #cardsContainer .card{print-color-adjust:exact;}
+}
+</style>
+</body>
+</html>
