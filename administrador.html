@@ -397,6 +397,69 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
     </a>
   </div>
 
+  <!-- Actividades independientes -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="card-lbl">Actividades independientes</div>
+    <h3 style="margin-bottom:.4rem;">Generar liga para una actividad</h3>
+    <p style="font-size:.82rem;color:var(--soft);margin-bottom:1rem;">
+      Copia la liga con la versión de marca que necesites y compártela directamente con participantes o grupos.
+      No requieren código de acceso.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+
+      <!-- Árbol de Problemas -->
+      <div style="border:1px solid var(--rule);border-radius:3px;padding:1rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;">🌳 Árbol de Problemas y Posibilidades</div>
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;">
+          <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);min-width:50px;">Marca</label>
+          <select id="arbol-marca" onchange="actualizarLigaArbol()" style="border:1px solid var(--rule);padding:.35rem .6rem;font-size:.8rem;flex:1;">
+            <option value="david">David Salgado</option>
+            <option value="sintropia">Sintropía Social</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:.4rem;align-items:center;">
+          <input type="text" id="liga-arbol" readonly
+                 style="flex:1;border:1px solid var(--rule);padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--soft);background:#fafafa;border-radius:2px;"
+                 value="actividad-arbol-problemas.html?marca=david"/>
+          <button onclick="copiarLiga('liga-arbol')"
+                  style="padding:.35rem .8rem;background:var(--dk);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;">
+            Copiar
+          </button>
+          <a id="abrir-arbol" href="actividad-arbol-problemas.html?marca=david" target="_blank"
+             style="padding:.35rem .7rem;background:var(--pbg);color:var(--p);border:1px solid var(--p);font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:2px;white-space:nowrap;">
+            Abrir
+          </a>
+        </div>
+      </div>
+
+      <!-- Tabla de Teoría de Cambio -->
+      <div style="border:1px solid var(--rule);border-radius:3px;padding:1rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:.5rem;">📊 Tabla de Teoría de Cambio</div>
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;">
+          <label style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);min-width:50px;">Marca</label>
+          <select id="tc-marca" onchange="actualizarLigaTC()" style="border:1px solid var(--rule);padding:.35rem .6rem;font-size:.8rem;flex:1;">
+            <option value="david">David Salgado</option>
+            <option value="sintropia">Sintropía Social</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:.4rem;align-items:center;">
+          <input type="text" id="liga-tc" readonly
+                 style="flex:1;border:1px solid var(--rule);padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--soft);background:#fafafa;border-radius:2px;"
+                 value="actividad-teoria-cambio.html?marca=david"/>
+          <button onclick="copiarLiga('liga-tc')"
+                  style="padding:.35rem .8rem;background:var(--dk);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;">
+            Copiar
+          </button>
+          <a id="abrir-tc" href="actividad-teoria-cambio.html?marca=david" target="_blank"
+             style="padding:.35rem .7rem;background:var(--pbg);color:var(--p);border:1px solid var(--p);font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:2px;white-space:nowrap;">
+            Abrir
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Tabs -->
   <div class="tabs">
     <div class="tab active" onclick="switchFormTab('individual')">Alta individual</div>
@@ -957,6 +1020,29 @@ function showSection(id) {
   if (id === 'publicaciones') cargarPublicaciones();
   if (id === 'portafolio') cargarPortafolio();
   if (id === 'oficios') cargarOficiosAdmin();
+}
+
+// ── ACTIVIDADES INDEPENDIENTES ────────────────────────────────
+function actualizarLigaArbol() {
+  const marca = document.getElementById('arbol-marca').value;
+  const liga = `actividad-arbol-problemas.html?marca=${marca}`;
+  document.getElementById('liga-arbol').value = liga;
+  document.getElementById('abrir-arbol').href = liga;
+}
+function actualizarLigaTC() {
+  const marca = document.getElementById('tc-marca').value;
+  const liga = `actividad-teoria-cambio.html?marca=${marca}`;
+  document.getElementById('liga-tc').value = liga;
+  document.getElementById('abrir-tc').href = liga;
+}
+function copiarLiga(inputId) {
+  const input = document.getElementById(inputId);
+  navigator.clipboard.writeText(input.value).then(() => {
+    toast('Liga copiada al portapapeles');
+  }).catch(() => {
+    input.select(); document.execCommand('copy');
+    toast('Liga copiada');
+  });
 }
 
 // ── TABS FORMACIÓN ────────────────────────────────────────────
