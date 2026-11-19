@@ -419,8 +419,8 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
         </div>
         <div style="display:flex;gap:.4rem;align-items:center;">
           <input type="text" id="liga-arbol" readonly
-                 style="flex:1;border:1px solid var(--rule);padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--soft);background:#fafafa;border-radius:2px;"
-                 value="actividad-arbol-problemas.html?marca=david"/>
+                 style="flex:1;min-width:0;border:1px solid var(--rule);padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ink);background:#fafafa;border-radius:2px;overflow:hidden;text-overflow:ellipsis;"
+                 value=""/>
           <button onclick="copiarLiga('liga-arbol')"
                   style="padding:.35rem .8rem;background:var(--dk);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;">
             Copiar
@@ -444,8 +444,8 @@ footer{border-top:1px solid var(--rule);padding:1.2rem 1.5rem;
         </div>
         <div style="display:flex;gap:.4rem;align-items:center;">
           <input type="text" id="liga-tc" readonly
-                 style="flex:1;border:1px solid var(--rule);padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--soft);background:#fafafa;border-radius:2px;"
-                 value="actividad-teoria-cambio.html?marca=david"/>
+                 style="flex:1;min-width:0;border:1px solid var(--rule);padding:.35rem .6rem;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--ink);background:#fafafa;border-radius:2px;overflow:hidden;text-overflow:ellipsis;"
+                 value=""/>
           <button onclick="copiarLiga('liga-tc')"
                   style="padding:.35rem .8rem;background:var(--dk);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap;">
             Copiar
@@ -969,6 +969,8 @@ window.addEventListener('DOMContentLoaded', () => {
 function onPanelReady() {
   cargarPublicaciones();
   cargarStats();
+  actualizarLigaArbol();
+  actualizarLigaTC();
 }
 
 // ── OJO CONTRASEÑA ───────────────────────────────────────────
@@ -1016,22 +1018,28 @@ function showSection(id) {
   document.querySelectorAll('.pnl').forEach(p => p.classList.remove('active'));
   document.getElementById('s-'+id).classList.add('active');
   event.target.classList.add('active');
-  if (id === 'formacion') cargarStats();
+  if (id === 'formacion') { cargarStats(); actualizarLigaArbol(); actualizarLigaTC(); }
   if (id === 'publicaciones') cargarPublicaciones();
   if (id === 'portafolio') cargarPortafolio();
   if (id === 'oficios') cargarOficiosAdmin();
 }
 
 // ── ACTIVIDADES INDEPENDIENTES ────────────────────────────────
+function baseUrl() {
+  // URL completa del sitio, sin el archivo actual
+  const parts = location.href.split('/');
+  parts.pop();
+  return parts.join('/');
+}
 function actualizarLigaArbol() {
   const marca = document.getElementById('arbol-marca').value;
-  const liga = `actividad-arbol-problemas.html?marca=${marca}`;
+  const liga = `${baseUrl()}/actividad-arbol-problemas.html?marca=${marca}`;
   document.getElementById('liga-arbol').value = liga;
   document.getElementById('abrir-arbol').href = liga;
 }
 function actualizarLigaTC() {
   const marca = document.getElementById('tc-marca').value;
-  const liga = `actividad-teoria-cambio.html?marca=${marca}`;
+  const liga = `${baseUrl()}/actividad-teoria-cambio.html?marca=${marca}`;
   document.getElementById('liga-tc').value = liga;
   document.getElementById('abrir-tc').href = liga;
 }
