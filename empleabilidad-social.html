@@ -1606,9 +1606,9 @@ const POR_MOD = {
   6:['sm6','m6t1','m6t2','m6t3','m6ev'],
 };
 
-let USER = JSON.parse(localStorage.getItem('hpi_user')||'null');
-let visitados = JSON.parse(localStorage.getItem('hpi_visitados')||'[]');
-let modsOK = JSON.parse(localStorage.getItem('hpi_mods_ok')||'[]');
+let USER = JSON.parse(localStorage.getItem('es_user')||'null');
+let visitados = JSON.parse(localStorage.getItem('es_visitados')||'[]');
+let modsOK = JSON.parse(localStorage.getItem('es_mods_ok')||'[]');
 
 // ══ ACCESS ══
 function entrar() {
@@ -1616,12 +1616,12 @@ function entrar() {
   if (tok.length < 5) { mostrarErr('Token demasiado corto'); return; }
 
   if (GAS_URL) {
-    fetch(GAS_URL + '?action=validarToken&token=' + encodeURIComponent(tok) + '&curso=Hablar para Influir')
+    fetch(GAS_URL + '?action=validarToken&token=' + encodeURIComponent(tok) + '&curso=Empleabilidad Social')
       .then(r => r.json())
       .then(d => {
         if (d.valida) {
           USER = d;
-          localStorage.setItem('hpi_user', JSON.stringify(d));
+          localStorage.setItem('es_user', JSON.stringify(d));
           iniciarCurso();
         } else {
           mostrarErr('Token no encontrado. Verifica que lo escribiste correctamente.');
@@ -1670,7 +1670,7 @@ function ir(vid) {
   if (t) t.style.display = 'block';
 
   if (!visitados.includes(vid)) visitados.push(vid);
-  localStorage.setItem('hpi_visitados', JSON.stringify(visitados));
+  localStorage.setItem('es_visitados', JSON.stringify(visitados));
 
   actualizarSidebar(vid);
   window.scrollTo(0,0);
@@ -2095,7 +2095,7 @@ function mostrarResultadoEval(containerId, aciertos, total, numMod) {
 
 function desbloquearMod(numAprobado) {
   if (!modsOK.includes(numAprobado)) modsOK.push(numAprobado);
-  localStorage.setItem('hpi_mods_ok', JSON.stringify(modsOK));
+  localStorage.setItem('es_mods_ok', JSON.stringify(modsOK));
   if (GAS_URL && USER) {
     fetch(GAS_URL, {method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({action:'actualizarProgreso',id:USER.id||USER.token,curso:'Empleabilidad Social',modulo:'M'+numAprobado,estado:'completado',calificacion:100,totalModulos:6})
@@ -2423,14 +2423,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Acceso admin directo con ?admin=1
   if (new URLSearchParams(location.search).get('admin') === '1') {
     USER = { nombre: 'David', email: 'd.salgado.lpz@gmail.com', rol: 'admin', valida: true };
-    localStorage.setItem('hpi_user', JSON.stringify(USER));
+    localStorage.setItem('es_user', JSON.stringify(USER));
     iniciarCurso();
     return;
   }
   iniciarLaberintos();
   // Sesiones sin validación del GAS se descartan (seguridad)
   if (USER && !USER.valida && USER.rol !== 'admin') {
-    localStorage.removeItem('hpi_user');
+    localStorage.removeItem('es_user');
     USER = null;
   }
   if (USER && (USER.valida || USER.rol === 'admin')) iniciarCurso();
