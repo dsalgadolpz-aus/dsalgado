@@ -334,21 +334,17 @@ function initBrand(){
 initBrand();
 
 // ── DEFINICIÓN DE LA TABLA ──
-// Columnas: cada columna tiene id, label y los elementos que acepta (por nivel)
-// Orden correcto izquierda → derecha según Marco Lógico / TdC:
-// Problema (necesidad) → Causas (contexto) → Población objetivo →
-// Actividades → Productos → Resultados → Objetivo específico → Fin (propósito)
-// + Indicadores, Supuestos, Medios de verificación por nivel (filas)
+// Regla simple: 1 pieza → 1 columna. Orden correcto izquierda→derecha.
 
 const COLUMNS = [
-  {id:'problema',   label:'Problema\n(necesidad)',    color:'#E8F5E9', th:'#2E7D32'},
-  {id:'causas',     label:'Causas\n(contexto)',        color:'#FFF3E0', th:'#E65100'},
-  {id:'poblacion',  label:'Población\nobjetivo',       color:'#E3F2FD', th:'#1565C0'},
-  {id:'actividades',label:'Actividades',               color:'#FCE4EC', th:'#C62828'},
-  {id:'productos',  label:'Productos',                 color:'#F3E5F5', th:'#6A1B9A'},
-  {id:'resultados', label:'Resultados',                color:'#E8EAF6', th:'#283593'},
-  {id:'obj_esp',    label:'Objetivo\nespecífico',      color:'#E0F7FA', th:'#00695C'},
-  {id:'fin',        label:'Fin\n(propósito)',           color:'#FFF8E1', th:'#F57F17'},
+  {id:'problema',    label:'Problema\n(necesidad)',   color:'#E8F5E9', th:'#2E7D32'},
+  {id:'causas',      label:'Causas\n(contexto)',       color:'#FFF3E0', th:'#E65100'},
+  {id:'poblacion',   label:'Población\nobjetivo',      color:'#E3F2FD', th:'#1565C0'},
+  {id:'actividades', label:'Actividades',              color:'#FCE4EC', th:'#C62828'},
+  {id:'productos',   label:'Productos',                color:'#F3E5F5', th:'#6A1B9A'},
+  {id:'resultados',  label:'Resultados',               color:'#E8EAF6', th:'#283593'},
+  {id:'obj_esp',     label:'Objetivo\nespecífico',     color:'#E0F7FA', th:'#00695C'},
+  {id:'fin',         label:'Fin\n(propósito)',          color:'#FFF8E1', th:'#F57F17'},
 ];
 
 const ROWS_FILL = [
@@ -358,36 +354,34 @@ const ROWS_FILL = [
   {id:'sup',    label:'Supuestos'},
 ];
 
-// Piezas del rompecabezas (mapeadas a columnas)
+// 8 piezas, una por columna — relación 1:1 clara y completable
 const PIECES = [
-  {id:'p_problema',    colId:'problema',    label:'Problema (necesidad)',   icon:'👥', type:'type-c'},
-  {id:'p_causas',      colId:'causas',      label:'Causas (contexto)',      icon:'⚠️', type:'type-b'},
-  {id:'p_poblacion',   colId:'poblacion',   label:'Población objetivo',    icon:'💡', type:'type-c'},
-  {id:'p_actividades', colId:'actividades', label:'Actividades',            icon:'⚙️', type:'type-a'},
-  {id:'p_productos',   colId:'productos',   label:'Productos',              icon:'📋', type:'type-b'},
-  {id:'p_resultados',  colId:'resultados',  label:'Resultados',             icon:'→',  type:'type-b'},
-  {id:'p_obj_esp',     colId:'obj_esp',     label:'Objetivo específico',   icon:'✅', type:'type-a'},
-  {id:'p_fin',         colId:'fin',         label:'Fin (propósito)',        icon:'⭐', type:'type-b'},
-  {id:'p_ind_act',     colId:'actividades', label:'Indicadores de\nproducto', icon:'🎯', type:'type-a'},
-  {id:'p_ind_res',     colId:'resultados',  label:'Indicadores de\nresultados',icon:'📈',type:'type-c'},
-  {id:'p_ind_obj',     colId:'obj_esp',     label:'Indicadores de\nobjetivo', icon:'📊', type:'type-b'},
-  {id:'p_sup_act',     colId:'actividades', label:'Supuestos de\nproducto',  icon:'🤝', type:'type-d'},
-  {id:'p_sup_res',     colId:'resultados',  label:'Supuestos de\nresultados',icon:'🤝', type:'type-d'},
-  {id:'p_obj_lp',      colId:'fin',         label:'Objetivo de\nlargo plazo',icon:'🎯', type:'type-a'},
-  {id:'p_ind_imp',     colId:'fin',         label:'Indicadores\nde impacto', icon:'📈', type:'type-a'},
-  {id:'p_sup_imp',     colId:'fin',         label:'Supuestos\nde impacto',   icon:'👥', type:'type-a'},
-  {id:'p_med_ver1',    colId:'resultados',  label:'Medios de\nverificación', icon:'📄', type:'type-c'},
-  {id:'p_med_ver2',    colId:'actividades', label:'Medios de\nverificación', icon:'📄', type:'type-c'},
+  {id:'p_problema',    colId:'problema',    label:'Problema (necesidad)',  icon:'⚠️', type:'type-c',
+   hint:'Situación negativa existente que el proyecto busca resolver.'},
+  {id:'p_causas',      colId:'causas',      label:'Causas (contexto)',     icon:'🔍', type:'type-b',
+   hint:'Factores que originan o mantienen el problema.'},
+  {id:'p_poblacion',   colId:'poblacion',   label:'Población objetivo',   icon:'👥', type:'type-c',
+   hint:'Personas o grupos a quienes va dirigida la intervención.'},
+  {id:'p_actividades', colId:'actividades', label:'Actividades',           icon:'⚙️', type:'type-a',
+   hint:'Acciones concretas que ejecuta el equipo del proyecto.'},
+  {id:'p_productos',   colId:'productos',   label:'Productos',             icon:'📦', type:'type-b',
+   hint:'Bienes y servicios que genera el proyecto (entregables).'},
+  {id:'p_resultados',  colId:'resultados',  label:'Resultados',            icon:'📈', type:'type-b',
+   hint:'Cambios en conocimientos, actitudes o comportamientos de la población.'},
+  {id:'p_obj_esp',     colId:'obj_esp',     label:'Objetivo específico',  icon:'✅', type:'type-a',
+   hint:'Meta de corto/mediano plazo que el proyecto se propone alcanzar.'},
+  {id:'p_fin',         colId:'fin',         label:'Fin (propósito)',       icon:'⭐', type:'type-b',
+   hint:'Impacto de largo plazo al que el proyecto contribuye.'},
 ];
 
-// Estado del puzzle
-let placedMap = {}; // colId -> [pieceIds colocadas]
+// Estado del puzzle: colId → pieceId colocada (o null)
+let placedMap = {};  // {colId: pieceId | null}
 let extraCols = 0;
 
 // ── RENDERIZAR PUZZLE ──
 function buildPuzzle(){
   placedMap = {};
-  COLUMNS.forEach(c=> placedMap[c.id]=[]);
+  COLUMNS.forEach(c=> placedMap[c.id] = null);
 
   // Cabecera
   const head = document.getElementById('tcHead');
@@ -400,12 +394,13 @@ function buildPuzzle(){
     head.appendChild(th);
   });
 
-  // Cuerpo (una sola fila de drop zones)
+  // Cuerpo — una celda por columna, acepta exactamente una pieza
   const body = document.getElementById('tcBody');
   body.innerHTML = '';
   const tr = document.createElement('tr');
   COLUMNS.forEach(c=>{
     const td = document.createElement('td');
+    td.id = 'cell_'+c.id;
     td.dataset.colId = c.id;
     td.style.background = c.color;
     td.innerHTML = `<div class="drop-hint">Arrastra aquí</div><div class="drop-zone-inner" id="dz_${c.id}"></div>`;
@@ -424,36 +419,40 @@ function buildPuzzle(){
     el.id = 'piece_'+p.id;
     el.draggable = true;
     el.dataset.pieceId = p.id;
-    el.innerHTML = `<span class="piece-icon">${p.icon}</span>${p.label.replace('\n','<br>')}`;
+    el.title = p.hint;
+    el.innerHTML = `<span class="piece-icon">${p.icon}</span>${p.label}`;
     setupDragPiece(el, p.id);
     pool.appendChild(el);
   });
 }
 
 let dragPieceId = null;
+
 function setupDragPiece(el, pieceId){
   el.addEventListener('dragstart', e=>{
     dragPieceId = pieceId;
     e.dataTransfer.effectAllowed='move';
+    el.style.opacity='.5';
   });
+  el.addEventListener('dragend', ()=>{ el.style.opacity=''; dragPieceId=null; });
+
   // Touch drag
-  let touchStartX, touchStartY, clone;
+  let clone=null;
   el.addEventListener('touchstart', e=>{
     dragPieceId = pieceId;
     const t = e.touches[0];
-    touchStartX=t.clientX; touchStartY=t.clientY;
-    clone=el.cloneNode(true);
-    clone.style.cssText=`position:fixed;opacity:.8;pointer-events:none;z-index:999;width:${el.offsetWidth}px;top:${t.clientY-20}px;left:${t.clientX-60}px;`;
+    clone = el.cloneNode(true);
+    clone.style.cssText=`position:fixed;opacity:.85;pointer-events:none;z-index:999;
+      width:${el.offsetWidth}px;top:${t.clientY-20}px;left:${t.clientX-60}px;transform:rotate(2deg);`;
     document.body.appendChild(clone);
   },{passive:true});
   el.addEventListener('touchmove', e=>{
     e.preventDefault();
     const t=e.touches[0];
     if(clone){clone.style.top=(t.clientY-20)+'px';clone.style.left=(t.clientX-60)+'px';}
-    // find drop target
-    const els = document.elementsFromPoint(t.clientX,t.clientY);
     document.querySelectorAll('.tc-table td').forEach(td=>td.classList.remove('drag-over'));
-    const td = els.find(x=>x.tagName==='TD'&&x.dataset.colId);
+    const els=document.elementsFromPoint(t.clientX,t.clientY);
+    const td=els.find(x=>x.tagName==='TD'&&x.dataset.colId);
     if(td) td.classList.add('drag-over');
   },{passive:false});
   el.addEventListener('touchend', e=>{
@@ -469,119 +468,143 @@ function setupDragPiece(el, pieceId){
 
 function setupDropZone(td, colId){
   td.addEventListener('dragover', e=>{e.preventDefault();e.dataTransfer.dropEffect='move';td.classList.add('drag-over');});
-  td.addEventListener('dragleave', ()=>td.classList.remove('drag-over'));
+  td.addEventListener('dragleave', e=>{
+    // solo quitar si sale de la celda real (no de un hijo)
+    if(!td.contains(e.relatedTarget)) td.classList.remove('drag-over');
+  });
   td.addEventListener('drop', e=>{e.preventDefault();td.classList.remove('drag-over');dropPiece(colId);});
 }
 
 function dropPiece(colId){
   if(!dragPieceId) return;
   const pieceEl = document.getElementById('piece_'+dragPieceId);
-  if(!pieceEl||pieceEl.classList.contains('placed')) return;
+  if(!pieceEl) return;
 
-  // Crear mini-etiqueta en la celda
-  const dz = document.getElementById('dz_'+colId);
-  const tag = document.createElement('div');
-  tag.style.cssText='display:inline-flex;align-items:center;gap:.3rem;background:#fff;border:1px solid #ccc;border-radius:3px;padding:.2rem .5rem;margin:.15rem;font-size:.7rem;cursor:pointer;';
-  const piece = PIECES.find(p=>p.id===dragPieceId);
-  tag.innerHTML = `${piece.icon} ${piece.label.replace('\n',' ')} <span style="color:#e53e3e;font-weight:700;margin-left:.2rem;" title="Quitar">×</span>`;
-  tag.querySelector('span').addEventListener('click',()=>{
-    tag.remove();
-    placedMap[colId] = placedMap[colId].filter(id=>id!==dragPieceId);
-    pieceEl.classList.remove('placed');
-    const cell = document.querySelector(`td[data-col-id="${colId}"]`)||document.querySelector(`td[data-col-id="${colId}"]`)||document.querySelector(`.tc-table td[data-col-id="${colId}"]`);
-    if(cell) cell.classList.remove('occupied','correct','wrong');
-    updateDropHint(colId);
+  // Si la celda ya tiene una pieza, la devuelve al pool
+  const prevPieceId = placedMap[colId];
+  if(prevPieceId){
+    const prevEl = document.getElementById('piece_'+prevPieceId);
+    if(prevEl){ prevEl.classList.remove('placed'); prevEl.style.opacity=''; }
+  }
+
+  // Si la pieza ya estaba en otra celda, la limpia de ahí
+  Object.keys(placedMap).forEach(cid=>{
+    if(placedMap[cid]===dragPieceId && cid!==colId){
+      placedMap[cid]=null;
+      renderCell(cid);
+    }
   });
 
-  // Buscar la celda td con dataset colId
-  const allTds = document.querySelectorAll('.tc-table td');
-  let targetTd=null;
-  allTds.forEach(td=>{if(td.dataset.colId===colId) targetTd=td;});
-  if(targetTd) targetTd.classList.add('occupied');
-
-  dz.appendChild(tag);
-  placedMap[colId].push(dragPieceId);
+  placedMap[colId] = dragPieceId;
   pieceEl.classList.add('placed');
-  updateDropHint(colId);
+  renderCell(colId);
   dragPieceId=null;
 }
 
-function updateDropHint(colId){
-  const dz=document.getElementById('dz_'+colId);
-  const td=dz?.closest('td');
-  if(!td) return;
-  const hint=td.querySelector('.drop-hint');
-  if(!hint) return;
-  hint.style.display = placedMap[colId]&&placedMap[colId].length>0?'none':'flex';
+function renderCell(colId){
+  const td = document.getElementById('cell_'+colId);
+  const dz = document.getElementById('dz_'+colId);
+  const hint = td.querySelector('.drop-hint');
+  const pieceId = placedMap[colId];
+
+  // Limpiar zona
+  dz.innerHTML='';
+  td.classList.remove('occupied','correct','wrong');
+
+  if(!pieceId){
+    hint.style.display='flex';
+    return;
+  }
+
+  hint.style.display='none';
+  td.classList.add('occupied');
+
+  const piece = PIECES.find(p=>p.id===pieceId);
+  const tag = document.createElement('div');
+  tag.style.cssText='display:flex;align-items:center;gap:.4rem;background:#fff;border:1px solid #ddd;'+
+    'border-radius:3px;padding:.3rem .6rem;font-size:.75rem;width:100%;justify-content:space-between;';
+  tag.innerHTML=`<span>${piece.icon} ${piece.label}</span>
+    <span data-remove="${colId}" style="color:#e53e3e;font-weight:700;cursor:pointer;padding:0 .2rem;font-size:.9rem;" title="Quitar">×</span>`;
+  tag.querySelector('[data-remove]').addEventListener('click', ()=>{
+    placedMap[colId]=null;
+    const pEl=document.getElementById('piece_'+pieceId);
+    if(pEl){pEl.classList.remove('placed');pEl.style.opacity='';}
+    renderCell(colId);
+    // limpiar feedback visual de esta celda
+    td.classList.remove('correct','wrong');
+  });
+  dz.appendChild(tag);
 }
 
 // ── VERIFICAR ──
 function checkPuzzle(){
   let correct=0, wrong=0, empty=0;
+
   COLUMNS.forEach(c=>{
-    const td=document.querySelector(`.tc-table td[data-col-id="${c.id}"]`);
-    const placed=placedMap[c.id]||[];
-    if(placed.length===0){empty++;if(td){td.classList.remove('correct','wrong');} return;}
-    // Piezas correctas para esta columna
-    const correctPieces=PIECES.filter(p=>p.colId===c.id).map(p=>p.id);
-    const allCorrect=placed.every(id=>correctPieces.includes(id));
-    if(allCorrect&&placed.length>0){correct++;if(td){td.classList.remove('wrong');td.classList.add('correct');}}
-    else{wrong++;if(td){td.classList.remove('correct');td.classList.add('wrong');}}
+    const td=document.getElementById('cell_'+c.id);
+    const placed=placedMap[c.id];
+    if(!placed){
+      empty++;
+      td.classList.remove('correct','wrong');
+      return;
+    }
+    if(placed===('p_'+c.id)){
+      correct++;
+      td.classList.remove('wrong'); td.classList.add('correct');
+    } else {
+      wrong++;
+      td.classList.remove('correct'); td.classList.add('wrong');
+    }
   });
 
   const fb=document.getElementById('fbBar');
   fb.className='fb-bar show';
 
-  const total=COLUMNS.length;
   if(wrong===0&&empty===0){
     fb.className='fb-bar ok show';
-    fb.innerHTML=`✓ ¡Perfecto! Todos los elementos están en su lugar. <strong>Ahora puedes comenzar a llenar tu Teoría de Cambio.</strong>`;
+    fb.innerHTML=`✓ ¡Perfecto! Colocaste los 8 elementos correctamente. <strong>Ahora llena tu Teoría de Cambio.</strong>`;
     setTimeout(()=>{ document.getElementById('addColOverlay').classList.add('show'); },800);
-  } else if(wrong>0&&correct>0){
-    fb.className='fb-bar warn show';
-    fb.innerHTML=`Tienes <strong>${correct} columnas correctas</strong> y <strong>${wrong} con elementos que no corresponden</strong>. No importa cuántas veces lo intentes — revisa las marcadas en rojo y vuelve a colocar los bloques.`;
-  } else if(wrong>0){
-    fb.className='fb-bar warn show';
-    fb.innerHTML=`Hay <strong>${wrong} columnas con elementos incorrectos</strong>. Mira cuáles están en rojo e intenta de nuevo.`;
   } else {
-    fb.className='fb-bar info show';
-    fb.innerHTML=`Tienes ${correct} columnas con piezas y ${empty} vacías. Recuerda colocar al menos un bloque en cada columna.`;
+    const parts=[];
+    if(correct>0) parts.push(`<strong>${correct} correctos ✓</strong>`);
+    if(wrong>0)   parts.push(`<strong>${wrong} incorrectos ✗</strong>`);
+    if(empty>0)   parts.push(`<strong>${empty} vacíos</strong>`);
+    fb.className='fb-bar warn show';
+    fb.innerHTML=`${parts.join(', ')}. Las celdas en rojo tienen una pieza que no corresponde — quítala con × y vuelve a intentarlo.`;
   }
 }
 
 function resetPuzzle(){
-  placedMap={};
   COLUMNS.forEach(c=>{
-    placedMap[c.id]=[];
-    const dz=document.getElementById('dz_'+c.id);
-    if(dz) dz.innerHTML='';
-    const td=document.querySelector(`.tc-table td[data-col-id="${c.id}"]`);
-    if(td){td.classList.remove('occupied','correct','wrong');}
-    updateDropHint(c.id);
+    placedMap[c.id]=null;
+    renderCell(c.id);
+    const td=document.getElementById('cell_'+c.id);
+    if(td) td.classList.remove('correct','wrong');
   });
-  document.querySelectorAll('.piece').forEach(el=>el.classList.remove('placed'));
+  document.querySelectorAll('.piece').forEach(el=>{el.classList.remove('placed');el.style.opacity='';});
   const fb=document.getElementById('fbBar');
   fb.className='fb-bar info show';
-  fb.textContent='Arrastra los bloques a la columna que les corresponda.';
+  fb.textContent='Arrastra cada bloque a la columna donde crees que va.';
 }
 
 function addExtraCol(){
   extraCols++;
   const newCol={id:'extra_'+extraCols, label:`Componente ${extraCols}`, color:'#FAFAFA', th:'#555'};
   COLUMNS.push(newCol);
-  placedMap[newCol.id]=[];
+  placedMap[newCol.id]=null;
   const head=document.getElementById('tcHead');
   const th=document.createElement('th');
   th.style.background=newCol.th; th.textContent=newCol.label; th.dataset.colId=newCol.id;
   head.appendChild(th);
   const tr=document.querySelector('#tcBody tr');
   const td=document.createElement('td');
+  td.id='cell_'+newCol.id;
   td.dataset.colId=newCol.id; td.style.background=newCol.color;
   td.innerHTML=`<div class="drop-hint">Arrastra aquí</div><div class="drop-zone-inner" id="dz_${newCol.id}"></div>`;
   setupDropZone(td,newCol.id);
   tr.appendChild(td);
   closeModal('addColOverlay');
-  toast('Columna agregada. Continúa verificando cuando estés listo.');
+  toast('Columna agregada.');
 }
 
 function goToFill(){
