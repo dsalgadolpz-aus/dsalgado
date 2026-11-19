@@ -422,63 +422,71 @@ const ROWS_FILL = [
 ];
 
 // 8 piezas CORRECTAS (colId ≠ null) + 18 DISTRACTORES (colId: null)
-// Las correctas tienen el mismo id de columna que colId
+// Todas van en gris (type-dist) y sin ícono — el alumno descifra por el texto
 const PIECES = [
-  // ── CORRECTAS ──
-  {id:'p_problema',    colId:'problema',    label:'Problema (necesidad)',   icon:'⚠️', type:'type-c',
-   hint:'Situación negativa existente que el proyecto busca resolver.'},
-  {id:'p_causas',      colId:'causas',      label:'Causas (contexto)',      icon:'🔍', type:'type-b',
-   hint:'Factores que originan o mantienen el problema.'},
-  {id:'p_poblacion',   colId:'poblacion',   label:'Población objetivo',    icon:'👥', type:'type-c',
-   hint:'Personas o grupos a quienes va dirigida la intervención.'},
-  {id:'p_actividades', colId:'actividades', label:'Actividades',            icon:'⚙️', type:'type-a',
-   hint:'Acciones concretas que ejecuta el equipo del proyecto.'},
-  {id:'p_productos',   colId:'productos',   label:'Productos',              icon:'📦', type:'type-b',
-   hint:'Bienes y servicios que genera el proyecto (entregables).'},
-  {id:'p_resultados',  colId:'resultados',  label:'Resultados',             icon:'📈', type:'type-b',
-   hint:'Cambios en conocimientos, actitudes o comportamientos de la población.'},
-  {id:'p_obj_esp',     colId:'obj_esp',     label:'Objetivo específico',   icon:'✅', type:'type-a',
-   hint:'Meta de corto/mediano plazo que el proyecto se propone alcanzar.'},
-  {id:'p_fin',         colId:'fin',         label:'Fin (propósito)',        icon:'⭐', type:'type-b',
-   hint:'Impacto de largo plazo al que el proyecto contribuye.'},
+  // ── CORRECTAS: label = pista pedagógica, no el nombre directo ──
+  {id:'p_problema',    colId:'problema',
+   label:'Necesidad',
+   hint:'¿Cuál es la situación negativa que este proyecto busca transformar?'},
+  {id:'p_causas',      colId:'causas',
+   label:'Contexto',
+   hint:'¿Por qué ocurre ese problema? ¿Qué factores lo originan o mantienen?'},
+  {id:'p_poblacion',   colId:'poblacion',
+   label:'¿A quiénes va dirigido?',
+   hint:'¿Quiénes son las personas o grupos que el proyecto busca beneficiar?'},
+  {id:'p_actividades', colId:'actividades',
+   label:'¿Qué hará el equipo?',
+   hint:'¿Qué acciones concretas ejecutará el equipo para intervenir en la problemática?'},
+  {id:'p_productos',   colId:'productos',
+   label:'¿Qué entregará el proyecto?',
+   hint:'¿Qué bienes, servicios o materiales generará el proyecto como resultado directo de las acciones?'},
+  {id:'p_resultados',  colId:'resultados',
+   label:'¿Qué cambios se esperan?',
+   hint:'¿Qué transformaciones observaremos en los conocimientos, actitudes o comportamientos de la población?'},
+  {id:'p_obj_esp',     colId:'obj_esp',
+   label:'¿A dónde queremos llegar?',
+   hint:'¿Cuál es la meta de corto o mediano plazo que el proyecto se propone alcanzar?'},
+  {id:'p_fin',         colId:'fin',
+   label:'¿Para qué, en última instancia?',
+   hint:'¿Cuál es el impacto de largo plazo al que este proyecto contribuye, aunque no dependa solo de él?'},
 
-  // ── DISTRACTORES (18) ──
-  {id:'d_ind_impacto',    colId:null, label:'Indicadores de impacto',       icon:'📊', type:'type-dist',
-   hint:'Elemento de evaluación, no de la estructura base de la Teoría de Cambio.'},
-  {id:'d_ind_result',     colId:null, label:'Indicadores de resultados',    icon:'📊', type:'type-dist',
-   hint:'Elemento de evaluación, no de la estructura base.'},
-  {id:'d_ind_producto',   colId:null, label:'Indicadores de producto',      icon:'📊', type:'type-dist',
-   hint:'Elemento de evaluación, no de la estructura base.'},
-  {id:'d_ind_cumpli',     colId:null, label:'Indicadores de cumplimiento',  icon:'📋', type:'type-dist',
-   hint:'Categoría de seguimiento operativo, no componente de la TC.'},
-  {id:'d_medios_verif',   colId:null, label:'Medios de verificación',       icon:'📂', type:'type-dist',
-   hint:'Elemento del marco lógico para corroborar indicadores.'},
-  {id:'d_fuentes',        colId:null, label:'Fuentes de información',       icon:'🗂️', type:'type-dist',
-   hint:'Instrumento de seguimiento y evaluación, no componente estructural.'},
-  {id:'d_sup_impacto',    colId:null, label:'Supuestos de impacto',         icon:'🔮', type:'type-dist',
-   hint:'Categoría de supuestos específica de la MML, no de la TC básica.'},
-  {id:'d_sup_result',     colId:null, label:'Supuestos de resultados',      icon:'🔮', type:'type-dist',
-   hint:'Subcategoría analítica, no componente estructural de la TC.'},
-  {id:'d_sup_producto',   colId:null, label:'Supuestos de producto',        icon:'🔮', type:'type-dist',
-   hint:'Subcategoría analítica, no componente estructural de la TC.'},
-  {id:'d_riesgos',        colId:null, label:'Riesgos de implementación',    icon:'⚡', type:'type-dist',
-   hint:'Elemento de gestión de riesgos, no de la TC.'},
-  {id:'d_metas',          colId:null, label:'Metas institucionales',        icon:'🏛️', type:'type-dist',
-   hint:'Elemento de planeación organizacional, no de la TC.'},
-  {id:'d_estrategias',    colId:null, label:'Estrategias de intervención',  icon:'🗺️', type:'type-dist',
-   hint:'Concepto más amplio que las actividades; no es un componente de la TC.'},
-  {id:'d_rec_fin',        colId:null, label:'Recursos financieros',         icon:'💰', type:'type-dist',
-   hint:'Elemento de gestión presupuestal, no de la TC.'},
-  {id:'d_rec_hum',        colId:null, label:'Recursos humanos',             icon:'👤', type:'type-dist',
-   hint:'Elemento de gestión organizacional, no de la TC.'},
-  {id:'d_seguimiento',    colId:null, label:'Mecanismos de seguimiento',    icon:'🔁', type:'type-dist',
-   hint:'Elemento de M&E, no de la estructura de la TC.'},
-  {id:'d_desempeno',      colId:null, label:'Evaluación de desempeño',      icon:'📝', type:'type-dist',
-   hint:'Proceso de RR. HH. o de gestión interna, no componente de la TC.'},
-  {id:'d_alcance',        colId:null, label:'Alcance territorial',          icon:'🗺️', type:'type-dist',
-   hint:'Variable de diseño del proyecto, no componente de la TC.'},
-  {id:'d_sostenib',       colId:null, label:'Sostenibilidad financiera',    icon:'💡', type:'type-dist',
-   hint:'Consideración de largo plazo del proyecto, no componente de la TC.'},
+  // ── DISTRACTORES (18): nombre directo, mismo estilo gris ──
+  {id:'d_ind_impacto',  colId:null, label:'Indicadores de impacto',
+   hint:'¿Se usa para construir la estructura de la TC o para medir su desempeño?'},
+  {id:'d_ind_result',   colId:null, label:'Indicadores de resultados',
+   hint:'¿Forma parte de los ocho componentes o es una herramienta de seguimiento?'},
+  {id:'d_ind_producto', colId:null, label:'Indicadores de producto',
+   hint:'¿Este concepto describe un componente de la TC o una forma de medirla?'},
+  {id:'d_ind_cumpli',   colId:null, label:'Indicadores de cumplimiento',
+   hint:'¿Es un nivel de la cadena de cambio o una categoría de monitoreo operativo?'},
+  {id:'d_medios_verif', colId:null, label:'Medios de verificación',
+   hint:'¿Dónde se origina la evidencia? ¿Esto define qué hace el proyecto o cómo se comprueba?'},
+  {id:'d_fuentes',      colId:null, label:'Fuentes de información',
+   hint:'¿Este concepto describe el cambio que se busca generar o de dónde viene la evidencia?'},
+  {id:'d_sup_impacto',  colId:null, label:'Supuestos de impacto',
+   hint:'¿Es un componente de la lógica de intervención o una subcategoría del marco lógico?'},
+  {id:'d_sup_result',   colId:null, label:'Supuestos de resultados',
+   hint:'¿Forma parte de los ocho niveles o es una subdivisión analítica del marco lógico?'},
+  {id:'d_sup_producto', colId:null, label:'Supuestos de producto',
+   hint:'¿Ayuda a construir la TC o a anticipar condiciones externas por nivel?'},
+  {id:'d_riesgos',      colId:null, label:'Riesgos de implementación',
+   hint:'¿Esto forma parte de la cadena de cambio o de la gestión de riesgos del proyecto?'},
+  {id:'d_metas',        colId:null, label:'Metas institucionales',
+   hint:'¿Este concepto pertenece a la lógica de intervención o a la planeación organizacional?'},
+  {id:'d_estrategias',  colId:null, label:'Estrategias de intervención',
+   hint:'¿Las estrategias son lo mismo que las acciones concretas del equipo?'},
+  {id:'d_rec_fin',      colId:null, label:'Recursos financieros',
+   hint:'¿Este elemento describe qué cambiará en la población o qué se necesita para operar?'},
+  {id:'d_rec_hum',      colId:null, label:'Recursos humanos',
+   hint:'¿Forma parte de la cadena de cambio o de la estructura operativa del proyecto?'},
+  {id:'d_seguimiento',  colId:null, label:'Mecanismos de seguimiento',
+   hint:'¿Este concepto integra la lógica de cambio o describe cómo se monitorea la implementación?'},
+  {id:'d_desempeno',    colId:null, label:'Evaluación de desempeño',
+   hint:'¿Esto mide el desempeño de quién — del proyecto o de las personas en la organización?'},
+  {id:'d_alcance',      colId:null, label:'Alcance territorial',
+   hint:'¿Este dato describe el cambio esperado o el contexto geográfico del proyecto?'},
+  {id:'d_sostenib',     colId:null, label:'Sostenibilidad financiera',
+   hint:'¿Forma parte de los ocho componentes de la TC o de las condiciones para su continuidad?'},
 ];
 
 // Estado del puzzle: colId → pieceId colocada (o null)
@@ -529,12 +537,13 @@ function buildPuzzle(){
   const shuffled = [...PIECES].sort(()=>Math.random()-.5);
   shuffled.forEach(p=>{
     const el = document.createElement('div');
-    el.className = 'piece '+p.type;
+    // Todas las piezas se ven igual (gris) — sin pistas visuales de tipo
+    el.className = 'piece type-dist';
     el.id = 'piece_'+p.id;
     el.draggable = true;
     el.dataset.pieceId = p.id;
     el.title = p.hint;
-    el.innerHTML = `<span class="piece-icon">${p.icon}</span>${p.label}`;
+    el.textContent = p.label;
     setupDragPiece(el, p.id);
     pool.appendChild(el);
   });
@@ -645,7 +654,7 @@ function renderCell(colId){
   const tag = document.createElement('div');
   tag.style.cssText='display:flex;align-items:center;gap:.4rem;background:#fff;border:1px solid #ddd;'+
     'border-radius:3px;padding:.3rem .6rem;font-size:.75rem;width:100%;justify-content:space-between;';
-  tag.innerHTML=`<span>${piece.icon} ${piece.label}</span>
+  tag.innerHTML=`<span>${piece.label}</span>
     <span data-remove="${colId}" style="color:#e53e3e;font-weight:700;cursor:pointer;padding:0 .2rem;font-size:.9rem;" title="Quitar">×</span>`;
   tag.querySelector('[data-remove]').addEventListener('click', ()=>{
     placedMap[colId]=null;
