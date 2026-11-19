@@ -29,33 +29,69 @@ h1,h2,h3{font-family:'Playfair Display',serif;}
 /* ── PHASES ── */
 #phaseA, #phaseB{min-height:calc(100vh - 60px);}
 
-/* ══ FASE A: ROMPECABEZAS ══ */
-#phaseA{background:var(--paper);display:flex;flex-direction:column;align-items:center;padding:2rem 1rem 1rem;}
-.puzzle-intro{text-align:center;max-width:600px;margin-bottom:1.8rem;}
-.puzzle-intro h2{font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:.5rem;}
-.puzzle-intro p{font-size:.88rem;color:var(--soft);line-height:1.6;}
+/* ══ FASE A: EJERCICIO ══ */
+#phaseA{background:var(--paper);padding:0 0 2rem;}
 
-/* tabla destino */
-.tc-table-wrap{width:100%;max-width:900px;overflow-x:auto;margin-bottom:1.5rem;}
-.tc-table{width:100%;border-collapse:collapse;min-width:720px;}
-.tc-table th{background:var(--dk);color:#fff;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.6rem .7rem;text-align:left;white-space:nowrap;}
-.tc-table td{border:2px dashed var(--rule);height:70px;vertical-align:middle;padding:.3rem;position:relative;transition:background .15s;}
-.tc-table td.occupied{border-style:solid;border-color:var(--p);}
-.tc-table td.wrong{border-color:#e53e3e!important;background:#fff5f5!important;}
-.tc-table td.correct{border-color:#2E7D32!important;background:#f1f8e9!important;}
-.tc-table td:hover{background:var(--pbg);}
-.drop-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.6rem;color:#ccc;letter-spacing:.05em;pointer-events:none;}
+/* Instrucciones */
+.exercise-instructions{background:#fff;border-bottom:1px solid var(--rule);padding:2rem 1.5rem;max-width:900px;margin:0 auto 2rem;}
+.exercise-instructions h2{font-size:1.4rem;font-weight:900;color:var(--ink);margin-bottom:.4rem;}
+.exercise-instructions .obj-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--p);border:1px solid var(--p);padding:.18rem .55rem;border-radius:2px;margin-bottom:.8rem;}
+.exercise-instructions p{font-size:.84rem;color:var(--soft);line-height:1.65;margin-bottom:.6rem;}
+.instr-list{padding-left:1.3rem;margin:.4rem 0 .8rem;}
+.instr-list li{font-size:.83rem;color:var(--soft);line-height:1.6;margin-bottom:.25rem;}
+.instr-list li strong{color:var(--ink);}
+.central-q{background:var(--pbg);border-left:3px solid var(--p);padding:.75rem 1rem;border-radius:0 3px 3px 0;font-size:.84rem;color:var(--p);line-height:1.6;margin-top:.6rem;}
+.instr-toggle{background:none;border:none;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);cursor:pointer;padding:.3rem 0;text-decoration:underline;margin-top:.4rem;}
 
-/* bloques draggable del rompecabezas */
-.pieces-pool{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;max-width:900px;margin-bottom:1.2rem;}
-.piece{display:flex;align-items:center;gap:.5rem;padding:.5rem .85rem;border-radius:4px;cursor:grab;user-select:none;font-family:'Lato',sans-serif;font-size:.8rem;font-weight:700;border:2px solid transparent;box-shadow:0 2px 8px rgba(0,0,0,.1);transition:transform .1s,box-shadow .1s;white-space:nowrap;}
-.piece:active{cursor:grabbing;transform:scale(1.04);box-shadow:0 6px 18px rgba(0,0,0,.18);}
+/* Panel del ejercicio */
+.puzzle-panel{max-width:960px;margin:0 auto;padding:0 1rem;}
+
+/* Pool de conceptos — ahora más prominente arriba */
+.pool-label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin-bottom:.6rem;}
+.pool-counter{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--p);float:right;}
+.pieces-pool{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.2rem;padding:.8rem;background:#fff;border:1px solid var(--rule);border-radius:4px;min-height:60px;}
+.piece{display:inline-flex;align-items:center;gap:.4rem;padding:.38rem .7rem;border-radius:3px;cursor:grab;user-select:none;font-family:'Lato',sans-serif;font-size:.77rem;font-weight:700;border:1.5px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:transform .1s,box-shadow .1s,opacity .2s;white-space:nowrap;}
+.piece:active{cursor:grabbing;transform:scale(1.04);box-shadow:0 4px 14px rgba(0,0,0,.16);}
 .piece.type-a{background:#EDE9FE;color:#4C1D95;border-color:#C4B5FD;}
 .piece.type-b{background:#FEF3E2;color:#78350F;border-color:#FCD34D;}
 .piece.type-c{background:#E0F2FE;color:#0C4A6E;border-color:#7DD3FC;}
 .piece.type-d{background:#F0FDF4;color:#14532D;border-color:#86EFAC;}
-.piece-icon{font-size:1rem;line-height:1;}
-.piece.placed{opacity:.35;pointer-events:none;transform:none;}
+.piece.type-e{background:#FFF1F2;color:#9F1239;border-color:#FDA4AF;}
+.piece.type-f{background:#F0F9FF;color:#0C4A6E;border-color:#7DD3FC;}
+.piece.type-dist{background:#F4F4F5;color:#71717A;border-color:#D4D4D8;}  /* distractores */
+.piece-icon{font-size:.9rem;line-height:1;}
+.piece.placed{opacity:.3;pointer-events:none;transform:none;}
+
+/* Tabla destino — VERTICAL (columnas como filas) */
+.tc-table-wrap{width:100%;overflow-x:auto;margin-bottom:1rem;}
+.tc-table{width:100%;border-collapse:collapse;}
+.tc-table th.row-col{width:220px;min-width:160px;background:var(--dk);color:#fff;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.65rem .8rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.1);}
+.tc-table th.row-col .col-num{display:inline-block;background:rgba(255,255,255,.12);font-size:.5rem;padding:.05rem .3rem;border-radius:2px;margin-right:.35rem;vertical-align:middle;}
+.tc-table td.drop-cell{border:2px dashed #D4D4D8;height:62px;vertical-align:middle;padding:.3rem;position:relative;transition:background .15s;background:#fff;}
+.tc-table td.drop-cell.occupied{border-style:solid;border-color:var(--p);}
+.tc-table td.drop-cell.wrong{border-color:#e53e3e!important;background:#fff5f5!important;}
+.tc-table td.drop-cell.correct{border-color:#2E7D32!important;background:#f1f8e9!important;}
+.tc-table td.drop-cell:hover{background:var(--pbg);}
+.tc-table tr{border-bottom:1px solid var(--rule);}
+.drop-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.58rem;color:#ccc;letter-spacing:.05em;pointer-events:none;}
+
+/* feedback bar */
+.fb-bar{max-width:960px;width:100%;padding:.8rem 1.2rem;border-radius:4px;font-size:.82rem;line-height:1.5;margin-bottom:.8rem;display:none;}
+.fb-bar.show{display:block;}
+.fb-bar.info{background:#EEF2FF;border-left:3px solid var(--p);color:var(--p);}
+.fb-bar.ok{background:#F0FDF4;border-left:3px solid #2E7D32;color:#2E7D32;}
+.fb-bar.warn{background:#FFF7ED;border-left:3px solid var(--o);color:var(--o);}
+
+.puzzle-btns{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;}
+.btn-check{padding:.65rem 1.6rem;background:var(--p);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:background .15s;}
+.btn-check:hover{background:var(--pm);}
+.btn-reset{padding:.65rem 1.2rem;background:#fff;color:var(--soft);border:1px solid var(--rule);font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:3px;}
+
+/* argumentación */
+.arg-section{max-width:960px;margin:1.5rem auto 0;padding:0 1rem;}
+.arg-section label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);display:block;margin-bottom:.4rem;}
+.arg-section textarea{width:100%;border:1px solid var(--rule);border-radius:3px;padding:.6rem .8rem;font-family:'Lato',sans-serif;font-size:.82rem;color:var(--ink);min-height:80px;resize:vertical;outline:none;transition:border-color .15s;}
+.arg-section textarea:focus{border-color:var(--p);}
 
 /* feedback bar */
 .fb-bar{max-width:900px;width:100%;padding:.8rem 1.2rem;border-radius:4px;font-size:.82rem;line-height:1.5;margin-bottom:.8rem;display:none;}
@@ -162,33 +198,60 @@ body.sintropia #phaseB::before{
   <div class="hdr-badge" id="modBadge">Módulo 1 · Actividad</div>
 </header>
 
-<!-- ══════════════ FASE A: ROMPECABEZAS ══════════════ -->
+<!-- ══════════════ FASE A: EJERCICIO ══════════════ -->
 <div id="phaseA">
-  <div class="puzzle-intro">
-    <h2>¿Cuál es la lógica?</h2>
-    <p>Arrastra cada bloque a su columna correcta en la tabla de Teoría de Cambio, siguiendo la secuencia lógica de izquierda a derecha. Cuando termines, haz clic en <strong>Verificar</strong>.</p>
+
+  <!-- INSTRUCCIONES -->
+  <div class="exercise-instructions">
+    <h2>Identificando la lógica de una Teoría de Cambio</h2>
+    <div class="obj-tag">Objetivo del ejercicio</div>
+    <p>Reconocer los componentes que integran una Teoría de Cambio, diferenciarlos de otros elementos de planeación y evaluación de proyectos, y organizarlos de acuerdo con su lógica de construcción.</p>
+
+    <div id="instrDetail">
+      <strong style="font-size:.82rem;color:var(--ink);">Instrucciones:</strong>
+      <ol class="instr-list">
+        <li><strong>Identificar:</strong> Lee cuidadosamente los 26 conceptos y reconoce cuáles corresponden a la estructura de una Teoría de Cambio.</li>
+        <li><strong>Seleccionar:</strong> Identifica únicamente los <strong>ocho componentes</strong> que consideres indispensables para construirla.</li>
+        <li><strong>Descartar:</strong> Separa los 18 conceptos restantes. Aunque pueden ser útiles en la gestión de proyectos, no corresponden a las ocho categorías de este ejercicio.</li>
+        <li><strong>Ordenar:</strong> Arrastra los ocho componentes seleccionados a las columnas 1–8 de acuerdo con la secuencia lógica de una Teoría de Cambio.</li>
+        <li><strong>Argumentar:</strong> Explica brevemente por qué elegiste ese orden y qué relación encuentras entre cada componente.</li>
+      </ol>
+      <p style="font-size:.8rem;"><em>Consideración clave:</em> Una Teoría de Cambio establece relaciones entre una problemática, sus condiciones de origen, las acciones de intervención y los cambios que se espera generar.</p>
+      <div class="central-q">
+        <strong>Pregunta central:</strong> ¿Cómo podemos demostrar que las acciones de un proyecto social tienen una relación lógica con los cambios que buscamos generar?
+      </div>
+    </div>
+    <button class="instr-toggle" onclick="toggleInstr()">Ocultar instrucciones ▲</button>
   </div>
 
-  <!-- POOL DE PIEZAS -->
-  <div class="pieces-pool" id="piecesPool"></div>
+  <div class="puzzle-panel">
+    <!-- CONTADOR Y POOL DE CONCEPTOS -->
+    <div>
+      <div class="pool-label">26 conceptos — elige los 8 que forman la Teoría de Cambio <span class="pool-counter" id="poolCounter">0 / 8 colocados</span></div>
+      <div class="pieces-pool" id="piecesPool"></div>
+    </div>
 
-  <!-- FEEDBACK -->
-  <div class="fb-bar info show" id="fbBar">Arrastra los bloques a la columna que les corresponda.</div>
+    <!-- FEEDBACK -->
+    <div class="fb-bar info show" id="fbBar">Arrastra los bloques a la columna donde consideres que van. Solo 8 de los 26 corresponden a la Teoría de Cambio.</div>
 
-  <!-- TABLA DESTINO -->
-  <div class="tc-table-wrap">
-    <table class="tc-table" id="tcTable">
-      <thead>
-        <tr id="tcHead"></tr>
-      </thead>
-      <tbody id="tcBody"></tbody>
-    </table>
-  </div>
+    <!-- TABLA DESTINO — VERTICAL -->
+    <div class="tc-table-wrap">
+      <table class="tc-table" id="tcTable">
+        <tbody id="tcBody"></tbody>
+      </table>
+    </div>
 
-  <!-- BOTONES -->
-  <div class="puzzle-btns">
-    <button class="btn-check" onclick="checkPuzzle()">Verificar colocación</button>
-    <button class="btn-reset" onclick="resetPuzzle()">Reiniciar</button>
+    <!-- ARGUMENTACIÓN -->
+    <div class="arg-section">
+      <label for="argText">Tu argumentación — ¿por qué elegiste ese orden? ¿qué relación hay entre componentes?</label>
+      <textarea id="argText" placeholder="Explica brevemente la lógica que seguiste para ordenar los ocho componentes…"></textarea>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="puzzle-btns">
+      <button class="btn-check" onclick="checkPuzzle()">Verificar colocación</button>
+      <button class="btn-reset" onclick="resetPuzzle()">Reiniciar</button>
+    </div>
   </div>
 </div>
 
@@ -225,6 +288,10 @@ body.sintropia #phaseB::before{
           <p><strong>Supuestos →</strong> condiciones externas.</p>
           <p><strong>Indicadores →</strong> cómo medirás cada nivel.</p>
         </div>
+      </div>
+      <div class="fill-sb-sec" id="argDisplay" style="display:none;">
+        <div class="fill-sb-lbl">Tu argumentación</div>
+        <div class="arg-content" style="font-size:.78rem;color:var(--soft);line-height:1.6;font-style:italic;"></div>
       </div>
     </aside>
   </div>
@@ -334,17 +401,17 @@ function initBrand(){
 initBrand();
 
 // ── DEFINICIÓN DE LA TABLA ──
-// Regla simple: 1 pieza → 1 columna. Orden correcto izquierda→derecha.
+// 8 columnas en orden lógico. Cada una tiene un slot para exactamente 1 pieza correcta.
 
 const COLUMNS = [
-  {id:'problema',    label:'Problema\n(necesidad)',   color:'#E8F5E9', th:'#2E7D32'},
-  {id:'causas',      label:'Causas\n(contexto)',       color:'#FFF3E0', th:'#E65100'},
-  {id:'poblacion',   label:'Población\nobjetivo',      color:'#E3F2FD', th:'#1565C0'},
-  {id:'actividades', label:'Actividades',              color:'#FCE4EC', th:'#C62828'},
-  {id:'productos',   label:'Productos',                color:'#F3E5F5', th:'#6A1B9A'},
-  {id:'resultados',  label:'Resultados',               color:'#E8EAF6', th:'#283593'},
-  {id:'obj_esp',     label:'Objetivo\nespecífico',     color:'#E0F7FA', th:'#00695C'},
-  {id:'fin',         label:'Fin\n(propósito)',          color:'#FFF8E1', th:'#F57F17'},
+  {id:'problema',    label:'Problema (necesidad)',   color:'#E8F5E9', th:'#2E7D32'},
+  {id:'causas',      label:'Causas (contexto)',       color:'#FFF3E0', th:'#E65100'},
+  {id:'poblacion',   label:'Población objetivo',     color:'#E3F2FD', th:'#1565C0'},
+  {id:'actividades', label:'Actividades',             color:'#FCE4EC', th:'#C62828'},
+  {id:'productos',   label:'Productos',               color:'#F3E5F5', th:'#6A1B9A'},
+  {id:'resultados',  label:'Resultados',              color:'#E8EAF6', th:'#283593'},
+  {id:'obj_esp',     label:'Objetivo específico',    color:'#E0F7FA', th:'#00695C'},
+  {id:'fin',         label:'Fin (propósito)',          color:'#FFF8E1', th:'#F57F17'},
 ];
 
 const ROWS_FILL = [
@@ -354,62 +421,109 @@ const ROWS_FILL = [
   {id:'sup',    label:'Supuestos'},
 ];
 
-// 8 piezas, una por columna — relación 1:1 clara y completable
+// 8 piezas CORRECTAS (colId ≠ null) + 18 DISTRACTORES (colId: null)
+// Las correctas tienen el mismo id de columna que colId
 const PIECES = [
-  {id:'p_problema',    colId:'problema',    label:'Problema (necesidad)',  icon:'⚠️', type:'type-c',
+  // ── CORRECTAS ──
+  {id:'p_problema',    colId:'problema',    label:'Problema (necesidad)',   icon:'⚠️', type:'type-c',
    hint:'Situación negativa existente que el proyecto busca resolver.'},
-  {id:'p_causas',      colId:'causas',      label:'Causas (contexto)',     icon:'🔍', type:'type-b',
+  {id:'p_causas',      colId:'causas',      label:'Causas (contexto)',      icon:'🔍', type:'type-b',
    hint:'Factores que originan o mantienen el problema.'},
-  {id:'p_poblacion',   colId:'poblacion',   label:'Población objetivo',   icon:'👥', type:'type-c',
+  {id:'p_poblacion',   colId:'poblacion',   label:'Población objetivo',    icon:'👥', type:'type-c',
    hint:'Personas o grupos a quienes va dirigida la intervención.'},
-  {id:'p_actividades', colId:'actividades', label:'Actividades',           icon:'⚙️', type:'type-a',
+  {id:'p_actividades', colId:'actividades', label:'Actividades',            icon:'⚙️', type:'type-a',
    hint:'Acciones concretas que ejecuta el equipo del proyecto.'},
-  {id:'p_productos',   colId:'productos',   label:'Productos',             icon:'📦', type:'type-b',
+  {id:'p_productos',   colId:'productos',   label:'Productos',              icon:'📦', type:'type-b',
    hint:'Bienes y servicios que genera el proyecto (entregables).'},
-  {id:'p_resultados',  colId:'resultados',  label:'Resultados',            icon:'📈', type:'type-b',
+  {id:'p_resultados',  colId:'resultados',  label:'Resultados',             icon:'📈', type:'type-b',
    hint:'Cambios en conocimientos, actitudes o comportamientos de la población.'},
-  {id:'p_obj_esp',     colId:'obj_esp',     label:'Objetivo específico',  icon:'✅', type:'type-a',
+  {id:'p_obj_esp',     colId:'obj_esp',     label:'Objetivo específico',   icon:'✅', type:'type-a',
    hint:'Meta de corto/mediano plazo que el proyecto se propone alcanzar.'},
-  {id:'p_fin',         colId:'fin',         label:'Fin (propósito)',       icon:'⭐', type:'type-b',
+  {id:'p_fin',         colId:'fin',         label:'Fin (propósito)',        icon:'⭐', type:'type-b',
    hint:'Impacto de largo plazo al que el proyecto contribuye.'},
+
+  // ── DISTRACTORES (18) ──
+  {id:'d_ind_impacto',    colId:null, label:'Indicadores de impacto',       icon:'📊', type:'type-dist',
+   hint:'Elemento de evaluación, no de la estructura base de la Teoría de Cambio.'},
+  {id:'d_ind_result',     colId:null, label:'Indicadores de resultados',    icon:'📊', type:'type-dist',
+   hint:'Elemento de evaluación, no de la estructura base.'},
+  {id:'d_ind_producto',   colId:null, label:'Indicadores de producto',      icon:'📊', type:'type-dist',
+   hint:'Elemento de evaluación, no de la estructura base.'},
+  {id:'d_ind_cumpli',     colId:null, label:'Indicadores de cumplimiento',  icon:'📋', type:'type-dist',
+   hint:'Categoría de seguimiento operativo, no componente de la TC.'},
+  {id:'d_medios_verif',   colId:null, label:'Medios de verificación',       icon:'📂', type:'type-dist',
+   hint:'Elemento del marco lógico para corroborar indicadores.'},
+  {id:'d_fuentes',        colId:null, label:'Fuentes de información',       icon:'🗂️', type:'type-dist',
+   hint:'Instrumento de seguimiento y evaluación, no componente estructural.'},
+  {id:'d_sup_impacto',    colId:null, label:'Supuestos de impacto',         icon:'🔮', type:'type-dist',
+   hint:'Categoría de supuestos específica de la MML, no de la TC básica.'},
+  {id:'d_sup_result',     colId:null, label:'Supuestos de resultados',      icon:'🔮', type:'type-dist',
+   hint:'Subcategoría analítica, no componente estructural de la TC.'},
+  {id:'d_sup_producto',   colId:null, label:'Supuestos de producto',        icon:'🔮', type:'type-dist',
+   hint:'Subcategoría analítica, no componente estructural de la TC.'},
+  {id:'d_riesgos',        colId:null, label:'Riesgos de implementación',    icon:'⚡', type:'type-dist',
+   hint:'Elemento de gestión de riesgos, no de la TC.'},
+  {id:'d_metas',          colId:null, label:'Metas institucionales',        icon:'🏛️', type:'type-dist',
+   hint:'Elemento de planeación organizacional, no de la TC.'},
+  {id:'d_estrategias',    colId:null, label:'Estrategias de intervención',  icon:'🗺️', type:'type-dist',
+   hint:'Concepto más amplio que las actividades; no es un componente de la TC.'},
+  {id:'d_rec_fin',        colId:null, label:'Recursos financieros',         icon:'💰', type:'type-dist',
+   hint:'Elemento de gestión presupuestal, no de la TC.'},
+  {id:'d_rec_hum',        colId:null, label:'Recursos humanos',             icon:'👤', type:'type-dist',
+   hint:'Elemento de gestión organizacional, no de la TC.'},
+  {id:'d_seguimiento',    colId:null, label:'Mecanismos de seguimiento',    icon:'🔁', type:'type-dist',
+   hint:'Elemento de M&E, no de la estructura de la TC.'},
+  {id:'d_desempeno',      colId:null, label:'Evaluación de desempeño',      icon:'📝', type:'type-dist',
+   hint:'Proceso de RR. HH. o de gestión interna, no componente de la TC.'},
+  {id:'d_alcance',        colId:null, label:'Alcance territorial',          icon:'🗺️', type:'type-dist',
+   hint:'Variable de diseño del proyecto, no componente de la TC.'},
+  {id:'d_sostenib',       colId:null, label:'Sostenibilidad financiera',    icon:'💡', type:'type-dist',
+   hint:'Consideración de largo plazo del proyecto, no componente de la TC.'},
 ];
 
 // Estado del puzzle: colId → pieceId colocada (o null)
 let placedMap = {};  // {colId: pieceId | null}
 let extraCols = 0;
 
+// ── TOGGLE INSTRUCCIONES ──
+function toggleInstr(){
+  const d=document.getElementById('instrDetail');
+  const btn=document.querySelector('.instr-toggle');
+  if(d.style.display==='none'){d.style.display='';btn.textContent='Ocultar instrucciones ▲';}
+  else{d.style.display='none';btn.textContent='Ver instrucciones ▼';}
+}
+
 // ── RENDERIZAR PUZZLE ──
 function buildPuzzle(){
   placedMap = {};
   COLUMNS.forEach(c=> placedMap[c.id] = null);
 
-  // Cabecera
-  const head = document.getElementById('tcHead');
-  head.innerHTML = '';
-  COLUMNS.forEach(c=>{
-    const th = document.createElement('th');
-    th.style.background = c.th;
-    th.textContent = c.label.replace('\n',' ');
-    th.dataset.colId = c.id;
-    head.appendChild(th);
-  });
-
-  // Cuerpo — una celda por columna, acepta exactamente una pieza
+  // Tabla VERTICAL: cada fila = 1 columna de la TC
   const body = document.getElementById('tcBody');
   body.innerHTML = '';
-  const tr = document.createElement('tr');
-  COLUMNS.forEach(c=>{
+  COLUMNS.forEach((c, idx)=>{
+    const tr = document.createElement('tr');
+
+    // Celda de etiqueta (th)
+    const th = document.createElement('th');
+    th.className = 'row-col';
+    th.style.background = c.th;
+    th.innerHTML = `<span class="col-num">${idx+1}</span>${c.label}`;
+    tr.appendChild(th);
+
+    // Celda drop
     const td = document.createElement('td');
+    td.className = 'drop-cell';
     td.id = 'cell_'+c.id;
     td.dataset.colId = c.id;
-    td.style.background = c.color;
     td.innerHTML = `<div class="drop-hint">Arrastra aquí</div><div class="drop-zone-inner" id="dz_${c.id}"></div>`;
     setupDropZone(td, c.id);
     tr.appendChild(td);
-  });
-  body.appendChild(tr);
 
-  // Pool de piezas (aleatorio)
+    body.appendChild(tr);
+  });
+
+  // Pool de piezas (aleatorio, incluye distractores)
   const pool = document.getElementById('piecesPool');
   pool.innerHTML='';
   const shuffled = [...PIECES].sort(()=>Math.random()-.5);
@@ -424,6 +538,13 @@ function buildPuzzle(){
     setupDragPiece(el, p.id);
     pool.appendChild(el);
   });
+
+  updateCounter();
+}
+
+function updateCounter(){
+  const placed = Object.values(placedMap).filter(v=>v!==null).length;
+  document.getElementById('poolCounter').textContent = `${placed} / 8 colocados`;
 }
 
 let dragPieceId = null;
@@ -498,6 +619,7 @@ function dropPiece(colId){
   placedMap[colId] = dragPieceId;
   pieceEl.classList.add('placed');
   renderCell(colId);
+  updateCounter();
   dragPieceId=null;
 }
 
@@ -530,8 +652,8 @@ function renderCell(colId){
     const pEl=document.getElementById('piece_'+pieceId);
     if(pEl){pEl.classList.remove('placed');pEl.style.opacity='';}
     renderCell(colId);
-    // limpiar feedback visual de esta celda
     td.classList.remove('correct','wrong');
+    updateCounter();
   });
   dz.appendChild(tag);
 }
@@ -548,6 +670,7 @@ function checkPuzzle(){
       td.classList.remove('correct','wrong');
       return;
     }
+    // Correcto: la pieza colocada es exactamente la que corresponde a esta columna
     if(placed===('p_'+c.id)){
       correct++;
       td.classList.remove('wrong'); td.classList.add('correct');
@@ -562,7 +685,7 @@ function checkPuzzle(){
 
   if(wrong===0&&empty===0){
     fb.className='fb-bar ok show';
-    fb.innerHTML=`✓ ¡Perfecto! Colocaste los 8 elementos correctamente. <strong>Ahora llena tu Teoría de Cambio.</strong>`;
+    fb.innerHTML=`✓ ¡Perfecto! Identificaste y ordenaste correctamente los 8 componentes. <strong>Ahora llena tu Teoría de Cambio.</strong>`;
     setTimeout(()=>{ document.getElementById('addColOverlay').classList.add('show'); },800);
   } else {
     const parts=[];
@@ -570,7 +693,10 @@ function checkPuzzle(){
     if(wrong>0)   parts.push(`<strong>${wrong} incorrectos ✗</strong>`);
     if(empty>0)   parts.push(`<strong>${empty} vacíos</strong>`);
     fb.className='fb-bar warn show';
-    fb.innerHTML=`${parts.join(', ')}. Las celdas en rojo tienen una pieza que no corresponde — quítala con × y vuelve a intentarlo.`;
+    let msg = parts.join(', ')+'.';
+    if(wrong>0) msg+=' Las celdas en rojo tienen un concepto que no corresponde a ese nivel — retíralo con × y vuelve a intentarlo.';
+    if(empty>0) msg+=' Recuerda: debes colocar exactamente 8 componentes.';
+    fb.innerHTML=msg;
   }
 }
 
@@ -584,27 +710,34 @@ function resetPuzzle(){
   document.querySelectorAll('.piece').forEach(el=>{el.classList.remove('placed');el.style.opacity='';});
   const fb=document.getElementById('fbBar');
   fb.className='fb-bar info show';
-  fb.textContent='Arrastra cada bloque a la columna donde crees que va.';
+  fb.textContent='Arrastra los bloques a la columna donde consideres que van. Solo 8 de los 26 corresponden a la Teoría de Cambio.';
+  updateCounter();
 }
 
 function addExtraCol(){
   extraCols++;
-  const newCol={id:'extra_'+extraCols, label:`Componente ${extraCols}`, color:'#FAFAFA', th:'#555'};
+  const idx = COLUMNS.length + 1;
+  const newCol={id:'extra_'+extraCols, label:`Componente ${idx}`, color:'#FAFAFA', th:'#555'};
   COLUMNS.push(newCol);
   placedMap[newCol.id]=null;
-  const head=document.getElementById('tcHead');
+  // Tabla vertical: agregar fila nueva
+  const body=document.getElementById('tcBody');
+  const tr=document.createElement('tr');
   const th=document.createElement('th');
-  th.style.background=newCol.th; th.textContent=newCol.label; th.dataset.colId=newCol.id;
-  head.appendChild(th);
-  const tr=document.querySelector('#tcBody tr');
+  th.className='row-col';
+  th.style.background=newCol.th;
+  th.innerHTML=`<span class="col-num">${idx}</span>${newCol.label}`;
+  tr.appendChild(th);
   const td=document.createElement('td');
+  td.className='drop-cell';
   td.id='cell_'+newCol.id;
-  td.dataset.colId=newCol.id; td.style.background=newCol.color;
+  td.dataset.colId=newCol.id;
   td.innerHTML=`<div class="drop-hint">Arrastra aquí</div><div class="drop-zone-inner" id="dz_${newCol.id}"></div>`;
   setupDropZone(td,newCol.id);
   tr.appendChild(td);
+  body.appendChild(tr);
   closeModal('addColOverlay');
-  toast('Columna agregada.');
+  toast('Fila agregada.');
 }
 
 function goToFill(){
@@ -623,6 +756,13 @@ function showPhaseB(){
   document.getElementById('phaseB').style.display='block';
   document.getElementById('stepBadge').textContent='Paso 2 / 2 — Llena tu Teoría de Cambio';
   buildFillTable();
+  // Mostrar argumentación en sidebar si existe
+  const arg=document.getElementById('argText')?document.getElementById('argText').value.trim():'';
+  const argDisplay=document.getElementById('argDisplay');
+  if(argDisplay){
+    argDisplay.style.display=arg?'block':'none';
+    if(arg) argDisplay.querySelector('.arg-content').textContent=arg;
+  }
 }
 
 // ── TABLA DE LLENADO ──
@@ -694,7 +834,10 @@ function collectFillData(){
 function getTextContent(){
   const data=collectFillData();
   const brand=BRAND==='sintropia'?'Sintropía Social':'David Salgado';
+  const argEl=document.getElementById('argText');
+  const arg=argEl?argEl.value.trim():'';
   let txt=`TABLA DE TEORÍA DE CAMBIO\n${brand}\n${new Date().toLocaleDateString('es-MX')}\n\n`;
+  if(arg) txt+=`ARGUMENTACIÓN DEL ORDEN:\n${arg}\n\n`;
   COLUMNS.forEach(c=>{
     txt+=`\n── ${c.label.replace('\n',' ').toUpperCase()} ──\n`;
     ROWS_FILL.forEach(r=>{
@@ -781,9 +924,11 @@ function sendEmail(){
   if(!addr.includes('@')){toast('Correo no válido');return;}
 
   const data=collectFillData();
+  const argText=document.getElementById('argText')?document.getElementById('argText').value.trim():'';
   const payload={
     action:'enviarTeoríaCambio', nombre:name, email:addr, notas:notes, consent, marca:BRAND,
     actividad:'teoria-cambio',
+    argumentacion:argText,
     tabla:JSON.stringify(data),
   };
   if(GAS_URL) fetch(GAS_URL,{method:'POST',body:JSON.stringify(payload)}).catch(()=>{});
