@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teoría de Cambio — Curso</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#6D28D9;--pm:#7C3AED;--plt:#EDE9FE;--pbg:#F5F3FF;
+  --o:#C45F00;--obg:#FEF3E2;
+  --ink:#18181B;--soft:#52525B;--rule:#E4E4E7;
+  --paper:#FAFAF8;--white:#fff;--dk:#13111C;
+  --ok:#2E7D32;--okbg:#F1F8E9;
+}
+body.sintropia{--p:#6B21F5;--pm:#7C3AED;--o:#FF6B1A;}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.65;}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;line-height:1.25;}
+p{margin-bottom:.9rem;}
+p:last-child{margin-bottom:0;}
+
+/* ── HEADER ── */
+.hdr{background:var(--dk);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:3px solid var(--p);position:sticky;top:0;z-index:50;}
+.hdr-logo{font-family:'Playfair Display',serif;font-size:1.1rem;color:#fff;font-weight:900;}
+.hdr-logo span{color:var(--o);}
+.hdr-sub{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-top:.15rem;}
+.hdr-badge{margin-left:auto;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--o);border:1px solid var(--o);padding:.2rem .6rem;white-space:nowrap;}
+
+/* ── HERO ── */
+.hero{background:var(--dk);padding:4rem 1.5rem 3.5rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(109,40,217,.18) 0%,transparent 65%);}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#a78bfa;margin-bottom:.8rem;}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);color:#fff;font-weight:900;max-width:760px;margin:0 auto .9rem;position:relative;}
+.hero h1 em{color:#a78bfa;font-style:italic;}
+.hero-desc{max-width:620px;margin:0 auto 2rem;font-size:1.05rem;color:rgba(255,255,255,.72);line-height:1.75;position:relative;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem;position:relative;}
+.chip{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .8rem;border-radius:2px;}
+.chip-p{background:rgba(167,139,250,.15);color:#a78bfa;border:1px solid rgba(167,139,250,.3);}
+.chip-o{background:rgba(196,95,0,.12);color:var(--o);border:1px solid rgba(196,95,0,.3);}
+.chip-w{background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.12);}
+.hero-cta{display:inline-flex;gap:.8rem;flex-wrap:wrap;justify-content:center;position:relative;}
+.btn-primary{padding:.75rem 1.8rem;background:var(--p);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:3px;text-decoration:none;transition:background .15s;}
+.btn-primary:hover{background:var(--pm);}
+.btn-secondary{padding:.75rem 1.6rem;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:3px;text-decoration:none;transition:all .15s;}
+.btn-secondary:hover{background:rgba(255,255,255,.08);}
+
+/* ── LAYOUT ── */
+.page-wrap{max-width:1140px;margin:0 auto;padding:0 1.25rem;}
+
+/* ── SECTION HEADERS ── */
+.sec-header{padding:3rem 0 1.5rem;}
+.sec-eyebrow{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--p);margin-bottom:.5rem;}
+.sec-title{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:900;color:var(--ink);}
+.sec-desc{max-width:640px;font-size:.92rem;color:var(--soft);margin-top:.6rem;line-height:1.75;}
+
+/* ── OVERVIEW CARDS ── */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2.5rem;}
+.ov-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.1rem 1.2rem;}
+.ov-card-num{font-family:'DM Mono',monospace;font-size:1.8rem;font-weight:500;color:var(--p);line-height:1;}
+.ov-card-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-top:.2rem;}
+.ov-card-sub{font-size:.8rem;color:var(--soft);margin-top:.4rem;line-height:1.5;}
+
+/* ── MÓDULOS ── */
+.modules-list{display:flex;flex-direction:column;gap:1px;border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin-bottom:3rem;}
+.module-item{background:#fff;cursor:pointer;transition:background .12s;}
+.module-item:hover{background:var(--pbg);}
+.module-item.open{background:#fff;}
+.module-header{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--rule);}
+.module-header:last-child{border-bottom:none;}
+.mod-num{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;min-width:28px;color:var(--soft);}
+.mod-color{width:4px;height:38px;border-radius:2px;flex-shrink:0;}
+.mod-info{flex:1;}
+.mod-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--ink);}
+.mod-meta{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:.2rem;}
+.mod-toggle{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--p);margin-left:auto;user-select:none;}
+.module-body{display:none;padding:1.3rem 1.3rem 1.6rem;border-top:1px solid var(--rule);background:#fefefe;}
+.module-item.open .module-body{display:block;}
+.module-item.open .mod-toggle::after{content:' ▲';}
+.mod-toggle::after{content:' ▼';}
+
+.mod-section{margin-bottom:1.2rem;}
+.mod-section-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);border-bottom:1px solid var(--rule);padding-bottom:.35rem;margin-bottom:.7rem;}
+.mod-section ul{padding-left:1.3rem;}
+.mod-section li{font-size:.87rem;color:var(--soft);line-height:1.65;margin-bottom:.25rem;}
+.mod-section li strong{color:var(--ink);}
+.mod-section p{font-size:.87rem;color:var(--soft);}
+
+.ref-inline{font-size:.78rem;color:var(--p);font-style:italic;}
+
+/* Tarjeta de actividad dentro del módulo */
+.act-card{background:var(--pbg);border-left:3px solid var(--p);border-radius:0 4px 4px 0;padding:.85rem 1rem;margin:.6rem 0;}
+.act-card-lbl{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--p);margin-bottom:.3rem;}
+.act-card-title{font-size:.9rem;font-weight:700;color:var(--ink);margin-bottom:.3rem;}
+.act-card-desc{font-size:.82rem;color:var(--soft);line-height:1.6;}
+.act-card-link{display:inline-block;margin-top:.5rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--p);text-decoration:none;border-bottom:1px solid var(--p);}
+.act-card-link:hover{color:var(--pm);}
+
+/* Sesión en vivo badge */
+.live-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(196,95,0,.08);border:1px solid rgba(196,95,0,.2);border-radius:2px;padding:.25rem .6rem;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--o);margin-bottom:.8rem;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--o);}
+
+/* ── METODOLOGÍA ── */
+.method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:2.5rem;}
+.method-card{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:1.2rem;}
+.method-icon{font-size:1.4rem;margin-bottom:.6rem;}
+.method-title{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:.35rem;}
+.method-desc{font-size:.82rem;color:var(--soft);line-height:1.6;}
+
+/* ── BIBLIOGRAFÍA ── */
+.bib-wrap{background:#fff;border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin-bottom:3rem;}
+.bib-top{background:var(--dk);padding:1rem 1.3rem;display:flex;align-items:center;justify-content:space-between;}
+.bib-top h3{font-family:'Playfair Display',serif;font-size:1rem;color:#fff;}
+.btn-bib-dl{padding:.4rem 1rem;background:var(--o);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;}
+.btn-bib-dl:hover{opacity:.88;}
+.bib-filter{padding:.7rem 1.1rem;border-bottom:1px solid var(--rule);display:flex;gap:.5rem;flex-wrap:wrap;}
+.bib-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .6rem;border-radius:2px;border:1px solid var(--rule);background:var(--paper);color:var(--soft);cursor:pointer;transition:all .12s;}
+.bib-tag.active,.bib-tag:hover{background:var(--p);color:#fff;border-color:var(--p);}
+.bib-list{padding:.6rem 0;}
+.bib-entry{padding:.8rem 1.3rem;border-bottom:1px solid var(--rule);font-size:.82rem;line-height:1.65;color:var(--ink);}
+.bib-entry:last-child{border-bottom:none;}
+.bib-entry.hidden{display:none;}
+.bib-entry .bib-cat{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--p);margin-bottom:.2rem;}
+.bib-entry em{color:var(--soft);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--dk);color:#fff;padding:.6rem 1.4rem;border-radius:3px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.08em;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
+.toast.show{opacity:1;}
+
+/* ── FOOTER ── */
+.footer{background:var(--dk);color:rgba(255,255,255,.45);padding:2rem 1.5rem;text-align:center;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;margin-top:4rem;}
+.footer a{color:#a78bfa;text-decoration:none;}
+
+@media(max-width:700px){
+  .hero{padding:2.5rem 1rem 2rem;}
+  .overview-grid{grid-template-columns:1fr 1fr;}
+  .method-grid{grid-template-columns:1fr;}
+  .module-header{flex-wrap:wrap;gap:.6rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr" id="mainHdr">
+  <div>
+    <div class="hdr-logo" id="logoTxt">David <span>Salgado</span></div>
+    <div class="hdr-sub" id="logoSub">Cursos de formación · Metodología social</div>
+  </div>
+  <div class="hdr-badge" id="modBadge">Catálogo · Curso</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Programa de formación</div>
+  <h1>Teoría de <em>Cambio</em></h1>
+  <p class="hero-desc">Un curso riguroso para diseñar, argumentar y comunicar la lógica de intervención de proyectos y programas sociales, con evidencia sólida y herramientas prácticas.</p>
+  <div class="hero-chips">
+    <span class="chip chip-p">40 horas</span>
+    <span class="chip chip-p">8 módulos</span>
+    <span class="chip chip-o">8 sesiones en vivo · Teams</span>
+    <span class="chip chip-w">Organizaciones · Gobierno · Empresas</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#modulos" class="btn-primary">Ver programa</a>
+    <a href="#bibliografia" class="btn-secondary">Bibliografía APA</a>
+  </div>
+</section>
+
+<div class="page-wrap">
+
+  <!-- PANORAMA -->
+  <div class="sec-header">
+    <div class="sec-eyebrow">Panorama del curso</div>
+    <h2 class="sec-title">¿Qué vas a construir?</h2>
+    <p class="sec-desc">Al concluir el programa habrás diseñado la Teoría de Cambio completa de un proyecto real, con todos sus componentes, indicadores y evidencia argumentativa lista para presentar a financiadores, equipos o evaluadores externos.</p>
+  </div>
+
+  <div class="overview-grid">
+    <div class="ov-card">
+      <div class="ov-card-num">40</div>
+      <div class="ov-card-label">horas totales</div>
+      <div class="ov-card-sub">28h autogestivas + 12h sesiones en vivo (8 × 1h30)</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-num">8</div>
+      <div class="ov-card-label">módulos</div>
+      <div class="ov-card-sub">De la problematización al fin e impacto, con un hilo conductor único</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-num">26+</div>
+      <div class="ov-card-label">referencias APA</div>
+      <div class="ov-card-sub">Literatura fundacional y estudios de caso regionales actualizados</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-card-num">3</div>
+      <div class="ov-card-label">actividades integradas</div>
+      <div class="ov-card-sub">Árbol de problemas, rompecabezas TC y tabla de llenado interactiva</div>
+    </div>
+  </div>
+
+  <!-- MÓDULOS -->
+  <div id="modulos" class="sec-header">
+    <div class="sec-eyebrow">Programa</div>
+    <h2 class="sec-title">Los 8 módulos</h2>
+    <p class="sec-desc">Cada módulo combina lectura teórica comentada, actividades prácticas y una sesión en vivo de profundización y retroalimentación.</p>
+  </div>
+
+  <div class="modules-list" id="modulesList"></div>
+
+  <!-- METODOLOGÍA -->
+  <div class="sec-header">
+    <div class="sec-eyebrow">Cómo aprenderás</div>
+    <h2 class="sec-title">Metodología pedagógica</h2>
+  </div>
+  <div class="method-grid">
+    <div class="method-card">
+        <div class="method-title">Lectura comentada</div>
+      <div class="method-desc">Cada unidad incluye extractos de fuentes primarias con notas de contexto que conectan la teoría con práctica regional latinoamericana.</div>
+    </div>
+    <div class="method-card">
+        <div class="method-title">Actividades interactivas</div>
+      <div class="method-desc">Ejercicios digitales —árbol de problemas, rompecabezas de componentes, tabla de llenado— que se completan en el navegador y se pueden enviar al facilitador.</div>
+    </div>
+    <div class="method-card">
+        <div class="method-title">Sesiones en vivo</div>
+      <div class="method-desc">Una sesión de 1h30 por módulo en Microsoft Teams: presentación de dudas, revisión de avances y retroalimentación personalizada.</div>
+    </div>
+    <div class="method-card">
+        <div class="method-title">Producto final acumulativo</div>
+      <div class="method-desc">Desde el módulo 1, cada participante trabaja su propio proyecto. El producto entregable es una Teoría de Cambio completa y argumentada.</div>
+    </div>
+    <div class="method-card">
+        <div class="method-title">Rigor bibliográfico</div>
+      <div class="method-desc">Todas las afirmaciones conceptuales están respaldadas por fuentes académicas con cita APA. La bibliografía completa es descargable.</div>
+    </div>
+    <div class="method-card">
+        <div class="method-title">Perspectiva latinoamericana</div>
+      <div class="method-desc">Los marcos teóricos se aterrizan con ejemplos de proyectos sociales en México, Centroamérica y Sudamérica, con atención a contextos de desigualdad y diversidad.</div>
+    </div>
+  </div>
+
+  <!-- BIBLIOGRAFÍA -->
+  <div id="bibliografia" class="sec-header">
+    <div class="sec-eyebrow">Referencias académicas</div>
+    <h2 class="sec-title">Bibliografía del curso</h2>
+    <p class="sec-desc">Todas las referencias están en formato APA 7ª edición. Puedes filtrar por tema o descargar la lista completa en texto plano.</p>
+  </div>
+
+  <div class="bib-wrap">
+    <div class="bib-top">
+      <h3>Referencias — APA 7ª ed.</h3>
+      <button class="btn-bib-dl" onclick="downloadBib()">↓ Descargar lista</button>
+    </div>
+    <div class="bib-filter">
+      <span class="bib-tag active" data-cat="all" onclick="filterBib(this,'all')">Todas</span>
+      <span class="bib-tag" data-cat="fundacional" onclick="filterBib(this,'fundacional')">Fundacional</span>
+      <span class="bib-tag" data-cat="metodologia" onclick="filterBib(this,'metodologia')">Metodología</span>
+      <span class="bib-tag" data-cat="evaluacion" onclick="filterBib(this,'evaluacion')">Evaluación</span>
+      <span class="bib-tag" data-cat="america-latina" onclick="filterBib(this,'america-latina')">América Latina</span>
+      <span class="bib-tag" data-cat="indicadores" onclick="filterBib(this,'indicadores')">Indicadores</span>
+    </div>
+    <div class="bib-list" id="bibList"></div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<div class="toast" id="toast"></div>
+
+<footer class="footer">
+  <div id="footerBrand">David Salgado</div>
+  <div style="margin-top:.4rem;">Curso de formación · Teoría de Cambio</div>
+</footer>
+
+<script>
+// ── BRAND ──
+const BRAND = new URLSearchParams(location.search).get('marca')||'david';
+function initBrand(){
+  if(BRAND==='sintropia'){
+    document.body.classList.add('sintropia');
+    document.getElementById('logoTxt').innerHTML='Sintropía <span>Social</span>';
+    document.getElementById('modBadge').textContent='Catálogo Sintropía · Curso';
+    document.getElementById('footerBrand').textContent='Sintropía Social';
+  }
+}
+initBrand();
+
+// ── DATOS DE MÓDULOS ──
+const MODULES = [
+  {
+    num:'01', color:'#2E7D32',
+    title:'Fundamentos: ¿qué es y para qué sirve una Teoría de Cambio?',
+    horas:'5h (3h autogestivo + 1h30 en vivo)',
+    temas:[
+      'Orígenes del concepto: de la evaluación de programas a la planificación estratégica',
+      'Diferencias entre Teoría de Cambio, Marco Lógico y Cadena de Valor',
+      'La lógica "if–then": condiciones, intervenciones y resultados',
+      'Tipos de teorías de cambio: explícita vs. implícita; individual vs. sistémica',
+      'Usos prácticos: diseño, gestión, evaluación y rendición de cuentas',
+    ],
+    autores:[
+      'Weiss, C. H. (1995). Nothing as practical as good theory: Exploring theory-based evaluation for comprehensive community initiatives with children and families.',
+      'Rogers, P. J. (2008). Using programme theory to evaluate complicated and complex aspects of interventions. <em>Evaluation, 14</em>(1), 29–48.',
+      'Connell, J. P., & Kubisch, A. C. (1998). Applying a theory of change approach to the evaluation of comprehensive community initiatives.',
+    ],
+    actividad:null,
+    live:'Sesión 1 · Presentación del proyecto personal y diagnóstico de punto de partida',
+  },
+  {
+    num:'02', color:'#E65100',
+    title:'Problematización: nombrar el problema con precisión',
+    horas:'5h (3h30 autogestivo + 1h30 en vivo)',
+    temas:[
+      'El problema central como "situación negativa existente": criterios de formulación',
+      'Problemas de primer y segundo orden en contextos sociales complejos',
+      'Análisis causal: árbol de problemas y diagrama de Ishikawa adaptado al sector social',
+      'Fuentes de evidencia para fundamentar el problema: datos cuantitativos y cualitativos',
+      'Errores comunes: la trampa de formular el problema como ausencia de solución',
+    ],
+    autores:[
+      'Martinelli, A., & Pfeifer, P. (2016). <em>How to build a theory of change</em>. Ashoka & McKinsey & Company.',
+      'CEPAL. (2021). <em>Metodología del marco lógico para la planificación, el seguimiento y la evaluación de proyectos y programas</em>. ILPES/CEPAL.',
+      'Chambers, R. (1994). The origins and practice of participatory rural appraisal. <em>World Development, 22</em>(7), 953–969.',
+    ],
+    actividad:{
+      title:'Actividad: Árbol de problemas',
+      desc:'Construye el árbol de problemas de tu proyecto identificando causas, efectos y el problema central mediante arrastre interactivo.',
+      link:'actividad-arbol-problemas.html',
+      linkText:'Ir al árbol de problemas →',
+    },
+    live:'Sesión 2 · Revisión colectiva de árboles de problemas: precisión en la formulación',
+  },
+  {
+    num:'03', color:'#1565C0',
+    title:'Población objetivo: quiénes son, dónde están, cuántos son',
+    horas:'4h (2h30 autogestivo + 1h30 en vivo)',
+    temas:[
+      'Criterios de focalización: quién, cuántos, dónde, en qué condición',
+      'Población potencial, objetivo y atendida: diferencias operativas',
+      'Interseccionalidad en la definición de población: género, edad, etnia, territorio',
+      'Técnicas de estimación cuando no hay datos censales disponibles',
+      'El principio de no dejar a nadie atrás: implicaciones para la focalización',
+    ],
+    autores:[
+      'CONEVAL. (2019). <em>Lineamientos generales para la evaluación de los Programas Federales de la Administración Pública Federal</em>. CONEVAL.',
+      'Crenshaw, K. (1989). Demarginalizing the intersection of race and sex. <em>University of Chicago Legal Forum, 1</em>(8), 139–167.',
+      'ONU. (2015). <em>Transformar nuestro mundo: la Agenda 2030 para el Desarrollo Sostenible</em>. Naciones Unidas.',
+    ],
+    actividad:null,
+    live:'Sesión 3 · Taller: definición y justificación de la población objetivo del proyecto personal',
+  },
+  {
+    num:'04', color:'#C62828',
+    title:'Actividades y productos: la cadena de producción del cambio',
+    horas:'5h (3h30 autogestivo + 1h30 en vivo)',
+    temas:[
+      'Distinción conceptual: actividades (lo que hace el equipo) vs. productos (lo que entrega)',
+      'Diseño de actividades basadas en evidencia: qué funciona en proyectos sociales',
+      'El ciclo del proyecto: insumos → procesos → productos → resultados',
+      'Criterios de calidad y oportunidad en los productos',
+      'Riesgos en la cadena de producción y medidas de mitigación',
+    ],
+    autores:[
+      'Funnell, S. C., & Rogers, P. J. (2011). <em>Purposeful program theory: Effective use of theories of change and logic models</em>. Jossey-Bass.',
+      'Leeuw, F. L., & Donaldson, S. I. (2015). Theory in evaluation: Reducing confusion and encouraging debate. <em>Evaluation, 21</em>(4), 467–480.',
+      'Dichter, S. (2015). <em>Development across difference</em>. Stanford Social Innovation Review.',
+    ],
+    actividad:null,
+    live:'Sesión 4 · Revisión de cadenas de producción: coherencia interna actividades–productos',
+  },
+  {
+    num:'05', color:'#6A1B9A',
+    title:'Resultados: los cambios que esperamos observar',
+    horas:'5h (3h30 autogestivo + 1h30 en vivo)',
+    temas:[
+      'Resultados como cambios en conocimientos, actitudes, prácticas o condiciones de vida',
+      'Resultados a corto, mediano y largo plazo: diferencias y articulación',
+      'El papel de los supuestos: condiciones externas necesarias para la causalidad',
+      'Supuestos implícitos vs. explícitos: cómo identificarlos y hacerlos transparentes',
+      'La lógica contrafactual: ¿qué hubiera pasado sin el proyecto?',
+    ],
+    autores:[
+      'Patton, M. Q. (2011). <em>Developmental evaluation: Applying complexity concepts to enhance innovation and use</em>. Guilford Press.',
+      'Mayne, J. (2012). Contribution analysis: Coming of age? <em>Evaluation, 18</em>(3), 270–280.',
+      'Rogers, P. J. (2014). <em>Theory of change</em>. UNICEF Office of Research – Methodological Briefs, No. 2.',
+    ],
+    actividad:{
+      title:'Actividad: Rompecabezas de Teoría de Cambio',
+      desc:'Identifica los 8 componentes de la TC entre 26 conceptos, colócalos en la secuencia correcta y argumenta tu orden. Incluye tabla de llenado para tu proyecto.',
+      link:'actividad-teoria-cambio.html',
+      linkText:'Ir al ejercicio interactivo →',
+    },
+    live:'Sesión 5 · Análisis de supuestos: qué damos por sentado y por qué importa explicitarlo',
+  },
+  {
+    num:'06', color:'#283593',
+    title:'Objetivo específico y fin: de los resultados al impacto',
+    horas:'5h (3h30 autogestivo + 1h30 en vivo)',
+    temas:[
+      'Objetivo específico como meta de mediano plazo: formulación con criterios SMART',
+      'El fin (propósito) como impacto de largo plazo al que el proyecto contribuye, sin controlar',
+      'La diferencia entre contribución y atribución en la cadena de impacto',
+      'Marcos de referencia sistémicos: Teoría de Cambio en contextos complejos',
+      'Coherencia vertical: comprobación de la lógica de intervención de abajo hacia arriba',
+    ],
+    autores:[
+      'Dees, J. G., & Anderson, B. B. (2006). Framing a theory of social entrepreneurship: Building on two schools of practice and thought.',
+      'Williams, B., & Imam, I. (Eds.). (2007). <em>Systems concepts in evaluation: An expert anthology</em>. Edge Press of Bicester.',
+      'Rincón-Gallardo, S. (2019). <em>Liberar el aprendizaje</em>. Grano de Sal.',
+    ],
+    actividad:null,
+    live:'Sesión 6 · Consistencia vertical: revisión cruzada de las TC entre participantes',
+  },
+  {
+    num:'07', color:'#00695C',
+    title:'Indicadores y medios de verificación',
+    horas:'6h (4h30 autogestivo + 1h30 en vivo)',
+    temas:[
+      'Qué es un indicador y qué no lo es: precisión conceptual',
+      'Criterios SMART aplicados al sector social: especificidad, medibilidad, relevancia',
+      'Indicadores cuantitativos y cualitativos: complementariedad y tensiones',
+      'Medios de verificación: fuentes primarias y secundarias, confiabilidad y acceso',
+      'Frecuencia de medición y responsables: el sistema de monitoreo',
+      'Indicadores de proceso, producto, resultado e impacto: diferencias y usos',
+    ],
+    autores:[
+      'Morra Imas, L. G., & Rist, R. C. (2009). <em>The road to results: Designing and conducting effective development evaluations</em>. The World Bank.',
+      'UNDP. (2009). <em>Handbook on planning, monitoring and evaluating for development results</em>. UNDP.',
+      'Scriven, M. (1991). <em>Evaluation thesaurus</em> (4th ed.). Sage.',
+    ],
+    actividad:null,
+    live:'Sesión 7 · Taller de indicadores: construcción colectiva y revisión de medios de verificación',
+  },
+  {
+    num:'08', color:'#F57F17',
+    title:'Comunicación, uso y revisión de la Teoría de Cambio',
+    horas:'5h (3h30 autogestivo + 1h30 en vivo)',
+    temas:[
+      'La TC como herramienta de comunicación: narrativas para financiadores, equipos y comunidades',
+      'Visualización de la TC: formatos y criterios de legibilidad',
+      'La TC como contrato de aprendizaje: revisión periódica y actualización con evidencia',
+      'Uso de la TC en evaluaciones de medio término y final',
+      'Límites y críticas a la TC: cuándo no es suficiente y cómo complementarla',
+      'Presentación del producto final: TC completa del proyecto personal',
+    ],
+    autores:[
+      'James, C. (2011). <em>Theory of change review</em>. Comic Relief.',
+      'Vogel, I. (2012). <em>Review of the use of "theory of change" in international development</em>. DFID.',
+      'Hernández Sampieri, R., Fernández Collado, C., & Baptista Lucio, P. (2014). <em>Metodología de la investigación</em> (6ª ed.). McGraw-Hill.',
+    ],
+    actividad:null,
+    live:'Sesión 8 · Presentación de Teorías de Cambio finales y retroalimentación grupal',
+  },
+];
+
+// ── BIBLIOGRAFÍA COMPLETA ──
+const BIBLIOGRAPHY = [
+  // Fundacional
+  {cat:'fundacional', text:'Weiss, C. H. (1995). Nothing as practical as good theory: Exploring theory-based evaluation for comprehensive community initiatives with children and families. En J. P. Connell, A. C. Kubisch, L. B. Schorr & C. H. Weiss (Eds.), <em>New approaches to evaluating community initiatives</em> (pp. 65–92). Aspen Institute.'},
+  {cat:'fundacional', text:'Connell, J. P., & Kubisch, A. C. (1998). Applying a theory of change approach to the evaluation of comprehensive community initiatives: Progress, prospects, and problems. En K. Fulbright-Anderson, A. C. Kubisch & J. P. Connell (Eds.), <em>New approaches to evaluating community initiatives: Vol. 2. Theory, measurement, and analysis</em> (pp. 15–44). Aspen Institute.'},
+  {cat:'fundacional', text:'Rogers, P. J. (2008). Using programme theory to evaluate complicated and complex aspects of interventions. <em>Evaluation, 14</em>(1), 29–48. https://doi.org/10.1177/1356389007084674'},
+  {cat:'fundacional', text:'Patton, M. Q. (2011). <em>Developmental evaluation: Applying complexity concepts to enhance innovation and use</em>. Guilford Press.'},
+  {cat:'fundacional', text:'Scriven, M. (1991). <em>Evaluation thesaurus</em> (4th ed.). Sage.'},
+  // Metodología
+  {cat:'metodologia', text:'Funnell, S. C., & Rogers, P. J. (2011). <em>Purposeful program theory: Effective use of theories of change and logic models</em>. Jossey-Bass.'},
+  {cat:'metodologia', text:'Martinelli, A., & Pfeifer, P. (2016). <em>How to build a theory of change</em>. Ashoka & McKinsey & Company. https://www.ashoka.org/en-mx'},
+  {cat:'metodologia', text:'Rogers, P. J. (2014). <em>Theory of change</em>. UNICEF Office of Research – Methodological Briefs, No. 2. https://www.unicef-irc.org/publications/pdf/brief_2_theory_of_change_eng.pdf'},
+  {cat:'metodologia', text:'James, C. (2011). <em>Theory of change review</em>. Comic Relief. https://www.comicrelief.com/'},
+  {cat:'metodologia', text:'Vogel, I. (2012). <em>Review of the use of "theory of change" in international development</em>. DFID. https://assets.publishing.service.gov.uk/'},
+  {cat:'metodologia', text:'Leeuw, F. L., & Donaldson, S. I. (2015). Theory in evaluation: Reducing confusion and encouraging debate. <em>Evaluation, 21</em>(4), 467–480. https://doi.org/10.1177/1356389015607712'},
+  {cat:'metodologia', text:'Williams, B., & Imam, I. (Eds.). (2007). <em>Systems concepts in evaluation: An expert anthology</em>. Edge Press of Bicester.'},
+  {cat:'metodologia', text:'Hernández Sampieri, R., Fernández Collado, C., & Baptista Lucio, P. (2014). <em>Metodología de la investigación</em> (6ª ed.). McGraw-Hill.'},
+  // Evaluación
+  {cat:'evaluacion', text:'Morra Imas, L. G., & Rist, R. C. (2009). <em>The road to results: Designing and conducting effective development evaluations</em>. The World Bank. https://doi.org/10.1596/978-0-8213-7891-5'},
+  {cat:'evaluacion', text:'Mayne, J. (2012). Contribution analysis: Coming of age? <em>Evaluation, 18</em>(3), 270–280. https://doi.org/10.1177/1356389012440174'},
+  {cat:'evaluacion', text:'UNDP. (2009). <em>Handbook on planning, monitoring and evaluating for development results</em>. UNDP. https://www.undp.org/'},
+  {cat:'evaluacion', text:'Dees, J. G., & Anderson, B. B. (2006). Framing a theory of social entrepreneurship: Building on two schools of practice and thought. <em>ARNOVA Occasional Paper Series, 1</em>(3), 39–66.'},
+  // América Latina
+  {cat:'america-latina', text:'CEPAL. (2021). <em>Metodología del marco lógico para la planificación, el seguimiento y la evaluación de proyectos y programas</em>. ILPES/CEPAL. https://repositorio.cepal.org/'},
+  {cat:'america-latina', text:'CONEVAL. (2019). <em>Lineamientos generales para la evaluación de los Programas Federales de la Administración Pública Federal</em>. CONEVAL. https://www.coneval.org.mx/'},
+  {cat:'america-latina', text:'Chambers, R. (1994). The origins and practice of participatory rural appraisal. <em>World Development, 22</em>(7), 953–969. https://doi.org/10.1016/0305-750X(94)90141-4'},
+  {cat:'america-latina', text:'Rincón-Gallardo, S. (2019). <em>Liberar el aprendizaje: El cambio educativo como movimiento social</em>. Grano de Sal.'},
+  {cat:'america-latina', text:'Dichter, S. (2015). <em>Development across difference</em>. Stanford Social Innovation Review. https://ssir.org/'},
+  // Indicadores
+  {cat:'indicadores', text:'ONU. (2015). <em>Transformar nuestro mundo: la Agenda 2030 para el Desarrollo Sostenible</em>. Resolución A/RES/70/1. Naciones Unidas. https://sdgs.un.org/'},
+  {cat:'indicadores', text:'Crenshaw, K. (1989). Demarginalizing the intersection of race and sex: A Black feminist critique of antidiscrimination doctrine, feminist theory and antiracist politics. <em>University of Chicago Legal Forum, 1</em>(8), 139–167.'},
+  {cat:'indicadores', text:'Scriven, M. (1996). The theory behind practical evaluation. <em>Evaluation, 2</em>(4), 393–404. https://doi.org/10.1177/135638909600200403'},
+];
+
+// ── RENDERIZAR MÓDULOS ──
+function buildModules(){
+  const list = document.getElementById('modulesList');
+  MODULES.forEach((m, i) => {
+    const item = document.createElement('div');
+    item.className = 'module-item';
+    item.innerHTML = `
+      <div class="module-header" onclick="toggleModule(this.parentElement)">
+        <span class="mod-num">M${m.num}</span>
+        <div class="mod-color" style="background:${m.color}"></div>
+        <div class="mod-info">
+          <div class="mod-title">${m.title}</div>
+          <div class="mod-meta">${m.horas}</div>
+        </div>
+        <span class="mod-toggle">Ver</span>
+      </div>
+      <div class="module-body">
+        <div class="live-badge"><span class="live-dot"></span>${m.live}</div>
+        <div class="mod-section">
+          <div class="mod-section-lbl">Contenidos</div>
+          <ul>${m.temas.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>
+        ${m.actividad ? `
+        <div class="mod-section">
+          <div class="mod-section-lbl">Actividad del módulo</div>
+          <div class="act-card">
+            <div class="act-card-lbl">Actividad interactiva</div>
+            <div class="act-card-title">${m.actividad.title}</div>
+            <div class="act-card-desc">${m.actividad.desc}</div>
+            <a class="act-card-link" href="${m.actividad.link}">${m.actividad.linkText}</a>
+          </div>
+        </div>` : ''}
+        <div class="mod-section">
+          <div class="mod-section-lbl">Lecturas recomendadas del módulo</div>
+          ${m.autores.map(a=>`<p class="ref-inline">${a}</p>`).join('')}
+        </div>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+function toggleModule(item){
+  item.classList.toggle('open');
+}
+
+// ── BIBLIOGRAFÍA ──
+function buildBib(){
+  const list = document.getElementById('bibList');
+  BIBLIOGRAPHY.forEach((b,i) => {
+    const div = document.createElement('div');
+    div.className = 'bib-entry';
+    div.dataset.cat = b.cat;
+    div.innerHTML = `<div class="bib-cat">${b.cat.replace('-',' ')}</div>${b.text}`;
+    list.appendChild(div);
+  });
+}
+
+function filterBib(el, cat){
+  document.querySelectorAll('.bib-tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.bib-entry').forEach(e=>{
+    e.classList.toggle('hidden', cat!=='all' && e.dataset.cat !== cat);
+  });
+}
+
+function downloadBib(){
+  let txt = 'BIBLIOGRAFÍA — CURSO TEORÍA DE CAMBIO\nAPA 7ª edición\nDavid Salgado / Sintropía Social\n\n';
+  const cats = ['fundacional','metodologia','evaluacion','america-latina','indicadores'];
+  const labels = {
+    'fundacional':'FUNDACIONAL',
+    'metodologia':'METODOLOGÍA',
+    'evaluacion':'EVALUACIÓN',
+    'america-latina':'PERSPECTIVA LATINOAMERICANA',
+    'indicadores':'INDICADORES Y MONITOREO',
+  };
+  cats.forEach(c=>{
+    txt += `\n── ${labels[c]} ──\n\n`;
+    BIBLIOGRAPHY.filter(b=>b.cat===c).forEach(b=>{
+      txt += b.text.replace(/<[^>]+>/g,'') + '\n\n';
+    });
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
+  a.download = 'bibliografia-teoria-de-cambio.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Bibliografía descargada.');
+}
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded',()=>{
+  buildModules();
+  buildBib();
+});
+</script>
+</body>
+</html>
