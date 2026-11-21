@@ -65,8 +65,9 @@ h1,h2,h3{font-family:'Playfair Display',serif;}
 /* Tabla destino — VERTICAL (columnas como filas) */
 .tc-table-wrap{width:100%;overflow-x:auto;margin-bottom:1rem;}
 .tc-table{width:100%;border-collapse:collapse;}
-.tc-table th.row-col{width:220px;min-width:160px;background:var(--dk);color:#fff;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.65rem .8rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.1);}
+.tc-table th.row-col{width:260px;min-width:180px;background:var(--dk);color:#fff;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem .9rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.1);vertical-align:top;}
 .tc-table th.row-col .col-num{display:inline-block;background:rgba(255,255,255,.12);font-size:.5rem;padding:.05rem .3rem;border-radius:2px;margin-right:.35rem;vertical-align:middle;}
+.tc-table th.row-col .col-hint{display:block;font-family:'Lato',sans-serif;font-size:.72rem;font-weight:400;letter-spacing:0;text-transform:none;color:rgba(255,255,255,.75);margin-top:.35rem;line-height:1.45;font-style:italic;}
 .tc-table td.drop-cell{border:2px dashed #D4D4D8;height:62px;vertical-align:middle;padding:.3rem;position:relative;transition:background .15s;background:#fff;}
 .tc-table td.drop-cell.occupied{border-style:solid;border-color:var(--p);}
 .tc-table td.drop-cell.wrong{border-color:#e53e3e!important;background:#fff5f5!important;}
@@ -404,14 +405,22 @@ initBrand();
 // 8 columnas en orden lógico. Cada una tiene un slot para exactamente 1 pieza correcta.
 
 const COLUMNS = [
-  {id:'problema',    label:'Problema (necesidad)',   color:'#E8F5E9', th:'#2E7D32'},
-  {id:'causas',      label:'Causas (contexto)',       color:'#FFF3E0', th:'#E65100'},
-  {id:'poblacion',   label:'Población objetivo',     color:'#E3F2FD', th:'#1565C0'},
-  {id:'actividades', label:'Actividades',             color:'#FCE4EC', th:'#C62828'},
-  {id:'productos',   label:'Productos',               color:'#F3E5F5', th:'#6A1B9A'},
-  {id:'resultados',  label:'Resultados',              color:'#E8EAF6', th:'#283593'},
-  {id:'obj_esp',     label:'Objetivo específico',    color:'#E0F7FA', th:'#00695C'},
-  {id:'fin',         label:'Fin (propósito)',          color:'#FFF8E1', th:'#F57F17'},
+  {id:'problema',    label:'Problema (necesidad)',  color:'#E8F5E9', th:'#2E7D32',
+   hint:'¿Cuál es la situación negativa existente que el proyecto busca transformar?'},
+  {id:'causas',      label:'Causas (contexto)',      color:'#FFF3E0', th:'#E65100',
+   hint:'¿Por qué ocurre ese problema? ¿Qué factores lo originan o mantienen?'},
+  {id:'poblacion',   label:'Población objetivo',    color:'#E3F2FD', th:'#1565C0',
+   hint:'¿Quiénes son las personas o grupos a quienes va dirigida la intervención?'},
+  {id:'actividades', label:'Actividades',            color:'#FCE4EC', th:'#C62828',
+   hint:'¿Qué acciones concretas ejecutará el equipo para intervenir en la problemática?'},
+  {id:'productos',   label:'Productos',              color:'#F3E5F5', th:'#6A1B9A',
+   hint:'¿Qué bienes, servicios o materiales generará el proyecto como resultado directo?'},
+  {id:'resultados',  label:'Resultados',             color:'#E8EAF6', th:'#283593',
+   hint:'¿Qué transformaciones observaremos en conocimientos, actitudes o comportamientos?'},
+  {id:'obj_esp',     label:'Objetivo específico',   color:'#E0F7FA', th:'#00695C',
+   hint:'¿Cuál es la meta de corto o mediano plazo que el proyecto se propone alcanzar?'},
+  {id:'fin',         label:'Fin (propósito)',         color:'#FFF8E1', th:'#F57F17',
+   hint:'¿Cuál es el impacto de largo plazo al que este proyecto contribuye?'},
 ];
 
 const ROWS_FILL = [
@@ -516,7 +525,7 @@ function buildPuzzle(){
     const th = document.createElement('th');
     th.className = 'row-col';
     th.style.background = c.th;
-    th.innerHTML = `<span class="col-num">${idx+1}</span>${c.label}`;
+    th.innerHTML = `<span class="col-num">${idx+1}</span>${c.hint ? `<span class="col-hint">${c.hint}</span>` : c.label}`;
     tr.appendChild(th);
 
     // Celda drop
@@ -542,7 +551,6 @@ function buildPuzzle(){
     el.id = 'piece_'+p.id;
     el.draggable = true;
     el.dataset.pieceId = p.id;
-    el.title = p.hint;
     el.textContent = p.label;
     setupDragPiece(el, p.id);
     pool.appendChild(el);
